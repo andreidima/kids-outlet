@@ -4,8 +4,43 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class InregistrareComandaController extends Controller
+class AngajatAplicatieController extends Controller
 {
+    /**
+     * Se returneaza pagina pentru logare prin cod de acces
+     */
+    public function autentificare(Request $request)
+    {
+        $angajat = $request->session()->forget('angajat');
+
+        return view('angajati_aplicatie/logare');
+    }
+
+    /**
+     * Se logheaza userul in aplicatie pe baza codului de acces
+     */
+    public function postAutentificare(Request $request)
+    {
+        $request->validate(
+                [
+                    'cod_de_acces' => 'required|exists:angajati,cod_de_acces',
+                ]
+            );
+
+        $angajat = \App\Models\Angajat::select('id', 'nume')->where('cod_de_acces', $request->cod_de_acces)->first();
+
+        $request->session()->put('angajat', $angajat);
+
+        return redirect('angajati_aplicatie/meniul_principal');
+    }
+
+
+
+
+
+
+
+
     public function adaugaComandaNoua(Request $request)
     {
         $angajat_comanda = $request->session()->forget('angajat_comanda');

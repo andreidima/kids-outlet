@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AngajatController;
-use App\Http\Controllers\InregistrareComandaController;
+use App\Http\Controllers\AngajatAplicatieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,15 +25,20 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-// Rute pentru comanda inregistrata de guest
-Route::any('/adauga-comanda-noua', [InregistrareComandaController::class, 'adaugaComandaNoua'])->name('adauga-comanda-noua');
-Route::get('/adauga-comanda-pasul-1', [InregistrareComandaController::class, 'adaugaComandaPasul1']);
-Route::post('/adauga-comanda-pasul-1', [InregistrareComandaController::class, 'postadaugaComandaPasul1']);
-Route::get('/adauga-comanda-pasul-2', [InregistrareComandaController::class, 'adaugaComandaPasul2']);
-Route::post('/adauga-comanda-pasul-2', [InregistrareComandaController::class, 'postAdaugaComandaPasul2']);
-Route::get('/adauga-comanda-pasul-3', [InregistrareComandaController::class, 'adaugaComandaPasul3']);
-Route::post('/adauga-comanda-pasul-3', [InregistrareComandaController::class, 'postAdaugaComandaPasul3']);
-Route::get('/adauga-comanda-pasul-4', [InregistrareComandaController::class, 'adaugaComandaPasul4']);
+// Rute pentru aplicatie angajati
+Route::get('/autentificare', [AngajatAplicatieController::class, 'autentificare'])->name('autentificare');
+Route::post('/autentificare', [AngajatAplicatieController::class, 'autentificare'])->name('post_autentificare');
+
+Route::get('/adauga-comanda-pasul-1', [AngajatAplicatieController::class, 'adaugaComandaPasul1']);
+
+Route::any('/adauga-comanda-noua', [AngajatAplicatieController::class, 'adaugaComandaNoua'])->name('adauga-comanda-noua');
+Route::get('/adauga-comanda-pasul-1', [AngajatAplicatieController::class, 'adaugaComandaPasul1']);
+Route::post('/adauga-comanda-pasul-1', [AngajatAplicatieController::class, 'postadaugaComandaPasul1']);
+Route::get('/adauga-comanda-pasul-2', [AngajatAplicatieController::class, 'adaugaComandaPasul2']);
+Route::post('/adauga-comanda-pasul-2', [AngajatAplicatieController::class, 'postAdaugaComandaPasul2']);
+Route::get('/adauga-comanda-pasul-3', [AngajatAplicatieController::class, 'adaugaComandaPasul3']);
+Route::post('/adauga-comanda-pasul-3', [AngajatAplicatieController::class, 'postAdaugaComandaPasul3']);
+Route::get('/adauga-comanda-pasul-4', [AngajatAplicatieController::class, 'adaugaComandaPasul4']);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('angajati', AngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
