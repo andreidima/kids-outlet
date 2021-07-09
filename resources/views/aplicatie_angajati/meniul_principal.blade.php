@@ -15,16 +15,22 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/adauga-comanda-noua" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
                     </div>
                 </div>
 
-                <div class="mb-5" style="background-color: #000000; height:5px;"></div>
+                <div class="mb-2" style="background-color: #000000; height:5px;"></div>
+
+                <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
+
+                {{ $angajat->numar_de_faza }}
+                <br>
+                {{ $angajat->numar_de_bucati }}
 
                 @include('errors')
 
-                <a class="btn btn-sm text-white" href="/adauga-comanda-noua" role="button" style="background-color: #FC4A1A;">sdf</a>
-                <a class="btn btn-sm text-white" href="/adauga-comanda-noua" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
+                <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/adauga-comanda-pasul-1" role="button" style="background-color: #FC4A1A;">COMANDĂ</a>
+                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A;">PONTAJ</a>
 
 
             </div>

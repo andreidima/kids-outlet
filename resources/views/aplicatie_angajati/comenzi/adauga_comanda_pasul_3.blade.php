@@ -12,22 +12,24 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/adauga-comanda-noua" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
                     </div>
                 </div>
 
                 <div class="mb-3" style="background-color: #000000; height:5px;"></div>
 
-                <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat_comanda->nume }}</b></h4>
+                <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
 
                 <h4 class="mb-4">
-                    <small>Nume de fază:</small> {{ $angajat_comanda->numar_de_faza }}
+                    <small>Nume de fază:</small> {{ $angajat->numar_de_faza }}
                     <br>
-                    <small>Preț pe bucată:</small> {{ $angajat_comanda->numar_de_faza }}
+                    <small>Preț pe bucată:</small> {{ $angajat->numar_de_faza }}
                     <br>
-                    <small>Număr de bucăți:</small> {{ $angajat_comanda->numar_de_bucati }}
+                    <small>Număr de bucăți:</small> {{ $angajat->numar_de_bucati }}
                 </h4>
                 @include('errors')
+
+                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A;">MENIUL PRINCIPAL</a>
 
             </div>
         </div>

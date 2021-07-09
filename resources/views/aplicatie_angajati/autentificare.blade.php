@@ -12,7 +12,7 @@
 
                 <h4 class="text-center">COD DE ACCES</h4>
 
-                <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-pasul-1"
+                <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati"
                     autocomplete="off"
                 >
                         @csrf

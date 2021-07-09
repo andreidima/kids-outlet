@@ -13,7 +13,7 @@ class AngajatAplicatieController extends Controller
     {
         $angajat = $request->session()->forget('angajat');
 
-        return view('angajati_aplicatie/logare');
+        return view('aplicatie_angajati/autentificare');
     }
 
     /**
@@ -31,60 +31,67 @@ class AngajatAplicatieController extends Controller
 
         $request->session()->put('angajat', $angajat);
 
-        return redirect('angajati_aplicatie/meniul_principal');
+        return redirect('aplicatie-angajati/meniul-principal');
     }
-
-
-
-
-
-
-
-
-    public function adaugaComandaNoua(Request $request)
+    /**
+     * Se afiseaza meniul principal
+     */
+    public function meniulPrincipal(Request $request)
     {
-        $angajat_comanda = $request->session()->forget('angajat_comanda');
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
 
-        return redirect('/adauga-comanda-pasul-1');
+        // Sterge atribute legate de comenzi sau pontaj, pastrare doar atributele angajatului
+        $angajat = new \App\Models\Angajat( $request->session()->get('angajat')->only('id', 'nume') );
+        $request->session()->put('angajat', $angajat);
+
+        return view('/aplicatie_angajati/meniul_principal', compact('angajat'));
     }
 
     /**
-     * Se returneaza pagina pentru logare prin cod de acces
+     *
      */
     public function adaugaComandaPasul1(Request $request)
     {
-        return view('comenzi/adauga-comanda-pasul-1');
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+
+        $angajat = $request->session()->get('angajat');
+        return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_1', compact('angajat'));
     }
 
     /**
-     * Se logheaza userul in aplicatie pe baza codului de acces
+     * Se seteaza numarul de faza
      */
     public function postAdaugaComandaPasul1(Request $request)
     {
         $request->validate(
                 [
-                    'cod_de_acces' => 'required|exists:angajati,cod_de_acces',
+                    'numar_de_faza' => 'required',
                 ]
             );
 
-        $angajat_comanda = \App\Models\Angajat::select('id', 'nume')->where('cod_de_acces', $request->cod_de_acces)->first();
+        $angajat = $request->session()->get('angajat');
+        $angajat->numar_de_faza = $request->numar_de_faza;
 
-        $request->session()->put('angajat_comanda', $angajat_comanda);
+        $request->session()->put('angajat', $angajat);
 
-        return redirect('/adauga-comanda-pasul-2');
+        return redirect('/aplicatie-angajati/adauga-comanda-pasul-2');
     }
 
     /**
-     * Afiseaza pagina pentru selectarea numarului de faza
+     *
      */
     public function adaugaComandaPasul2(Request $request)
     {
-        if(empty($request->session()->get('angajat_comanda'))){
-            return redirect('/adauga-comanda-noua');
-        }else{
-            $angajat_comanda = $request->session()->get('angajat_comanda');
-            return view('comenzi/adauga-comanda-pasul-2', compact('angajat_comanda'));
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
         }
+
+        $angajat = $request->session()->get('angajat');
+        return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_2', compact('angajat'));
     }
 
     /**
@@ -94,16 +101,16 @@ class AngajatAplicatieController extends Controller
     {
         $request->validate(
                 [
-                    'numar_de_faza' => 'required',
+                    'numar_de_bucati' => 'required|numeric',
                 ]
             );
 
-        $angajat_comanda = $request->session()->get('angajat_comanda');
-        $angajat_comanda->numar_de_faza = $request->numar_de_faza;
+        $angajat = $request->session()->get('angajat');
+        $angajat->numar_de_bucati = $request->numar_de_bucati;
 
-        $request->session()->put('angajat_comanda', $angajat_comanda);
+        $request->session()->put('angajat', $angajat);
 
-        return redirect('/adauga-comanda-pasul-3');
+        return redirect('/aplicatie-angajati/adauga-comanda-pasul-3');
     }
 
     /**
@@ -111,44 +118,25 @@ class AngajatAplicatieController extends Controller
      */
     public function adaugaComandaPasul3(Request $request)
     {
-        if(empty($request->session()->get('angajat_comanda'))){
-            return redirect('/adauga-comanda-noua');
-        }else{
-            $angajat_comanda = $request->session()->get('angajat_comanda');
-            return view('comenzi/adauga-comanda-pasul-3', compact('angajat_comanda'));
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
         }
-    }
 
-    /**
-     * Se seteaza numarul de faza
-     */
-    public function postAdaugaComandaPasul3(Request $request)
-    {
-        $request->validate(
-                [
-                    'numar_de_bucati' => 'required|numeric',
-                ]
-            );
-
-        $angajat_comanda = $request->session()->get('angajat_comanda');
-        $angajat_comanda->numar_de_bucati = $request->numar_de_bucati;
-
-        $request->session()->put('angajat_comanda', $angajat_comanda);
-
-        return redirect('/adauga-comanda-pasul-4');
+        $angajat = $request->session()->get('angajat');
+        return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_3', compact('angajat'));
     }
 
     /**
      *
      */
-    public function adaugaComandaPasul4(Request $request)
+    public function pontaj(Request $request)
     {
-        if(empty($request->session()->get('angajat_comanda'))){
-            return redirect('/adauga-comanda-noua');
-        }else{
-            $angajat_comanda = $request->session()->get('angajat_comanda');
-            return view('comenzi/adauga-comanda-pasul-4', compact('angajat_comanda'));
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
         }
+
+        $angajat = $request->session()->get('angajat');
+        return view('aplicatie_angajati/pontaj/pontaj', compact('angajat'));
     }
 
 }
