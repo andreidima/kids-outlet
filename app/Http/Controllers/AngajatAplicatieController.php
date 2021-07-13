@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Angajat;
+use App\Models\Pontaj;
+
 class AngajatAplicatieController extends Controller
 {
     /**
@@ -27,7 +30,7 @@ class AngajatAplicatieController extends Controller
                 ]
             );
 
-        $angajat = \App\Models\Angajat::select('id', 'nume')->where('cod_de_acces', $request->cod_de_acces)->first();
+        $angajat = Angajat::select('id', 'nume')->where('cod_de_acces', $request->cod_de_acces)->first();
 
         $request->session()->put('angajat', $angajat);
 
@@ -43,7 +46,7 @@ class AngajatAplicatieController extends Controller
         }
 
         // Sterge atribute legate de comenzi sau pontaj, pastrare doar atributele angajatului
-        $angajat = new \App\Models\Angajat( $request->session()->get('angajat')->only('id', 'nume') );
+        $angajat = new Angajat( $request->session()->get('angajat')->only('id', 'nume') );
         $request->session()->put('angajat', $angajat);
 
         return view('/aplicatie_angajati/meniul_principal', compact('angajat'));
@@ -134,8 +137,41 @@ class AngajatAplicatieController extends Controller
         if(empty($request->session()->get('angajat'))){
             return redirect('/aplicatie-angajati');
         }
-
         $angajat = $request->session()->get('angajat');
+
+        // dd($angajat->pontaj_azi()->first()->data);
+
+        $pontaj = Pontaj::where('angajat_id' , $angajat->id)->where('data', \Carbon\Carbon::today())->first();
+        if ($pontaj === null){
+            // dd('$pontaj');
+            $pontaj = new Pontaj;
+            $pontaj->angajat_id = $angajat->id;
+            $pontaj->data = \Carbon\Carbon::now();
+        }
+        // dd($angajat, $pontaj);
+
+        switch ($request->moment) {
+            case 'sosire':
+                if ( !empty ($pontaj->ora_sosire) ){
+                    // ora de sosire este deja setata
+                } else {
+                    $pontaj->ora_sosire = \Carbon\Carbon::now()->toTimeString();
+                    $pontaj->save();
+                }
+                $angajat->pontaj_sosire = $pontaj->ora_sosire;
+                break;
+            case 'plecare':
+                if ( !empty ($pontaj->ora_plecare) ){
+                    // ora de plecare este deja setata
+                } else {
+                    $pontaj->ora_plecare = \Carbon\Carbon::now()->toTimeString();
+                    $pontaj->save();
+                }
+                $angajat->pontaj_plecare = $pontaj->ora_plecare;
+                break;
+        }
+
+        $request->session()->put('angajat', $angajat);
         return view('aplicatie_angajati/pontaj/pontaj', compact('angajat'));
     }
 

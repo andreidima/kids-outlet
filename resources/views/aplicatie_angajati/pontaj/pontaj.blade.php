@@ -30,11 +30,26 @@
                 <div class="row text-center mb-4 mx-0">
                     <div class="col-6 p-2" style="background-color:#007e6b; border-right: 5px #4ABDAC solid">
                         <h4>SOSIRE</h4>
-                        <a class="btn btn-lg w-100 text-white" href="" style="background-color: #FC4A1A;">SETEAZĂ</a>
+
+                            {{-- {{ \App\Models\Pontaj::where('data', \Carbon\Carbon::today()); }} --}}
+                        @php
+                        dd ($angajat, \App\Models\Pontaj::where('data', \Carbon\Carbon::today())->first());
+                            dd($angajat);
+
+                        @endphp
+                        @isset($angajat->pontaj_azi->ora_sosire)
+                            <h4 class="mt-3">{{ $angajat->pontaj_azi->ora_sosire ?? '' }}</h4>
+                        @else
+                            <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj/sosire" style="background-color: #FC4A1A;">SETEAZĂ</a>
+                        @endisset
                     </div>
                     <div class="col-6 p-2" style="background-color:#007e6b; border-left: 5px #4ABDAC solid">
                         <h4>PLECARE</h4>
-                        <a class="btn btn-lg w-100 text-white" href="" style="background-color: #FC4A1A;">SETEAZĂ</a>
+                        @isset($angajat->pontaj_azi->ora_plecare)
+                            <h4 class="mt-3">{{ $angajat->pontaj_azi->ora_plecare ?? '' }}</h4>
+                        @else
+                            <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj/plecare" style="background-color: #FC4A1A;">SETEAZĂ</a>
+                        @endisset
                     </div>
                 </div>
 
