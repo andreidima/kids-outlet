@@ -158,7 +158,6 @@ class AngajatAplicatieController extends Controller
                     $pontaj->ora_sosire = \Carbon\Carbon::now()->toTimeString();
                     $pontaj->save();
                 }
-                $angajat->pontaj_sosire = $pontaj->ora_sosire;
                 break;
             case 'plecare':
                 if ( !empty ($pontaj->ora_plecare) ){
@@ -167,12 +166,15 @@ class AngajatAplicatieController extends Controller
                     $pontaj->ora_plecare = \Carbon\Carbon::now()->toTimeString();
                     $pontaj->save();
                 }
-                $angajat->pontaj_plecare = $pontaj->ora_plecare;
                 break;
         }
 
+        // Readucerea modelului din baza de date, pentru ca altfel nu se regasesc modificarile facute „relatiei” pontaj
+        $angajat = Angajat::find($angajat->id);
+
         $request->session()->put('angajat', $angajat);
-        return view('aplicatie_angajati/pontaj/pontaj', compact('angajat'));
+
+        return view('aplicatie_angajati/pontaj/pontaj', compact('angajat', 'pontaj'));
     }
 
 }

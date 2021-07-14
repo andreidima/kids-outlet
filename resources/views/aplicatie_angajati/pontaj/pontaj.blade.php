@@ -32,11 +32,11 @@
                         <h4>SOSIRE</h4>
 
                             {{-- {{ \App\Models\Pontaj::where('data', \Carbon\Carbon::today()); }} --}}
-                        @php
-                        dd ($angajat, \App\Models\Pontaj::where('data', \Carbon\Carbon::today())->first());
+                        {{-- @php
+                        dd ($angajat, $angajat->pontaj_azi->ora_sosire, \App\Models\Pontaj::where('data', \Carbon\Carbon::today())->first());
                             dd($angajat);
 
-                        @endphp
+                        @endphp --}}
                         @isset($angajat->pontaj_azi->ora_sosire)
                             <h4 class="mt-3">{{ $angajat->pontaj_azi->ora_sosire ?? '' }}</h4>
                         @else
