@@ -37,7 +37,7 @@ class AngajatController extends Controller
      */
     public function create()
     {
-        //
+        return view('angajati.create');
     }
 
     /**
@@ -48,7 +48,9 @@ class AngajatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $angajat = Angajat::create($this->validateRequest($request));
+
+        return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost adăugat cu succes!');
     }
 
     /**
@@ -59,7 +61,7 @@ class AngajatController extends Controller
      */
     public function show(Angajat $angajat)
     {
-        //
+        return view('angajati.show', compact('angajat'));
     }
 
     /**
@@ -70,7 +72,7 @@ class AngajatController extends Controller
      */
     public function edit(Angajat $angajat)
     {
-        //
+        return view('angajati.edit', compact('angajat'));
     }
 
     /**
@@ -82,7 +84,9 @@ class AngajatController extends Controller
      */
     public function update(Request $request, Angajat $angajat)
     {
-        //
+        $angajat->update($this->validateRequest($request));
+
+        return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost modificat cu succes!');
     }
 
     /**
@@ -93,6 +97,21 @@ class AngajatController extends Controller
      */
     public function destroy(Angajat $angajat)
     {
-        //
+        $angajat->delete();
+        return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost șters cu succes!');
+    }
+
+    /**
+     * Validate the request attributes.
+     *
+     * @return array
+     */
+    protected function validateRequest(Request $request)
+    {
+        return request()->validate([
+            'nume' => 'nullable|max:100',
+            'telefon' => 'nullable|max:50',
+            'cod_de_acces' => 'nullable|max:50'
+        ]);
     }
 }
