@@ -41,7 +41,11 @@
                             <a class="nav-link active" aria-current="page" href="{{ route('angajati.index') }}">
                                 <i class="fas fa-users me-1"></i>Angajați
                             </a>
-                            {{-- <a class="dropdown-item" href="{{ route('clienti-neseriosi.index') }}">Clienți neserioși</a> --}}
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ route('pontaje.index') }}">
+                                <i class="fas fa-user-clock me-1"></i>Pontaje
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Link</a>

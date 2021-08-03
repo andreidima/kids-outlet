@@ -6,7 +6,7 @@
         <div class="col-md-7">
             <div class="shadow-lg" style="border-radius: 40px 40px 40px 40px;">
                 <div class="border border-secondary p-2" style="border-radius: 40px 40px 0px 0px; background-color:#e66800">
-                    <h6 class="ms-2 my-0" style="color:white"><i class="fas fa-users me-1"></i>Angajați / {{ $angajat->nume }}</h6>
+                    <h6 class="ms-2 my-0" style="color:white"><i class="fas fa-user-clock me-1"></i>Pontaje / {{ $pontaj->angajat->nume ?? '' }}</h6>
                 </div>
 
                 <div class="card-body py-2 border border-secondary"
@@ -25,23 +25,31 @@
                                     Nume
                                 </td>
                                 <td>
-                                    {{ $angajat->nume }}
+                                    {{ $pontaj->angajat->nume ?? '' }}
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    Telefon
+                                    Data
                                 </td>
                                 <td>
-                                    {{ $angajat->telefon }}
+                                    {{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->data)->isoFormat('DD.MM.YYYY') : '' }}
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    Cod de acces
+                                    Ora sosire
                                 </td>
                                 <td>
-                                    {{ $angajat->cod_de_acces }}
+                                    {{ $pontaj->ora_sosire ? \Carbon\Carbon::parse($pontaj->ora_sosire)->isoFormat('HH:mm') : '' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Ora plecare
+                                </td>
+                                <td>
+                                    {{ $pontaj->ora_plecare ? \Carbon\Carbon::parse($pontaj->ora_plecare)->isoFormat('HH:mm') : '' }}
                                 </td>
                             </tr>
                         </table>
@@ -49,7 +57,7 @@
 
                     <div class="form-row mb-2 px-2">
                         <div class="col-lg-12 d-flex justify-content-center">
-                            <a class="btn btn-primary text-white btn-sm rounded-pill" href="/angajati">Pagină Angajați</a>
+                            <a class="btn btn-primary text-white btn-sm rounded-pill" href="/pontaje">Pagină Pontaje</a>
                         </div>
                     </div>
 

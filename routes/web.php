@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AngajatController;
 use App\Http\Controllers\AngajatAplicatieController;
+use App\Http\Controllers\AngajatController;
+use App\Http\Controllers\PontajController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,5 +44,6 @@ Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('angajati', AngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
+    Route::resource('pontaje', PontajController::class,  ['parameters' => ['pontaje' => 'pontaj']]);
 });
 

@@ -9,11 +9,19 @@ class Pontaj extends Model
 {
     use HasFactory;
 
-    protected $table = 'pontaj';
+    protected $table = 'pontaje';
     protected $guarded = [];
 
     public function path()
     {
-        return "/pontaj/{$this->id}";
+        return "/pontaje/{$this->id}";
+    }
+
+    /**
+     * Returneaza „angajatul” acetui „pontaj”.
+     */
+    public function angajat()
+    {
+        return $this->belongsTo(Angajat::class);
     }
 }

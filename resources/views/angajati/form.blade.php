@@ -37,7 +37,7 @@
 
         <div class="row py-2 justify-content-center">
             <div class="col-lg-8 d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary btn-sm me-2 rounded-pill">{{ $buttonText }}</button>
+                <button type="submit" class="btn btn-primary text-white btn-sm me-2 rounded-pill">{{ $buttonText }}</button>
                 {{-- <a class="btn btn-secondary btn-sm mr-4 rounded-pill" href="{{ $client_neserios->path() }}">Renunță</a>  --}}
                 <a class="btn btn-secondary btn-sm rounded-pill" href="/angajati">Renunță</a>
             </div>
