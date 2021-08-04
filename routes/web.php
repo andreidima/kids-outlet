@@ -44,6 +44,8 @@ Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('angajati', AngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
+
+    Route::get('pontaje/afisare-lunar', [PontajController::class, 'afisareLunar'],  ['parameters' => ['pontaje' => 'pontaj']])->name('pontaje.afisare_lunar');
     Route::resource('pontaje', PontajController::class,  ['parameters' => ['pontaje' => 'pontaj']]);
 });
 

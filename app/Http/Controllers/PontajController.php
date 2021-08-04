@@ -6,6 +6,8 @@ use App\Models\Pontaj;
 use App\Models\Angajat;
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+
 class PontajController extends Controller
 {
     /**
@@ -115,5 +117,29 @@ class PontajController extends Controller
             'ora_sosire' => 'nullable',
             'ora_plecare' => 'nullable'
         ]);
+    }
+
+    /**
+     * Afisare lunara
+     *
+     * @return array
+     */
+    protected function afisareLunar(Request $request)
+    {
+        $search_data = \Request::get('search_data');
+        $search_data = $search_data ?? Carbon::now();
+
+        dd(Carbon::parse($search_data)->year);
+
+        $pontaje = Pontaj::
+            whereYear('data', Carbon::parse($search_data)->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            // when($search_nume, function ($query, $search_nume) {
+            //     return $query->where('nume', 'like', '%' . $search_nume . '%');
+            // })
+            ->latest()
+            ->simplePaginate(25);
+
+        return view('pontaje.index', compact('pontaje', 'search_nume'));
     }
 }
