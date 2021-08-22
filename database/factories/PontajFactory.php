@@ -22,7 +22,9 @@ class PontajFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'nume' => $this->faker->name(),
+            'angajat_id' => $this->faker->numberBetween(13, 45),
+            'cod_de_acces' => $this->faker->numberBetween(000000, 999999),
         ];
     }
 }

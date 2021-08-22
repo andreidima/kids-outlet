@@ -6,13 +6,24 @@
             <div class="col-lg-3">
                 <h4 class="mb-0"><a href="{{ route('pontaje.index') }}"><i class="fas fa-user-clock me-1"></i>Pontaje</a></h4>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6" id="app1">
                 <form class="needs-validation" novalidate method="GET" action="{{ route('pontaje.index') }}">
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
                         <div class="col-lg-8">
                             <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
                                     value="{{ $search_nume }}">
+                        </div>
+                        <div class="col-lg-4 d-flex">
+                            <label for="search_data" class="mb-0 align-self-center me-1">Data:</label>
+                            <vue2-datepicker
+                                data-veche="{{ $search_data }}"
+                                nume-camp-db="search_data"
+                                tip="date"
+                                value-type="YYYY-MM-DD"
+                                format="DD-MM-YYYY"
+                                :latime="{ width: '125px' }"
+                            ></vue2-datepicker>
                         </div>
                     </div>
                     <div class="row input-group custom-search-form justify-content-center">
