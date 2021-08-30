@@ -136,10 +136,8 @@ class PontajController extends Controller
     protected function afisareLunar(Request $request)
     {
         $search_nume = \Request::get('search_nume');
-        $search_data = \Request::get('search_data');
-        $search_data = $search_data ?? Carbon::now();
-
-        // dd(Carbon::parse($search_data)->year);
+        $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now();
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::now();
 
         $pontaje = Pontaj::with('angajat')
             // ->select('id', 'angajat_id', 'data', 'ora_sosire', 'ora_plecare')
@@ -148,13 +146,15 @@ class PontajController extends Controller
                     $query->where('nume', 'like', '%' . $search_nume . '%');
                 });
             })
-            ->whereYear('data', Carbon::parse($search_data)->year)
-            ->whereMonth('data', Carbon::parse($search_data)->month)
+            // ->whereYear('data', Carbon::parse($search_data)->year)
+            // ->whereMonth('data', Carbon::parse($search_data)->month)
+            ->whereDate('data', '>=', $search_data_inceput)
+            ->whereDate('data', '<=', $search_data_sfarsit)
             ->get()
             ->sortBy('angajat.nume');
 
         // dd($pontaje);
 
-        return view('pontaje.index.lunar', compact('pontaje', 'search_nume', 'search_data'));
+        return view('pontaje.index.lunar', compact('pontaje', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
     }
 }

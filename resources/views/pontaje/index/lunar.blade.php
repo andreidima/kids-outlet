@@ -6,7 +6,10 @@
         <div class="col-lg-6">
             <h4 class="mb-0"><a href="{{ route('pontaje.afisare_lunar') }}">
                 <i class="fas fa-user-clock me-1"></i>Pontaje</a> /
-                {{ \Carbon\Carbon::parse($search_data)->isoFormat('MMMM YYYY') }}
+                {{-- {{ \Carbon\Carbon::parse($search_data)->isoFormat('MMMM YYYY') }} --}}
+                {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
+                -
+                {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
             </h4>
         </div>
         <div class="col-lg-6" id="app1">
@@ -18,7 +21,19 @@
                                 value="{{ $search_nume }}">
                     </div>
                     <div class="col-lg-4 d-flex">
-                        <label for="search_data" class="mb-0 align-self-center me-1">Data:</label>
+                        <label for="search_data" class="mb-0 align-self-center me-1">Interval:</label>
+                        <vue2-datepicker
+                            data-veche="{{ $search_data_inceput }}"
+                            nume-camp-db="search_data_inceput"
+                            tip="date"
+                            latime="100"
+                        ></vue2-datepicker>
+                        <vue2-datepicker
+                            data-veche="{{ $search_data_sfarsit }}"
+                            nume-camp-db="search_data_sfarsit"
+                            tip="date"
+                            latime="150"
+                        ></vue2-datepicker>
                         <vue2-datepicker
                             data-veche="{{ $search_data }}"
                             nume-camp-db="search_data"
