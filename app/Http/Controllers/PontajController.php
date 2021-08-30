@@ -129,7 +129,7 @@ class PontajController extends Controller
         $search_data = \Request::get('search_data');
         $search_data = $search_data ?? Carbon::now();
 
-        dd(Carbon::parse($search_data)->year);
+        // dd(Carbon::parse($search_data)->year);
 
         $pontaje = Pontaj::
             whereYear('data', Carbon::parse($search_data)->year)
