@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pontaj;
 use App\Models\Angajat;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 use Carbon\Carbon;
 
@@ -18,15 +19,21 @@ class PontajController extends Controller
     public function index()
     {
         $search_nume = \Request::get('search_nume');
+        $search_data = \Request::get('search_data');
 
         $pontaje = Pontaj::
-            // when($search_nume, function ($query, $search_nume) {
-            //     return $query->where('nume', 'like', '%' . $search_nume . '%');
-            // })
-            latest()
+            when($search_nume, function (Builder $query, $search_nume) {
+                $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
+                    $query->where('nume', 'like', '%' . $search_nume . '%');
+                });
+            })
+            ->when($search_data, function ($query, $search_data) {
+                return $query->whereDate('data', '=', $search_data);
+            })
+            ->latest()
             ->simplePaginate(25);
 
-        return view('pontaje.index', compact('pontaje', 'search_nume'));
+        return view('pontaje.index', compact('pontaje', 'search_nume', 'search_data'));
     }
 
     /**
@@ -37,6 +44,8 @@ class PontajController extends Controller
     public function create()
     {
         $angajati = Angajat::orderBy('nume')->get();
+
+        session(['previous-url' => url()->previous()]);
 
         return view('pontaje.create', compact('angajati'));
     }
@@ -51,7 +60,7 @@ class PontajController extends Controller
     {
         $pontaj = Pontaj::create($this->validateRequest($request));
 
-        return redirect('/pontaje')->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume ?? '' . '" a fost adăugat cu succes!');
+        return redirect(session('previous-url'))->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume ?? '' . '" a fost adăugat cu succes!');
     }
 
     /**
@@ -89,7 +98,7 @@ class PontajController extends Controller
     {
         $pontaj->update($this->validateRequest($request));
 
-        return redirect('/pontaje')->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
+        return redirect(session('previous-url'))->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
     }
 
     /**
@@ -101,7 +110,7 @@ class PontajController extends Controller
     public function destroy(Pontaj $pontaj)
     {
         $pontaj->delete();
-        return redirect('/pontaje')->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
+        return back()->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
     }
 
     /**
@@ -126,20 +135,26 @@ class PontajController extends Controller
      */
     protected function afisareLunar(Request $request)
     {
+        $search_nume = \Request::get('search_nume');
         $search_data = \Request::get('search_data');
         $search_data = $search_data ?? Carbon::now();
 
         // dd(Carbon::parse($search_data)->year);
 
-        $pontaje = Pontaj::
-            whereYear('data', Carbon::parse($search_data)->year)
-            ->whereMonth('created_at', Carbon::now()->month)
-            // when($search_nume, function ($query, $search_nume) {
-            //     return $query->where('nume', 'like', '%' . $search_nume . '%');
-            // })
-            ->latest()
-            ->simplePaginate(25);
+        $pontaje = Pontaj::with('angajat')
+            // ->select('id', 'angajat_id', 'data', 'ora_sosire', 'ora_plecare')
+            ->when($search_nume, function (Builder $query, $search_nume) {
+                $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
+                    $query->where('nume', 'like', '%' . $search_nume . '%');
+                });
+            })
+            ->whereYear('data', Carbon::parse($search_data)->year)
+            ->whereMonth('data', Carbon::parse($search_data)->month)
+            ->get()
+            ->sortBy('angajat.nume');
 
-        return view('pontaje.index', compact('pontaje', 'search_nume'));
+        // dd($pontaje);
+
+        return view('pontaje.index.lunar', compact('pontaje', 'search_nume', 'search_data'));
     }
 }
