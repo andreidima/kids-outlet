@@ -47,9 +47,9 @@
                                 <i class="fas fa-user-clock me-1"></i>Pontaje
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ route('pontaje.index') }}">Toate</a></li>
+                                <li><a class="dropdown-item" href="{{ route('pontaje.index') }}">Administrare</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('pontaje.afisare_lunar') }}">Lunar</a></li>
+                                <li><a class="dropdown-item" href="{{ route('pontaje.afisare_lunar') }}">Vizualizare tabelară</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">

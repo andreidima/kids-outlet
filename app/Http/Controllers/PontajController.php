@@ -6,6 +6,7 @@ use App\Models\Pontaj;
 use App\Models\Angajat;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 
@@ -136,25 +137,67 @@ class PontajController extends Controller
     protected function afisareLunar(Request $request)
     {
         $search_nume = \Request::get('search_nume');
-        $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now();
-        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::now();
+        $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::now()->endOfWeek()->toDateString();
 
-        $pontaje = Pontaj::with('angajat')
-            // ->select('id', 'angajat_id', 'data', 'ora_sosire', 'ora_plecare')
-            ->when($search_nume, function (Builder $query, $search_nume) {
-                $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
-                    $query->where('nume', 'like', '%' . $search_nume . '%');
-                });
-            })
-            // ->whereYear('data', Carbon::parse($search_data)->year)
-            // ->whereMonth('data', Carbon::parse($search_data)->month)
-            ->whereDate('data', '>=', $search_data_inceput)
-            ->whereDate('data', '<=', $search_data_sfarsit)
-            ->get()
-            ->sortBy('angajat.nume');
+
+        if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
+            return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
+        }
+
+        // $pontaje = Pontaj::with('angajat')
+        //     ->when($search_nume, function (Builder $query, $search_nume) {
+        //         $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
+        //             $query->where('nume', 'like', '%' . $search_nume . '%');
+        //         });
+        //     })
+        //     ->whereDate('data', '>=', $search_data_inceput)
+        //     ->whereDate('data', '<=', $search_data_sfarsit)
+        //     ->get()
+        //     ->sortBy('angajat.nume');
+
+        // $pontaje = Pontaj::
+        //     when($search_nume, function (Builder $query, $search_nume) {
+        //         $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
+        //             $query->where('nume', 'like', '%' . $search_nume . '%');
+        //         });
+        //     })
+        //     ->whereDate('data', '>=', $search_data_inceput)
+        //     ->whereDate('data', '<=', $search_data_sfarsit)
+        //     ->join('angajati', 'angajati.id', '=', 'angajat_id')
+        //     ->orderBy('angajati.nume')
+        //     ->groupBy('angajat_id')
+        //     ->paginate();
+
+        // $pontaje = DB::table('pontaje')
+        //     ->join('angajati', 'angajati.id', '=', 'angajat_id')
+        //     ->select('pontaje.*', 'angajati.nume')
+        //     ->when($search_nume, function (Builder $query, $search_nume) {
+        //         $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
+        //             $query->where('nume', 'like', '%' . $search_nume . '%');
+        //         });
+        //     })
+        //     ->whereDate('data', '>=', $search_data_inceput)
+        //     ->whereDate('data', '<=', $search_data_sfarsit)
+        //     // ->orderBy('angajati.nume')
+        //     ->groupBy('pontaje.angajat_id')
+        //     ->get();
 
         // dd($pontaje);
 
-        return view('pontaje.index.lunar', compact('pontaje', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
+        $angajati = Angajat::with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+                $query->whereDate('data', '>=', $search_data_inceput)
+                    ->whereDate('data', '<=', $search_data_sfarsit);
+            }])
+            ->when($search_nume, function ($query, $search_nume) {
+                return $query->where('nume', 'like', '%' . $search_nume . '%');
+            })
+            ->orderBy('nume')
+            // ->groupBy('angajat_id')
+            ->paginate(10);
+
+        // dd($angajati);
+
+        return view('pontaje.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
     }
 }
