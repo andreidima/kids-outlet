@@ -19,9 +19,6 @@ use App\Http\Controllers\PontajController;
 
 Auth::routes(['register' => false, 'password.request' => false, 'reset' => false]);
 
-Route::get('/', function () {
-    return view('acasa');
-});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -43,9 +40,15 @@ Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::
 
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', function () {
+        return view('acasa');
+    });
+
     Route::resource('angajati', AngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
 
     Route::get('pontaje/afisare-lunar', [PontajController::class, 'afisareLunar'],  ['parameters' => ['pontaje' => 'pontaj']])->name('pontaje.afisare_lunar');
     Route::resource('pontaje', PontajController::class,  ['parameters' => ['pontaje' => 'pontaj']]);
+
+    Route::resource('produse', AngajatController::class,  ['parameters' => ['produse' => 'produs']]);
 });
 

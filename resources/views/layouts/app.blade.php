@@ -25,7 +25,7 @@
 <body>
     @auth
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: #4ABDAC">
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: darkcyan">
             <div class="container">
                 <a class="navbar-brand me-5" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -51,6 +51,11 @@
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ route('pontaje.afisare_lunar') }}">Vizualizare tabelară</a></li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ route('produse.index') }}">
+                                <i class="fas fa-tshirt me-1"></i>Produse
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Link</a>
