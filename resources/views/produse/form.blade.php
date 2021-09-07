@@ -10,28 +10,40 @@
                     class="form-control form-control-sm rounded-pill {{ $errors->has('nume') ? 'is-invalid' : '' }}"
                     name="nume"
                     placeholder=""
-                    value="{{ old('nume', $angajat->nume) }}"
+                    value="{{ old('nume', $produs->nume) }}"
                     required>
             </div>
             <div class="col-lg-12 mb-2">
-                <label for="telefon" class="mb-0 ps-3">Telefon:</label>
+                <label for="client_pret" class="mb-0 ps-3">Client preț:</label>
                 <input
                     type="text"
-                    class="form-control form-control-sm rounded-pill {{ $errors->has('telefon') ? 'is-invalid' : '' }}"
-                    name="telefon"
+                    class="form-control form-control-sm rounded-pill {{ $errors->has('client_pret') ? 'is-invalid' : '' }}"
+                    name="client_pret"
                     placeholder=""
-                    value="{{ old('telefon', $angajat->telefon) }}"
-                    required>
+                    value="{{ old('client_pret', $produs->client_pret) }}">
             </div>
-            <div class="col-lg-12">
-                <label for="cod_de_acces" class="mb-0 ps-3">Cod de acces:</label>
+            <div class="col-lg-12 mb-2">
+                <label for="cost_produs" class="mb-0 ps-3">Cost produs:</label>
                 <input
                     type="text"
-                    class="form-control form-control-sm rounded-pill {{ $errors->has('cod_de_acces') ? 'is-invalid' : '' }}"
-                    name="cod_de_acces"
+                    class="form-control form-control-sm rounded-pill {{ $errors->has('cost_produs') ? 'is-invalid' : '' }}"
+                    name="cost_produs"
                     placeholder=""
-                    value="{{ old('cod_de_acces', $angajat->cod_de_acces) }}"
-                    required>
+                    value="{{ old('cost_produs', $produs->cost_produs) }}">
+            </div>
+            <div class="col-lg-12 mb-2">
+                <label for="cantitate" class="mb-0 ps-3">Cantitate:</label>
+                <input
+                    type="text"
+                    class="form-control form-control-sm rounded-pill {{ $errors->has('cantitate') ? 'is-invalid' : '' }}"
+                    name="cantitate"
+                    placeholder=""
+                    value="{{ old('cantitate', $produs->cantitate) }}">
+            </div>
+            <div class="col-lg-12 mb-2">
+                <label for="observatii" class="mb-0 ps-3">Observații:</label>
+                <textarea class="form-control form-control-sm {{ $errors->has('observatii') ? 'is-invalid' : '' }}"
+                    name="observatii" rows="2">{{ old('observatii', $produs->observatii) }}</textarea>
             </div>
         </div>
 
@@ -39,7 +51,7 @@
             <div class="col-lg-8 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary text-white btn-sm me-2 rounded-pill">{{ $buttonText }}</button>
                 {{-- <a class="btn btn-secondary btn-sm mr-4 rounded-pill" href="{{ $client_neserios->path() }}">Renunță</a>  --}}
-                <a class="btn btn-secondary btn-sm rounded-pill" href="/angajati">Renunță</a>
+                <a class="btn btn-secondary btn-sm rounded-pill" href="/produse">Renunță</a>
             </div>
         </div>
     </div>

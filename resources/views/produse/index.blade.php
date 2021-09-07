@@ -4,10 +4,10 @@
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
         <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
             <div class="col-lg-3">
-                <h4 class="mb-0"><a href="{{ route('angajati.index') }}"><i class="fas fa-users me-1"></i>Angajați</a></h4>
+                <h4 class="mb-0"><a href="{{ route('produse.index') }}"><i class="fas fa-tshirt me-1"></i>Produse</a></h4>
             </div>
             <div class="col-lg-6">
-                <form class="needs-validation" novalidate method="GET" action="{{ route('angajati.index') }}">
+                <form class="needs-validation" novalidate method="GET" action="{{ route('produse.index') }}">
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
                         <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
@@ -19,15 +19,15 @@
                         <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
                             <i class="fas fa-search text-white me-1"></i>Caută
                         </button>
-                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ route('angajati.index') }}" role="button">
+                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ route('produse.index') }}" role="button">
                             <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                         </a>
                     </div>
                 </form>
             </div>
             <div class="col-lg-3 text-end">
-                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('angajati.create') }}" role="button">
-                    <i class="fas fa-plus-square text-white me-1"></i>Adaugă angajat
+                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('produse.create') }}" role="button">
+                    <i class="fas fa-plus-square text-white me-1"></i>Adaugă produs
                 </a>
             </div>
         </div>
@@ -42,33 +42,37 @@
                         <tr class="" style="padding:2rem">
                             <th>Nr. Crt.</th>
                             <th>Nume</th>
-                            <th>Telefon</th>
-                            <th>Cod de acces</th>
+                            <th>Client preț</th>
+                            <th>Cost produs</th>
+                            <th>Cantitate</th>
                             <th class="text-end">Acțiuni</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($angajati as $angajat)
+                        @forelse ($produse as $produs)
                             <tr>
                                 <td align="">
-                                    {{ ($angajati ->currentpage()-1) * $angajati ->perpage() + $loop->index + 1 }}
+                                    {{ ($produse ->currentpage()-1) * $produse ->perpage() + $loop->index + 1 }}
                                 </td>
                                 <td>
-                                    <b>{{ $angajat->nume }}</b>
+                                    <b>{{ $produs->nume }}</b>
                                 </td>
                                 <td>
-                                    {{ $angajat->telefon }}
+                                    {{ $produs->client_pret }}
                                 </td>
                                 <td>
-                                    {{ $angajat->cod_de_acces }}
+                                    {{ $produs->cost_produs }}
+                                </td>
+                                <td>
+                                    {{ $produs->cantitate }}
                                 </td>
                                 <td class="d-flex justify-content-end">
-                                    <a href="{{ $angajat->path() }}"
+                                    <a href="{{ $produs->path() }}"
                                         class="flex me-1"
                                     >
                                         <span class="badge bg-success">Vizualizează</span>
                                     </a>
-                                    <a href="{{ $angajat->path() }}/modifica"
+                                    <a href="{{ $produs->path() }}/modifica"
                                         class="flex me-1"
                                     >
                                         <span class="badge bg-primary">Modifică</span>
@@ -77,8 +81,8 @@
                                         <a
                                             href="#"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#stergeAngajat{{ $angajat->id }}"
-                                            title="Șterge Angajat"
+                                            data-bs-target="#stergeProdus{{ $produs->id }}"
+                                            title="Șterge Produs"
                                             >
                                             <span class="badge bg-danger">Șterge</span>
                                         </a>
@@ -94,36 +98,36 @@
 
                 <nav>
                     <ul class="pagination pagination-sm justify-content-center">
-                        {{$angajati->appends(Request::except('page'))->links()}}
+                        {{$produse->appends(Request::except('page'))->links()}}
                     </ul>
                 </nav>
 
         </div>
     </div>
 
-    {{-- Modalele pentru stergere angajat --}}
-    @foreach ($angajati as $angajat)
-        <div class="modal fade text-dark" id="stergeAngajat{{ $angajat->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- Modalele pentru stergere produs --}}
+    @foreach ($produse as $produs)
+        <div class="modal fade text-dark" id="stergeProdus{{ $produs->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white" id="exampleModalLabel">Angajat: <b>{{ $angajat->nume }}</b></h5>
+                    <h5 class="modal-title text-white" id="exampleModalLabel">Produs: <b>{{ $produs->nume }}</b></h5>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="text-align:left;">
-                    Ești sigur ca vrei să ștergi Angajatul?
+                    Ești sigur ca vrei să ștergi Produsul?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
 
-                    <form method="POST" action="{{ $angajat->path() }}">
+                    <form method="POST" action="{{ $produs->path() }}">
                         @method('DELETE')
                         @csrf
                         <button
                             type="submit"
                             class="btn btn-danger text-white"
                             >
-                            Șterge Angajat
+                            Șterge Produs
                         </button>
                     </form>
 

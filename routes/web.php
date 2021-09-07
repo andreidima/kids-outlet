@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AngajatAplicatieController;
 use App\Http\Controllers\AngajatController;
 use App\Http\Controllers\PontajController;
+use App\Http\Controllers\ProdusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('pontaje/afisare-lunar', [PontajController::class, 'afisareLunar'],  ['parameters' => ['pontaje' => 'pontaj']])->name('pontaje.afisare_lunar');
     Route::resource('pontaje', PontajController::class,  ['parameters' => ['pontaje' => 'pontaj']]);
 
-    Route::resource('produse', AngajatController::class,  ['parameters' => ['produse' => 'produs']]);
+    Route::resource('produse', ProdusController::class,  ['parameters' => ['produse' => 'produs']]);
 });
 
