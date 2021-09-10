@@ -57,6 +57,11 @@
                                 <i class="fas fa-tshirt me-1"></i>Produse
                             </a>
                         </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link active" aria-current="page" href="{{ route('produse-operatii.index') }}">
+                                <i class="fas fa-tasks me-1"></i>Produse operații
+                            </a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

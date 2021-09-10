@@ -6,6 +6,7 @@ use App\Http\Controllers\AngajatAplicatieController;
 use App\Http\Controllers\AngajatController;
 use App\Http\Controllers\PontajController;
 use App\Http\Controllers\ProdusController;
+use App\Http\Controllers\ProdusOperatieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,5 +52,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('pontaje', PontajController::class,  ['parameters' => ['pontaje' => 'pontaj']]);
 
     Route::resource('produse', ProdusController::class,  ['parameters' => ['produse' => 'produs']]);
+
+    Route::resource('produse-operatii', ProdusOperatieController::class,  ['parameters' => ['produse-operatii' => 'produs_operatie']]);
 });
 
