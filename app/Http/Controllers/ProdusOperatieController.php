@@ -116,13 +116,18 @@ class ProdusOperatieController extends Controller
      */
     protected function validateRequest(Request $request)
     {
-        return request()->validate([
-            'produs_id' => 'required',
-            'nume' => 'nullable|max:100',
-            'timp' => 'nullable',
-            'pret' => 'nullable|numeric|between:0.00,99999.99',
-            'norma' => 'nullable|numeric|between:0,99999',
-            'observatii' => 'nullable|max:1000',
-        ]);
+        return request()->validate(
+            [
+                'produs_id' => 'required',
+                'nume' => 'nullable|max:100',
+                'timp' => 'nullable',
+                'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'norma' => 'nullable|numeric|between:0,99999',
+                'observatii' => 'nullable|max:1000',
+            ],
+            [
+                'pret.regex' => 'Prețul poate avea la partea zecimală maxim 5 cifre.',
+            ]
+        );
     }
 }
