@@ -7,6 +7,7 @@ use App\Http\Controllers\AngajatController;
 use App\Http\Controllers\PontajController;
 use App\Http\Controllers\ProdusController;
 use App\Http\Controllers\ProdusOperatieController;
+use App\Http\Controllers\NormaLucrataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,5 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('produse', ProdusController::class,  ['parameters' => ['produse' => 'produs']]);
 
     Route::resource('produse-operatii', ProdusOperatieController::class,  ['parameters' => ['produse-operatii' => 'produs_operatie']]);
+
+    Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme_lucrate' => 'norma_lucrata']]);
 });
 

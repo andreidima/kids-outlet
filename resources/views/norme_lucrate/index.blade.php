@@ -4,30 +4,41 @@
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
         <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
             <div class="col-lg-3">
-                <h4 class="mb-0"><a href="{{ route('produse-operatii.index') }}"><i class="fas fa-tasks me-1"></i>Produse - operații</a></h4>
+                <h4 class="mb-0"><a href="{{ route('norme-lucrate.index') }}"><i class="fas fa-clipboard-list me-1"></i>Norme lucrate</a></h4>
             </div>
-            <div class="col-lg-6">
-                <form class="needs-validation" novalidate method="GET" action="{{ route('produse-operatii.index') }}">
+            <div class="col-lg-6" id="app1">
+                <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.index') }}">
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
-                        <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
-                                value="{{ $search_nume }}">
-                        {{-- <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_telefon" name="search_telefon" placeholder="Telefon" autofocus
-                                value="{{ $search_telefon }}"> --}}
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
+                                    value="{{ $search_nume }}">
+                        </div>
+                        <div class="col-lg-4 d-flex">
+                            <label for="search_data" class="mb-0 align-self-center me-1">Data:</label>
+                            <vue2-datepicker
+                                data-veche="{{ $search_data }}"
+                                nume-camp-db="search_data"
+                                tip="date"
+                                value-type="YYYY-MM-DD"
+                                format="DD-MM-YYYY"
+                                :latime="{ width: '125px' }"
+                            ></vue2-datepicker>
+                        </div>
                     </div>
                     <div class="row input-group custom-search-form justify-content-center">
                         <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
                             <i class="fas fa-search text-white me-1"></i>Caută
                         </button>
-                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ route('produse-operatii.index') }}" role="button">
+                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ route('norme-lucrate.index') }}" role="button">
                             <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                         </a>
                     </div>
                 </form>
             </div>
             <div class="col-lg-3 text-end">
-                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('produse-operatii.create', ['last_url' => '/produse-operatii']) }}" role="button">
-                    <i class="fas fa-plus-square text-white me-1"></i>Adaugă operație
+                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('norme-lucrate.create') }}" role="button">
+                    <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă
                 </a>
             </div>
         </div>
@@ -41,48 +52,38 @@
                     <thead class="text-white rounded" style="background-color:#e66800;">
                         <tr class="" style="padding:2rem">
                             <th>Nr. Crt.</th>
-                            <th>Produs</th>
-                            <th>Nume operație</th>
-                            <th>Număr de fază</th>
-                            <th>Timp</th>
-                            <th>Preț</th>
-                            <th>Norma</th>
+                            <th>Angajat</th>
+                            <th class="text-center">Operație</th>
+                            <th class="text-center">Cantitate</th>
+                            <th class="text-center">Data lucrării</th>
                             <th class="text-end">Acțiuni</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($produse_operatii as $produs_operatie)
+                        @forelse ($norme_lucrate as $norma_lucrata)
                             <tr>
                                 <td align="">
-                                    {{ ($produse_operatii ->currentpage()-1) * $produse_operatii ->perpage() + $loop->index + 1 }}
+                                    {{ ($norme_lucrate ->currentpage()-1) * $norme_lucrate ->perpage() + $loop->index + 1 }}
                                 </td>
                                 <td>
-                                    <b>{{ $produs_operatie->produs->nume ?? '' }}</b>
+                                    <b>{{ $norma_lucrata->angajat->nume ?? '' }}</b>
                                 </td>
-                                <td>
-                                    <b>{{ $produs_operatie->nume }}</b>
+                                <td class="text-center">
+                                    {{-- {{ $norma_lucrata->produs_operatie->nume ?? '' }} --}}
                                 </td>
-                                <td>
-                                    <b>{{ $produs_operatie->numar_de_faza }}</b>
+                                <td class="text-center">
+                                    {{ $norma_lucrata->cantitate }}
                                 </td>
-                                <td>
-                                    {{ $produs_operatie->timp ? \Carbon\Carbon::parse($produs_operatie->timp)->isoFormat('HH:mm') : '' }}
-                                </td>
-                                <td>
-                                    {{ $produs_operatie->pret }}
-                                </td>
-                                <td>
-                                    {{ $produs_operatie->norma }}
+                                <td class="text-center">
+                                    {{ $norma_lucrata->created_at ? \Carbon\Carbon::parse($norma_lucrata->created_at)->isoFormat('DD.MM.YYYY') : '' }}
                                 </td>
                                 <td class="d-flex justify-content-end">
-                                    <a href="{{ $produs_operatie->path() }}"
-                                    {{-- <a href="{{ route('produse-operatii.edit', ['produs_operatie' => $produs_operatie->id, 'last_url' => '/produse-operatii']) }}" --}}
+                                    <a href="{{ $norma_lucrata->path() }}"
                                         class="flex me-1"
                                     >
                                         <span class="badge bg-success">Vizualizează</span>
                                     </a>
-                                    {{-- <a href="{{ $produs_operatie->path() }}/modifica" --}}
-                                    <a href="{{ route('produse-operatii.edit', ['produs_operatie' => $produs_operatie->id, 'last_url' => '/produse-operatii']) }}"
+                                    <a href="{{ $norma_lucrata->path() }}/modifica"
                                         class="flex me-1"
                                     >
                                         <span class="badge bg-primary">Modifică</span>
@@ -91,8 +92,8 @@
                                         <a
                                             href="#"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#stergeOperatie{{ $produs_operatie->id }}"
-                                            title="Șterge Operatie"
+                                            data-bs-target="#stergeNormaLucrata{{ $norma_lucrata->id }}"
+                                            title="Șterge NormaLucrata"
                                             >
                                             <span class="badge bg-danger">Șterge</span>
                                         </a>
@@ -108,36 +109,36 @@
 
                 <nav>
                     <ul class="pagination pagination-sm justify-content-center">
-                        {{$produse_operatii->appends(Request::except('page'))->links()}}
+                        {{$norme_lucrate->appends(Request::except('page'))->links()}}
                     </ul>
                 </nav>
 
         </div>
     </div>
 
-    {{-- Modalele pentru stergere produs_operatie --}}
-    @foreach ($produse_operatii as $produs_operatie)
-        <div class="modal fade text-dark" id="stergeOperatie{{ $produs_operatie->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- Modalele pentru stergere norma_lucrata --}}
+    @foreach ($norme_lucrate as $norma_lucrata)
+        <div class="modal fade text-dark" id="stergeNormaLucrata{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white" id="exampleModalLabel">Produs: {{ $produs_operatie->produs->nume ?? '' }} / Operație: <b>{{ $produs_operatie->nume }}</b></h5>
+                    <h5 class="modal-title text-white" id="exampleModalLabel">Norma Lucrată: <b>{{ $norma_lucrata->angajat->nume ?? '' }}</b></h5>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="text-align:left;">
-                    Ești sigur ca vrei să ștergi Operația?
+                    Ești sigur ca vrei să ștergi Norma Lucrată?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
 
-                    <form method="POST" action="{{ $produs_operatie->path() }}">
+                    <form method="POST" action="{{ $norma_lucrata->path() }}">
                         @method('DELETE')
                         @csrf
                         <button
                             type="submit"
                             class="btn btn-danger text-white"
                             >
-                            Șterge Operație
+                            Șterge Norma Lucrată
                         </button>
                     </form>
 

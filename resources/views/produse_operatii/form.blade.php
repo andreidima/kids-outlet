@@ -19,7 +19,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-12 mb-2">
+            <div class="col-lg-8 mb-2">
                 <label for="nume" class="mb-0 ps-3">Nume:*</label>
                 <input
                     type="text"
@@ -27,6 +27,16 @@
                     name="nume"
                     placeholder=""
                     value="{{ old('nume', $produs_operatie->nume) }}"
+                    required>
+            </div>
+            <div class="col-lg-4 mb-2">
+                <label for="numar_de_faza" class="mb-0 ps-3">Număr de fază:</label>
+                <input
+                    type="text"
+                    class="form-control form-control-sm rounded-pill {{ $errors->has('numar_de_faza') ? 'is-invalid' : '' }}"
+                    name="numar_de_faza"
+                    placeholder=""
+                    value="{{ old('numar_de_faza', $produs_operatie->numar_de_faza) }}"
                     required>
             </div>
             <div class="col-lg-4 mb-2">

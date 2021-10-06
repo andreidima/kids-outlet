@@ -119,7 +119,8 @@ class ProdusOperatieController extends Controller
         return request()->validate(
             [
                 'produs_id' => 'required',
-                'nume' => 'nullable|max:100',
+                'nume' => 'required|max:100',
+                'numar_de_faza' => 'nullable|numeric|between:0,9999999',
                 'timp' => 'nullable',
                 'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'norma' => 'nullable|numeric|between:0,99999',

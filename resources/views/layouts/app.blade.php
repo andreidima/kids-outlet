@@ -52,6 +52,16 @@
                                 <li><a class="dropdown-item" href="{{ route('pontaje.afisare_lunar') }}">Vizualizare tabelară</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item me-3 dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-clipboard-list me-1"></i>Norme lucrate
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ route('norme-lucrate.index') }}">Administrare</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                {{-- <li><a class="dropdown-item" href="{{ route('norme-lucrate.afisare_lunar') }}">Vizualizare tabelară</a></li> --}}
+                            </ul>
+                        </li>
                         <li class="nav-item me-3">
                             <a class="nav-link active" aria-current="page" href="{{ route('produse.index') }}">
                                 <i class="fas fa-tshirt me-1"></i>Produse
