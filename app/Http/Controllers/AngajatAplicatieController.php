@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Angajat;
 use App\Models\Pontaj;
+use App\Models\ProdusOperatie;
+use App\Models\NormaLucrata;
 
 class AngajatAplicatieController extends Controller
 {
@@ -72,12 +74,16 @@ class AngajatAplicatieController extends Controller
     {
         $request->validate(
                 [
-                    'numar_de_faza' => 'required',
+                    'numar_de_faza' => 'required|exists:produse_operatii'
                 ]
             );
 
+        $produs_operatie = ProdusOperatie::where('numar_de_faza', $request->numar_de_faza)->first();
+
         $angajat = $request->session()->get('angajat');
-        $angajat->numar_de_faza = $request->numar_de_faza;
+        $angajat->numar_de_faza = $produs_operatie->numar_de_faza;
+        $angajat->produs = $produs_operatie->produs->nume ?? '';
+        $angajat->operatie = $produs_operatie->nume;
 
         $request->session()->put('angajat', $angajat);
 
@@ -104,12 +110,23 @@ class AngajatAplicatieController extends Controller
     {
         $request->validate(
                 [
-                    'numar_de_bucati' => 'required|numeric',
+                    'numar_de_bucati' => 'required|numeric|between:1,9999',
                 ]
             );
 
         $angajat = $request->session()->get('angajat');
-        $angajat->numar_de_bucati = $request->numar_de_bucati;
+
+        $norma_lucrata = NormaLucrata::make();
+        $norma_lucrata->angajat_id = $angajat->id;
+        $norma_lucrata->numar_de_faza = $angajat->numar_de_faza;
+        $norma_lucrata->cantitate = $request->numar_de_bucati;
+        $norma_lucrata->save();
+
+        // Cantitatea totala pentru aceasta faza
+        $cantitate_total = NormaLucrata::where('angajat_id', $angajat->id)->where('numar_de_faza', $angajat->numar_de_faza)->sum('cantitate');
+        // dd($cantitate_total);
+        $angajat->cantitate = $request->numar_de_bucati;
+        $angajat->cantitate_total = $cantitate_total;
 
         $request->session()->put('angajat', $angajat);
 

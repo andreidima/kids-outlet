@@ -24,4 +24,12 @@ class NormaLucrata extends Model
     {
         return $this->belongsTo(Angajat::class);
     }
+
+    /**
+     * Returneaza produsul acetei operatii .
+     */
+    public function produs_operatie()
+    {
+        return $this->belongsTo(ProdusOperatie::class, 'numar_de_faza', 'numar_de_faza');
+    }
 }

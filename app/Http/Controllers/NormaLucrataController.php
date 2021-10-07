@@ -20,7 +20,7 @@ class NormaLucrataController extends Controller
         $search_nume = \Request::get('search_nume');
         $search_data = \Request::get('search_data');
 
-        $norme_lucrate = NormaLucrata::with('angajat')
+        $norme_lucrate = NormaLucrata::with('angajat', 'produs_operatie.produs')
             ->when($search_nume, function (Builder $query, $search_nume) {
                 $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
                     $query->where('nume', 'like', '%' . $search_nume . '%');
@@ -44,7 +44,9 @@ class NormaLucrataController extends Controller
     {
         $angajati = Angajat::orderBy('nume')->get();
 
-        return view('pontaje.create', compact('angajati'));
+        session(['previous-url' => url()->previous()]);
+
+        return view('norme_lucrate.create', compact('angajati'));
     }
 
     /**
@@ -55,51 +57,72 @@ class NormaLucrataController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $norma_lucrata = NormaLucrata::create($this->validateRequest($request));
+
+        return redirect(session('previous-url'))->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost adăugată cu succes!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\NormeLucrate  $norma_lucrata
+     * @param  \App\Models\NormaLucrata  $norma_lucrata
      * @return \Illuminate\Http\Response
      */
-    public function show(NormeLucrate $norma_lucrata)
+    public function show(NormaLucrata $norma_lucrata)
     {
-        //
+        return view('norme_lucrate.show', compact('norma_lucrata'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\NormeLucrate  $norma_lucrata
+     * @param  \App\Models\NormaLucrata  $norma_lucrata
      * @return \Illuminate\Http\Response
      */
-    public function edit(NormeLucrate $norma_lucrata)
+    public function edit(NormaLucrata $norma_lucrata)
     {
-        //
+        $angajati = Angajat::orderBy('nume')->get();
+
+        return view('norme_lucrate.edit', compact('norma_lucrata', 'angajati'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\NormeLucrate  $norma_lucrata
+     * @param  \App\Models\NormaLucrata  $norma_lucrata
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, NormeLucrate $norma_lucrata)
+    public function update(Request $request, NormaLucrata $norma_lucrata)
     {
-        //
+        $norma_lucrata->update($this->validateRequest($request));
+
+        return redirect(session('previous-url'))->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost modificată cu succes!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\NormeLucrate  $norma_lucrata
+     * @param  \App\Models\NormaLucrata  $norma_lucrata
      * @return \Illuminate\Http\Response
      */
-    public function destroy(NormeLucrate $norma_lucrata)
+    public function destroy(NormaLucrata $norma_lucrata)
     {
-        //
+        $norma_lucrata->delete();
+        return back()->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost ștearsă cu succes!');
+    }
+
+    /**
+     * Validate the request attributes.
+     *
+     * @return array
+     */
+    protected function validateRequest(Request $request)
+    {
+        return request()->validate([
+            'angajat_id' => 'required',
+            'numar_de_faza' => 'required|exists:produse_operatii' ,
+            'cantitate' => 'required',
+        ]);
     }
 }

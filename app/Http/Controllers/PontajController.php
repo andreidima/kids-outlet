@@ -22,8 +22,8 @@ class PontajController extends Controller
         $search_nume = \Request::get('search_nume');
         $search_data = \Request::get('search_data');
 
-        $pontaje = Pontaj::
-            when($search_nume, function (Builder $query, $search_nume) {
+        $pontaje = Pontaj::with('angajat')
+            ->when($search_nume, function (Builder $query, $search_nume) {
                 $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
                     $query->where('nume', 'like', '%' . $search_nume . '%');
                 });

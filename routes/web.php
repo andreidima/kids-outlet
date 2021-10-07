@@ -56,6 +56,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('produse-operatii', ProdusOperatieController::class,  ['parameters' => ['produse-operatii' => 'produs_operatie']]);
 
-    Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme_lucrate' => 'norma_lucrata']]);
+    Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 });
 

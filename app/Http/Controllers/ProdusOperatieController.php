@@ -17,8 +17,8 @@ class ProdusOperatieController extends Controller
     {
         $search_nume = \Request::get('search_nume');
 
-        $produse_operatii = ProdusOperatie::
-            when($search_nume, function ($query, $search_nume) {
+        $produse_operatii = ProdusOperatie::with('produs')
+            ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
             // ->when($search_telefon, function ($query, $search_telefon) {

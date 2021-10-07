@@ -21,11 +21,19 @@
                 <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
 
                 <h4 class="mb-4">
-                    <small>Nume de fază:</small> {{ $angajat->numar_de_faza }}
+                    <small>Număr de fază:</small> {{ $angajat->numar_de_faza }}
                     <br>
-                    <small>Preț pe bucată:</small> {{ $angajat->numar_de_faza }}
+                    <small>Produs:</small> {{ $angajat->produs }}
                     <br>
-                    <small>Număr de bucăți:</small> {{ $angajat->numar_de_bucati }}
+                    <small>Operație:</small> {{ $angajat->operatie }}
+                    <br>
+                    <br>
+                    <small>Preț pe bucată:</small> {{ $angajat->numar_de_faza }} lei
+                    <br>
+                    <br>
+                    <small>Număr de bucăți adăugate la ultima comandă:</small> {{ $angajat->cantitate }}
+                    <br>
+                    <small>Număr de bucăți în total:</small> {{ $angajat->cantitate_total }}
                 </h4>
                 @include('errors')
 

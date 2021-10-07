@@ -4,8 +4,6 @@
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
             <div class="col-lg-12 mb-4">
-                {{-- <label for="nume" class="mb-0 ps-3">Nume:*</label>
-                <label for="nume" class="mb-0 ps-3">{{ $pontaj->angajat->nume ?? '' }}</label> --}}
                 <label for="angajat_id" class="mb-0 ps-3">Angajat:</label>
                 <select name="angajat_id"
                     class="form-select form-select-sm rounded-pill {{ $errors->has('angajat_id') ? 'is-invalid' : '' }}"
@@ -14,50 +12,35 @@
                     @foreach ($angajati as $angajat)
                         <option
                             value='{{ $angajat->id }}'
-                            {{ ($angajat->id == old('angajat_id', $pontaj->angajat->id ?? '')) ? 'selected' : '' }}
+                            {{ ($angajat->id == old('angajat_id', $norma_lucrata->angajat->id ?? '')) ? 'selected' : '' }}
                         >{{ $angajat->nume }} </option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-4 mb-2">
-                <label for="data" class="mb-0 ps-1">Data:</label>
-                    <vue2-datepicker
-                        data-veche="{{ old('data', ($pontaj->data ?? '')) }}"
-                        nume-camp-db="data"
-                        tip="date"
-                        value-type="YYYY-MM-DD"
-                        format="DD-MM-YYYY"
-                        :latime="{ width: '125px' }"
-                    ></vue2-datepicker>
+            <div class="col-lg-6 mb-2">
+                <label for="numar_de_faza" class="mb-0 ps-3">Număr de fază:</label>
+                <input
+                    type="text"
+                    class="form-control form-control-sm rounded-pill {{ $errors->has('numar_de_faza') ? 'is-invalid' : '' }}"
+                    name="numar_de_faza"
+                    placeholder=""
+                    value="{{ old('numar_de_faza', $norma_lucrata->numar_de_faza) }}">
             </div>
-            <div class="col-lg-4 mb-2 text-lg-center">
-                <label for="data" class="mb-0 ps-1">Ora sosire:</label>
-                    <vue2-datepicker
-                        data-veche="{{ old('ora_sosire', ($pontaj->ora_sosire ?? '')) }}"
-                        nume-camp-db="ora_sosire"
-                        tip="time"
-                        value-type="HH:mm"
-                        format="HH:mm"
-                        :latime="{ width: '90px' }"
-                    ></vue2-datepicker>
-            </div>
-            <div class="col-lg-4 mb-2 text-lg-end">
-                <label for="data" class="mb-0 pe-2">Ora plecare:</label>
-                    <vue2-datepicker
-                        data-veche="{{ old('ora_plecare', ($pontaj->ora_plecare ?? '')) }}"
-                        nume-camp-db="ora_plecare"
-                        tip="time"
-                        value-type="HH:mm"
-                        format="HH:mm"
-                        :latime="{ width: '90px' }"
-                    ></vue2-datepicker>
+            <div class="col-lg-6 mb-2">
+                <label for="cantitate" class="mb-0 ps-3">Cantitate:</label>
+                <input
+                    type="text"
+                    class="form-control form-control-sm rounded-pill {{ $errors->has('cantitate') ? 'is-invalid' : '' }}"
+                    name="cantitate"
+                    placeholder=""
+                    value="{{ old('cantitate', $norma_lucrata->cantitate) }}">
             </div>
         </div>
 
         <div class="row py-2 justify-content-center">
             <div class="col-lg-8 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary text-white btn-sm me-2 rounded-pill">{{ $buttonText }}</button>
-                <a class="btn btn-secondary btn-sm rounded-pill" href="/pontaje">Renunță</a>
+                <a class="btn btn-secondary btn-sm rounded-pill" href="/norme-lucrate">Renunță</a>
             </div>
         </div>
     </div>
