@@ -146,7 +146,7 @@
                 <thead class="text-white rounded" style="background-color:#e66800;">
                     <tr class="" style="padding:2rem">
                         <th style="min-width: 50px;">Nr. Crt.</th>
-                        <th style="min-width: 150px;">Nume</th>
+                        <th style="min-width: 170px;">Nume</th>
                         @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                             <th class="text-center" style="min-width: 120px;">
                                 {{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD.MM.YYYY') }}
@@ -165,7 +165,7 @@
                                 style="
     position: absolute;
     display: inline-block;
-    width: 140px;
+    width: 160px;
     background-color:#e66800;
     color:white;
     "

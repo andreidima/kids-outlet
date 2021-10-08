@@ -59,7 +59,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{{ route('norme-lucrate.index') }}">Administrare</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                {{-- <li><a class="dropdown-item" href="{{ route('norme-lucrate.afisare_lunar') }}">Vizualizare tabelară</a></li> --}}
+                                <li><a class="dropdown-item" href="{{ route('norme-lucrate.afisare_lunar') }}">Vizualizare tabelară</a></li>
                             </ul>
                         </li>
                         <li class="nav-item me-3">

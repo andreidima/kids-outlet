@@ -47,6 +47,7 @@
                             <th>Timp</th>
                             <th>Preț</th>
                             <th>Norma</th>
+                            <th>Norma efectuată</th>
                             <th class="text-end">Acțiuni</th>
                         </tr>
                     </thead>
@@ -73,6 +74,9 @@
                                 </td>
                                 <td>
                                     {{ $produs_operatie->norma }}
+                                </td>
+                                <td>
+                                    {{ $produs_operatie->norma_efectuata }}
                                 </td>
                                 <td class="d-flex justify-content-end">
                                     <a href="{{ $produs_operatie->path() }}"

@@ -56,6 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('produse-operatii', ProdusOperatieController::class,  ['parameters' => ['produse-operatii' => 'produs_operatie']]);
 
+    Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 });
 

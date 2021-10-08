@@ -26,4 +26,9 @@ class Angajat extends Model
     {
         return $this->hasOne('App\Models\Pontaj', 'angajat_id')->where('data', \Carbon\Carbon::today());
     }
+
+    public function norme_lucrate()
+    {
+        return $this->HasMany('App\Models\NormaLucrata', 'angajat_id');
+    }
 }
