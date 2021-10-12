@@ -44,8 +44,6 @@ class NormaLucrataController extends Controller
     {
         $angajati = Angajat::orderBy('nume')->get();
 
-        session(['previous-url' => url()->previous()]);
-
         return view('norme_lucrate.create', compact('angajati'));
     }
 
@@ -57,9 +55,22 @@ class NormaLucrataController extends Controller
      */
     public function store(Request $request)
     {
-        $norma_lucrata = NormaLucrata::create($this->validateRequest($request));
+        if (NormaLucrata::where('angajat_id' ,$request->angajat_id)->where('numar_de_faza', $request->numar_de_faza)->first()){
+            return back()->with('error', 'Acest Angajat are deja o Normă lucrată pentru această Fază. Căutați și modificați norma deja adaugată.');
+        }
 
-        return redirect(session('previous-url'))->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost adăugată cu succes!');
+        $produs_operatie = ProdusOperatie::where('numar_de_faza', $request->numar_de_faza)->first();
+
+        if (($produs_operatie->norma_efectuata + $request->cantitate) > $produs_operatie->norma){
+            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $request->numar_de_faza . '". Mai puteți adăuga maxim "' . ($produs_operatie->norma - $produs_operatie->norma_efectuata ?? '') . '"!');
+        } else {
+            $norma_lucrata = NormaLucrata::create($this->validateRequest($request));
+
+            $produs_operatie->norma_efectuata += $request->cantitate;
+            $produs_operatie->save();
+
+            return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru angajatul "' . ($norma_lucrata->angajat->nume ?? '') . '" și numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost adăugată cu succes!');
+        }
     }
 
     /**
@@ -95,9 +106,29 @@ class NormaLucrataController extends Controller
      */
     public function update(Request $request, NormaLucrata $norma_lucrata)
     {
+        $produs_operatie = ProdusOperatie::where('numar_de_faza', $request->numar_de_faza)->first();
+
+        // Se verifica sa nu se depaseasca norma
+        // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
+        if (($produs_operatie->norma_efectuata - $norma_lucrata->cantitate + $request->cantitate) > $produs_operatie->norma){
+            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $request->numar_de_faza . '". Cantitatea maximă poate fi "' . ($produs_operatie->norma - $produs_operatie->norma_efectuata ?? '') . '"!');
+        } else {
+            $norma_lucrata = NormaLucrata::firstOrNew(
+                ['angajat_id' => $request->angajat_id],
+                ['numar_de_faza' => $request->numar_de_faza],
+            );
+            $norma_lucrata->cantitate += $request->cantitate;
+            $norma_lucrata->save();
+
+            $produs_operatie->norma_efectuata += $request->cantitate;
+            $produs_operatie->save();
+
+            return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru numărul de fază "' . ($request->numar_de_faza ?? '') . '" a fost adăugată cu succes!');
+        }
+
         $norma_lucrata->update($this->validateRequest($request));
 
-        return redirect(session('previous-url'))->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost modificată cu succes!');
+        return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost modificată cu succes!');
     }
 
     /**
@@ -122,7 +153,7 @@ class NormaLucrataController extends Controller
         return request()->validate([
             'angajat_id' => 'required',
             'numar_de_faza' => 'required|exists:produse_operatii' ,
-            'cantitate' => 'required',
+            'cantitate' => 'required|integer|between:1,9999',
         ]);
     }
 

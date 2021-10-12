@@ -42,11 +42,9 @@ class PontajController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $angajati = Angajat::orderBy('nume')->get();
-
-        session(['previous-url' => url()->previous()]);
 
         return view('pontaje.create', compact('angajati'));
     }
@@ -61,7 +59,7 @@ class PontajController extends Controller
     {
         $pontaj = Pontaj::create($this->validateRequest($request));
 
-        return redirect(session('previous-url'))->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume ?? '' . '" a fost adăugat cu succes!');
+        return redirect('/pontaje')->with('status', 'Pontajul pentru „' . ($pontaj->angajat->nume ?? '') . '” a fost adăugat cu succes!');
     }
 
     /**
@@ -99,7 +97,7 @@ class PontajController extends Controller
     {
         $pontaj->update($this->validateRequest($request));
 
-        return redirect(session('previous-url'))->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
+        return redirect('/pontaje')->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
     }
 
     /**

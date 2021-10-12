@@ -1,4 +1,5 @@
 @csrf
+{{-- {{ ($norma_lucrata->angajat_id === null) ? 'dada' : 'nunu'; }} --}}
 
 <div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px" id="app1">
     <div class="col-lg-12 px-2 mb-0">
@@ -7,6 +8,7 @@
                 <label for="angajat_id" class="mb-0 ps-3">Angajat:</label>
                 <select name="angajat_id"
                     class="form-select form-select-sm rounded-pill {{ $errors->has('angajat_id') ? 'is-invalid' : '' }}"
+                    {{ ($norma_lucrata->angajat_id === null) ? '' : 'disabled' }}
                 >
                         <option value='' selected>Selectează</option>
                     @foreach ($angajati as $angajat)
@@ -24,7 +26,9 @@
                     class="form-control form-control-sm rounded-pill {{ $errors->has('numar_de_faza') ? 'is-invalid' : '' }}"
                     name="numar_de_faza"
                     placeholder=""
-                    value="{{ old('numar_de_faza', $norma_lucrata->numar_de_faza) }}">
+                    value="{{ old('numar_de_faza', $norma_lucrata->numar_de_faza) }}"
+                    {{ ($norma_lucrata->angajat_id === null) ? '' : 'disabled' }}
+                    >
             </div>
             <div class="col-lg-6 mb-2">
                 <label for="cantitate" class="mb-0 ps-3">Cantitate:</label>
