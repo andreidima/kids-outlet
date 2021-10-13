@@ -116,17 +116,34 @@ class AngajatAplicatieController extends Controller
 
         $angajat = $request->session()->get('angajat');
 
-        $norma_lucrata = NormaLucrata::make();
-        $norma_lucrata->angajat_id = $angajat->id;
-        $norma_lucrata->numar_de_faza = $angajat->numar_de_faza;
-        $norma_lucrata->cantitate = $request->numar_de_bucati;
-        $norma_lucrata->save();
 
-        // Cantitatea totala pentru aceasta faza
-        $cantitate_total = NormaLucrata::where('angajat_id', $angajat->id)->where('numar_de_faza', $angajat->numar_de_faza)->sum('cantitate');
-        // dd($cantitate_total);
+        $produs_operatie = ProdusOperatie::where('numar_de_faza', $angajat->numar_de_faza)->first();
+
+        $norma_lucrata = NormaLucrata::firstOrNew([
+            'angajat_id' => $angajat->id,
+            'numar_de_faza' => $angajat->numar_de_faza
+        ]);
+
+        // Se verifica sa nu se depaseasca norma
+        // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
+        if (($produs_operatie->norma_efectuata + $request->numar_de_bucati) > $produs_operatie->norma){
+            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $norma_lucrata->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . ($produs_operatie->norma - $produs_operatie->norma_efectuata) . '"!');
+        } else {
+            $produs_operatie->norma_efectuata += $request->numar_de_bucati;
+            $produs_operatie->save();
+
+            $norma_lucrata->cantitate += $request->numar_de_bucati;
+            $norma_lucrata->save();
+        }
+
+        // $norma_lucrata = NormaLucrata::make();
+        // $norma_lucrata->angajat_id = $angajat->id;
+        // $norma_lucrata->numar_de_faza = $angajat->numar_de_faza;
+        // $norma_lucrata->cantitate = $request->numar_de_bucati;
+        // $norma_lucrata->save();
+
         $angajat->cantitate = $request->numar_de_bucati;
-        $angajat->cantitate_total = $cantitate_total;
+        $angajat->cantitate_total = $norma_lucrata->cantitate;
 
         $request->session()->put('angajat', $angajat);
 

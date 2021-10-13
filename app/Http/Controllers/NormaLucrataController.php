@@ -106,29 +106,20 @@ class NormaLucrataController extends Controller
      */
     public function update(Request $request, NormaLucrata $norma_lucrata)
     {
-        $produs_operatie = ProdusOperatie::where('numar_de_faza', $request->numar_de_faza)->first();
-
+        $produs_operatie = ProdusOperatie::where('numar_de_faza', $norma_lucrata->numar_de_faza)->first();
         // Se verifica sa nu se depaseasca norma
         // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
         if (($produs_operatie->norma_efectuata - $norma_lucrata->cantitate + $request->cantitate) > $produs_operatie->norma){
-            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $request->numar_de_faza . '". Cantitatea maximă poate fi "' . ($produs_operatie->norma - $produs_operatie->norma_efectuata ?? '') . '"!');
+            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $norma_lucrata->numar_de_faza . '". Cantitatea maximă este "' . ($produs_operatie->norma - $produs_operatie->norma_efectuata + $norma_lucrata->cantitate ?? '') . '"!');
         } else {
-            $norma_lucrata = NormaLucrata::firstOrNew(
-                ['angajat_id' => $request->angajat_id],
-                ['numar_de_faza' => $request->numar_de_faza],
-            );
-            $norma_lucrata->cantitate += $request->cantitate;
-            $norma_lucrata->save();
-
-            $produs_operatie->norma_efectuata += $request->cantitate;
+            $produs_operatie->norma_efectuata = $produs_operatie->norma_efectuata - $norma_lucrata->cantitate + $request->cantitate;
             $produs_operatie->save();
 
-            return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru numărul de fază "' . ($request->numar_de_faza ?? '') . '" a fost adăugată cu succes!');
+            $norma_lucrata->cantitate = $request->cantitate;
+            $norma_lucrata->save();
+
+            return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost modificată cu succes!');
         }
-
-        $norma_lucrata->update($this->validateRequest($request));
-
-        return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost modificată cu succes!');
     }
 
     /**
@@ -139,7 +130,12 @@ class NormaLucrataController extends Controller
      */
     public function destroy(NormaLucrata $norma_lucrata)
     {
+        $produs_operatie = ProdusOperatie::where('numar_de_faza', $norma_lucrata->numar_de_faza)->first();
+        $produs_operatie->norma_efectuata -= $norma_lucrata->cantitate;
+        $produs_operatie->save();
+
         $norma_lucrata->delete();
+
         return back()->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost ștearsă cu succes!');
     }
 
