@@ -15,7 +15,7 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
                     </div>
                 </div>
 
@@ -29,8 +29,8 @@
 
                 @include('errors')
 
-                <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/adauga-comanda-pasul-1" role="button" style="background-color: #FC4A1A;">COMANDĂ</a>
-                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A;">PONTAJ</a>
+                <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/adauga-comanda-pasul-1" role="button" style="background-color: #FC4A1A; border:2px solid white;">COMANDĂ</a>
+                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A; border:2px solid white;">PONTAJ</a>
 
 
             </div>

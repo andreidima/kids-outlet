@@ -27,7 +27,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: darkcyan">
             <div class="container">
-                <a class="navbar-brand me-5" href="{{ url('/') }}">
+                <a class="navbar-brand me-5" href="/acasa">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

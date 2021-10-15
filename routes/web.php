@@ -22,6 +22,9 @@ use App\Http\Controllers\NormaLucrataController;
 
 Auth::routes(['register' => false, 'password.request' => false, 'reset' => false]);
 
+    Route::get('/', function () {
+        return view('first_page');
+    });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -29,6 +32,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Rute pentru aplicatie angajati
 Route::get('/aplicatie-angajati', [AngajatAplicatieController::class, 'autentificare'])->name('autentificare');
 Route::post('/aplicatie-angajati', [AngajatAplicatieController::class, 'postAutentificare']);
+
+Route::get('/aplicatie-angajati/deconectare', [AngajatAplicatieController::class, 'deconectare'])->name('deconectare');
 
 Route::get('/aplicatie-angajati/meniul-principal', [AngajatAplicatieController::class, 'meniulPrincipal']);
 
@@ -43,7 +48,7 @@ Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::
 
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', function () {
+    Route::get('/acasa', function () {
         return view('acasa');
     });
 

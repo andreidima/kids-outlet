@@ -15,7 +15,7 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
                     </div>
                 </div>
 
@@ -40,7 +40,7 @@
                         @isset($angajat->pontaj_azi->ora_sosire)
                             <h4 class="mt-3">{{ $angajat->pontaj_azi->ora_sosire ?? '' }}</h4>
                         @else
-                            <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj/sosire" style="background-color: #FC4A1A;">SETEAZĂ</a>
+                            <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj/sosire" style="background-color: #FC4A1A; border:2px solid white;">SETEAZĂ</a>
                         @endisset
                     </div>
                     <div class="col-6 p-2" style="background-color:#007e6b; border-left: 5px #4ABDAC solid">
@@ -48,12 +48,12 @@
                         @isset($angajat->pontaj_azi->ora_plecare)
                             <h4 class="mt-3">{{ $angajat->pontaj_azi->ora_plecare ?? '' }}</h4>
                         @else
-                            <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj/plecare" style="background-color: #FC4A1A;">SETEAZĂ</a>
+                            <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj/plecare" style="background-color: #FC4A1A; border:2px solid white;">SETEAZĂ</a>
                         @endisset
                     </div>
                 </div>
 
-                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A;">MENIUL PRINCIPAL</a>
+                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
 
             </div>
         </div>

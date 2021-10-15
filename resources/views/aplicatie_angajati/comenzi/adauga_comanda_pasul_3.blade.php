@@ -12,7 +12,7 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
                 </h4>
                 @include('errors')
 
-                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A;">MENIUL PRINCIPAL</a>
+                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
 
             </div>
         </div>

@@ -38,6 +38,17 @@ class AngajatAplicatieController extends Controller
 
         return redirect('aplicatie-angajati/meniul-principal');
     }
+
+    /**
+     * Se returneaza pagina pentru logare prin cod de acces
+     */
+    public function deconectare(Request $request)
+    {
+        $angajat = $request->session()->forget('angajat');
+
+        return redirect('/');
+    }
+
     /**
      * Se afiseaza meniul principal
      */

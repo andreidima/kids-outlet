@@ -15,7 +15,7 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati" role="button" style="background-color: #FC4A1A;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
                     </div>
                 </div>
 
@@ -37,8 +37,8 @@
                         <div class="col-md-12 text-center">
                             <input class="form-control form-control-lg mb-3" type="text" name="numar_de_faza">
 
-                            <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A;">SELECTEAZĂ</button>
-                            <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal">RENUNȚĂ</a>
+                            <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">SELECTEAZĂ</button>
+                            <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">RENUNȚĂ</a>
                         </div>
                     </div>
                 </form>
