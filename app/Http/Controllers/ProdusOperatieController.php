@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produs;
 use App\Models\ProdusOperatie;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProdusOperatieController extends Controller
 {
@@ -92,7 +93,7 @@ class ProdusOperatieController extends Controller
      */
     public function update(Request $request, ProdusOperatie $produs_operatie)
     {
-        $produs_operatie->update($this->validateRequest($request));
+        $produs_operatie->update($this->validateRequest($request, $produs_operatie));
 
         return redirect($request->last_url)->with('status', 'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') . '” a fost modificată cu succes!');
     }
@@ -114,13 +115,17 @@ class ProdusOperatieController extends Controller
      *
      * @return array
      */
-    protected function validateRequest(Request $request)
+    protected function validateRequest(Request $request, $produs_operatie = null)
     {
         return request()->validate(
             [
                 'produs_id' => 'required',
                 'nume' => 'required|max:100',
-                'numar_de_faza' => 'nullable|numeric|between:0,9999999',
+                'numar_de_faza' => [
+                    'nullable',
+                    'max:50',
+                    Rule::unique('App\Models\ProdusOperatie')->ignore($produs_operatie),
+                ],
                 'timp' => 'nullable',
                 'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'norma' => 'nullable|numeric|between:0,99999',

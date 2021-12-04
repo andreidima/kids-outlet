@@ -44,7 +44,9 @@ Route::post('/aplicatie-angajati/adauga-comanda-pasul-2', [AngajatAplicatieContr
 Route::get('/aplicatie-angajati/adauga-comanda-pasul-3', [AngajatAplicatieController::class, 'adaugaComandaPasul3']);
 
 Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::class, 'pontaj']);
-// Route::get('/aplicatie-angajati/pontaj/{moment}', [AngajatAplicatieController::class, 'pontaj']);
+
+Route::get('/aplicatie-angajati/realizat', [AngajatAplicatieController::class, 'realizat'])->name('aplicatie_angajati.realizat');;
+
 
 
 Route::group(['middleware' => 'auth'], function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Angajat;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AngajatController extends Controller
 {
@@ -84,7 +85,7 @@ class AngajatController extends Controller
      */
     public function update(Request $request, Angajat $angajat)
     {
-        $angajat->update($this->validateRequest($request));
+        $angajat->update($this->validateRequest($request, $angajat));
 
         return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost modificat cu succes!');
     }
@@ -106,12 +107,16 @@ class AngajatController extends Controller
      *
      * @return array
      */
-    protected function validateRequest(Request $request)
+    protected function validateRequest(Request $request, $angajat = null)
     {
         return request()->validate([
             'nume' => 'nullable|max:100',
             'telefon' => 'nullable|max:50',
-            'cod_de_acces' => 'nullable|max:50'
+            'cod_de_acces' => [
+                'nullable',
+                'max:50',
+                Rule::unique('App\Models\Angajat')->ignore($angajat),
+            ]
         ]);
     }
 }

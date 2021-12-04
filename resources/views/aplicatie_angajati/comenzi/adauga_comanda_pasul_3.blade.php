@@ -28,12 +28,14 @@
                     <small>Operație:</small> {{ $angajat->operatie }}
                     <br>
                     <br>
-                    <small>Preț pe bucată:</small> {{ $angajat->numar_de_faza }} lei
-                    <br>
-                    <br>
                     <small>Număr de bucăți adăugate la ultima comandă:</small> {{ $angajat->cantitate }}
                     <br>
                     <small>Număr de bucăți în total:</small> {{ $angajat->cantitate_total }}
+                    <br>
+                    <br>
+                    <small>Preț pe bucată:</small> {{ $angajat->pret_pe_bucata }} lei
+                    <br>
+                    <small>Suma totală:</small> {{ $angajat->cantitate_total * $angajat->pret_pe_bucata }} lei
                 </h4>
                 @include('errors')
 

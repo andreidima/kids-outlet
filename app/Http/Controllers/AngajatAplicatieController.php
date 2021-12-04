@@ -130,10 +130,17 @@ class AngajatAplicatieController extends Controller
 
         $produs_operatie = ProdusOperatie::where('numar_de_faza', $angajat->numar_de_faza)->first();
 
-        $norma_lucrata = NormaLucrata::firstOrNew([
-            'angajat_id' => $angajat->id,
-            'numar_de_faza' => $angajat->numar_de_faza
-        ]);
+
+        // In prima faza norma daca era pentru acelasi numar de faza se aduna la aceasi inregistrare
+        // Pentru un control maxim, acum norma se adauga individual de fiecare data
+        // $norma_lucrata = NormaLucrata::firstOrNew([
+        //     'angajat_id' => $angajat->id,
+        //     'numar_de_faza' => $angajat->numar_de_faza
+        // ]);
+        $norma_lucrata = NormaLucrata::make();
+        $norma_lucrata->angajat_id = $angajat->id;
+        $norma_lucrata->numar_de_faza = $angajat->numar_de_faza;
+
 
         // Se verifica sa nu se depaseasca norma
         // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
@@ -143,18 +150,15 @@ class AngajatAplicatieController extends Controller
             $produs_operatie->norma_efectuata += $request->numar_de_bucati;
             $produs_operatie->save();
 
-            $norma_lucrata->cantitate += $request->numar_de_bucati;
+            $norma_lucrata->cantitate = $request->numar_de_bucati;
             $norma_lucrata->save();
         }
 
-        // $norma_lucrata = NormaLucrata::make();
-        // $norma_lucrata->angajat_id = $angajat->id;
-        // $norma_lucrata->numar_de_faza = $angajat->numar_de_faza;
-        // $norma_lucrata->cantitate = $request->numar_de_bucati;
-        // $norma_lucrata->save();
 
         $angajat->cantitate = $request->numar_de_bucati;
-        $angajat->cantitate_total = $norma_lucrata->cantitate;
+        $angajat->cantitate_total = NormaLucrata::where('angajat_id', $angajat->id)->where('numar_de_faza', $angajat->numar_de_faza)->sum('cantitate');
+
+        $angajat->pret_pe_bucata = $produs_operatie->pret;
 
         $request->session()->put('angajat', $angajat);
 
@@ -220,6 +224,41 @@ class AngajatAplicatieController extends Controller
         $request->session()->put('angajat', $angajat);
 
         return view('aplicatie_angajati/pontaj/pontaj', compact('angajat', 'pontaj'));
+    }
+
+    /**
+     *
+     */
+    public function realizat(Request $request)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+
+        $angajat = $request->session()->get('angajat');
+
+        $search_data_inceput = \Request::get('search_data_inceput') ? \Carbon\Carbon::parse(\Request::get('search_data_inceput')) : \Carbon\Carbon::today();
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ? \Carbon\Carbon::parse(\Request::get('search_data_sfarsit')) : \Carbon\Carbon::today();
+        // $search_data_inceput = \Request::get('search_data_inceput');
+        // $search_data_sfarsit = \Request::get('search_data_sfarsit');
+
+        if ($search_data_inceput->diffInDays($search_data_sfarsit) > 35){
+            return back()->with('error', 'Vă rog căutați o perioadă de maxim 35 de zile.');
+        }
+
+        // if ($search_data_inceput && $search_data_sfarsit){
+            $norme_lucrate = NormaLucrata::with('produs_operatie')
+                ->where('angajat_id', $angajat->id)
+                ->whereDate('created_at', '>=', $search_data_inceput)
+                ->whereDate('created_at', '<=', $search_data_sfarsit)
+                ->get();
+        // } else{
+        //     $norme_lucrate = '';
+        // }
+
+        // dd($angajat, $norme_lucrate);
+
+        return view('aplicatie_angajati/realizat/realizat', compact('angajat', ($norme_lucrate ? 'norme_lucrate' : ''), 'search_data_inceput', 'search_data_sfarsit'));
     }
 
 }

@@ -6,7 +6,6 @@
         <div class="col-lg-6">
             <h4 class="mb-0"><a href="{{ route('norme-lucrate.afisare_lunar') }}">
                 <i class="fas fa-clipboard-list me-1"></i>Norme lucrate</a> /
-                {{-- {{ \Carbon\Carbon::parse($search_data)->isoFormat('MMMM YYYY') }} --}}
                 {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
                 -
                 {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
@@ -93,13 +92,25 @@
 
                             @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                                 <td class="text-center">
-                                    @forelse ($angajat->norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
+                                    @php
+                                        $suma_totala = 0;
+                                    @endphp
+                                    @forelse ($angajat->norme_lucrate
+                                                            ->where('created_at', '>', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
+                                                            ->where('created_at', '<', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua+1))
+                                            as $norma_lucrata)
+                                            @php
+                                                $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;
+                                            @endphp
+                                    @empty
+                                    @endforelse
 
+                                    {{ ($suma_totala <> '0') ? ($suma_totala . ' lei') : '' }}
+
+                                    {{-- @forelse ($angajat->norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
                                         @forelse ($norme_lucrate_per_data as $norma_lucrata)
                                             @if (\Carbon\Carbon::parse($norma_lucrata->created_at)->startOfDay() == \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
-                                                {{-- @if ($loop->iteration > 1)
-                                                    <br>
-                                                @endif --}}
+
                                                 <p class="m-0 p-0" style="white-space: nowrap">
                                                     <span class="badge bg-secondary mx-1" style="font-size: 1em">
                                                         {{ $norma_lucrata->numar_de_faza }}
@@ -108,28 +119,14 @@
                                                     <span class="badge bg-success mx-1" style="font-size: 1em">
                                                         {{ $norma_lucrata->cantitate }}
                                                     </span>
+                                                        {{ $norma_lucrata->produs_operatie->pret ?? '' }}
                                                 </p>
 
-
-                                                {{-- {{ $pontaj->ora_sosire ? \Carbon\Carbon::parse($pontaj->ora_sosire)->isoFormat('HH:mm') : '' }}
-                                                -
-                                                {{ $pontaj->ora_plecare ? \Carbon\Carbon::parse($pontaj->ora_plecare)->isoFormat('HH:mm') : '' }}
-
-                                                @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
-                                                    @php
-                                                        $ora_sosire = new \Carbon\Carbon($pontaj->ora_sosire);
-                                                        $ora_plecare = new \Carbon\Carbon($pontaj->ora_plecare);
-
-                                                        $timp_in_minute = $ora_plecare->diffInMinutes($ora_sosire);
-
-                                                        $timp_total->addMinutes($timp_in_minute);
-                                                    @endphp
-                                                @endif --}}
                                             @endif
                                         @empty
                                         @endforelse
                                     @empty
-                                    @endforelse
+                                    @endforelse --}}
                                 </td>
                             @endfor
                         </tr>
@@ -140,7 +137,7 @@
 
         </div>
 
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-12 my-0 py-0">
                 <b>Legendă:</b>
                     <span class="badge bg-secondary mx-1" style="font-size: 1em">
@@ -150,7 +147,7 @@
                         Cantitate
                     </span>
             </div>
-        </div>
+        </div> --}}
                 <nav>
                     <ul class="pagination pagination-sm justify-content-center">
                         {{$angajati->appends(Request::except('page'))->links()}}

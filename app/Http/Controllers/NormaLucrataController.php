@@ -173,11 +173,14 @@ class NormaLucrataController extends Controller
                 $query->whereDate('created_at', '>=', $search_data_inceput)
                     ->whereDate('created_at', '<=', $search_data_sfarsit);
             }])
+            ->with('norme_lucrate.produs_operatie')
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
             ->orderBy('nume')
             ->paginate(10);
+
+        // dd($angajati);
 
         return view('norme_lucrate.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
     }
