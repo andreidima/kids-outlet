@@ -127,7 +127,7 @@ class ProdusOperatieController extends Controller
                     Rule::unique('App\Models\ProdusOperatie')->ignore($produs_operatie),
                 ],
                 'timp' => 'nullable',
-                'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'pret' => 'required|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'norma' => 'nullable|numeric|between:0,99999',
                 'observatii' => 'nullable|max:1000',
             ],
