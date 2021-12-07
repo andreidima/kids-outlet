@@ -55,16 +55,14 @@ class NormaLucrataController extends Controller
      */
     public function store(Request $request)
     {
-        if (NormaLucrata::where('angajat_id' ,$request->angajat_id)->where('numar_de_faza', $request->numar_de_faza)->first()){
-            return back()->with('error', 'Acest Angajat are deja o Normă lucrată pentru această Fază. Căutați și modificați norma deja adaugată.');
-        }
+        $norma_lucrata = NormaLucrata::make($this->validateRequest($request));
 
         $produs_operatie = ProdusOperatie::where('numar_de_faza', $request->numar_de_faza)->first();
 
         if (($produs_operatie->norma_efectuata + $request->cantitate) > $produs_operatie->norma){
             return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $request->numar_de_faza . '". Mai puteți adăuga maxim "' . ($produs_operatie->norma - $produs_operatie->norma_efectuata ?? '') . '"!');
         } else {
-            $norma_lucrata = NormaLucrata::create($this->validateRequest($request));
+            $norma_lucrata->save();
 
             $produs_operatie->norma_efectuata += $request->cantitate;
             $produs_operatie->save();
