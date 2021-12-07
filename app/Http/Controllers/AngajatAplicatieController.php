@@ -95,6 +95,7 @@ class AngajatAplicatieController extends Controller
         $angajat->numar_de_faza = $produs_operatie->numar_de_faza;
         $angajat->produs = $produs_operatie->produs->nume ?? '';
         $angajat->operatie = $produs_operatie->nume;
+        $angajat->pret_pe_bucata = $produs_operatie->pret;
 
         $request->session()->put('angajat', $angajat);
 
@@ -157,8 +158,6 @@ class AngajatAplicatieController extends Controller
 
         $angajat->cantitate = $request->numar_de_bucati;
         $angajat->cantitate_total = NormaLucrata::where('angajat_id', $angajat->id)->where('numar_de_faza', $angajat->numar_de_faza)->sum('cantitate');
-
-        $angajat->pret_pe_bucata = $produs_operatie->pret;
 
         $request->session()->put('angajat', $angajat);
 
