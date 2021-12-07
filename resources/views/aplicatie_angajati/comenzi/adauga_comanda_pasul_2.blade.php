@@ -28,7 +28,7 @@
                     <small>Operație:</small> {{ $angajat->operatie }}
                     <br>
                     <br>
-                    <small>Preț pe bucată:</small> {{ $angajat->numar_de_faza }} lei
+                    <small>Preț pe bucată:</small> {{ $angajat->pret_pe_bucata }} lei
                 </h4>
                 @include('errors')
 
