@@ -128,9 +128,10 @@ class NormaLucrataController extends Controller
      */
     public function destroy(NormaLucrata $norma_lucrata)
     {
-        $produs_operatie = ProdusOperatie::where('numar_de_faza', $norma_lucrata->numar_de_faza)->first();
-        $produs_operatie->norma_efectuata -= $norma_lucrata->cantitate;
-        $produs_operatie->save();
+        if ($produs_operatie = ProdusOperatie::where('numar_de_faza', $norma_lucrata->numar_de_faza)->first()){
+            $produs_operatie->norma_efectuata -= $norma_lucrata->cantitate;
+            $produs_operatie->save();
+        }
 
         $norma_lucrata->delete();
 

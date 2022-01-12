@@ -24,4 +24,14 @@ class ProdusOperatie extends Model
     {
         return $this->belongsTo(Produs::class);
     }
+
+    /**
+     * Get all of the norme_lucrate for the ProdusOperatie
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function norme_lucrate()
+    {
+        return $this->hasMany(NormaLucrata::class, 'numar_de_faza', 'numar_de_faza');
+    }
 }

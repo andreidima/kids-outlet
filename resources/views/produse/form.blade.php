@@ -21,6 +21,7 @@
                     name="client_pret"
                     placeholder=""
                     value="{{ old('client_pret', $produs->client_pret) }}">
+                <small class="ps-3">Punct(.) pentru zecimalele</small>
             </div>
             <div class="col-lg-12 mb-2">
                 <label for="cost_produs" class="mb-0 ps-3">Cost produs:</label>
@@ -30,6 +31,7 @@
                     name="cost_produs"
                     placeholder=""
                     value="{{ old('cost_produs', $produs->cost_produs) }}">
+                <small class="ps-3">Punct(.) pentru zecimalele</small>
             </div>
             <div class="col-lg-12 mb-2">
                 <label for="cantitate" class="mb-0 ps-3">Cantitate:</label>

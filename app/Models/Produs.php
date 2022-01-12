@@ -16,4 +16,14 @@ class Produs extends Model
     {
         return "/produse/{$this->id}";
     }
+
+    /**
+     * Get all of the produse_operatii for the Produs
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function produse_operatii()
+    {
+        return $this->hasMany(ProdusOperatie::class, 'produs_id', 'id');
+    }
 }

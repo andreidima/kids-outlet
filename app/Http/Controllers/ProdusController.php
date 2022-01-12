@@ -97,8 +97,12 @@ class ProdusController extends Controller
      */
     public function destroy(Produs $produs)
     {
-        $produs->delete();
-        return redirect('/produse')->with('status', 'Produsul "' . $produs->nume . '" a fost șters cu succes!');
+        if (!count($produs->produse_operatii)) {
+            $produs->delete();
+            return redirect('/produse')->with('status', 'Produsul "' . $produs->nume . '" a fost șters cu succes!');
+        } else {
+            return back()->with('error', 'Produsul "' . $produs->nume . '" nu poate fi șters pentru că are adăugate operații. Ștergeti mai întâi operațiile adăugate acestuia!');
+        }
     }
 
     /**

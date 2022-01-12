@@ -106,8 +106,14 @@ class ProdusOperatieController extends Controller
      */
     public function destroy(ProdusOperatie $produs_operatie)
     {
-        $produs_operatie->delete();
-        return back()->with('status', 'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') . '” a fost ștearsă cu succes!');
+        if (!count($produs_operatie->norme_lucrate)) {
+            $produs_operatie->delete();
+            return back()->with('status', 'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') . '” a fost ștearsă cu succes!');
+        } else {
+            return back()->with('error',
+                'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') .
+                '” nu poate fi ștearsă pentru că are norme lucrate. Ștergeți mai întâi normele lucrate!');
+        }
     }
 
     /**

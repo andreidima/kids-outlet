@@ -58,6 +58,7 @@
                     name="pret"
                     placeholder=""
                     value="{{ old('pret', $produs_operatie->pret) }}">
+                <small>Punct(.) pentru zecimalele</small>
             </div>
             <div class="col-lg-4 mb-2">
                 <label for="norma" class="mb-0 ps-3">Norma:</label>
