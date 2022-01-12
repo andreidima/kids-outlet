@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid vh-100 py-2" style="background-color: #DFDCE3;">
         <div class="row p-2 vh-100 align-items-center">
-            <div class="col-md-4 col-lg-3 p-3 mx-auto border border-dark text-white shadow-lg" style="background-color: #4ABDAC;">
+            <div class="col-md-6 col-lg-3 p-3 mx-auto border border-dark text-white shadow-lg" style="background-color: #4ABDAC;">
                 <h4 class="pb-1">{{ config('app.name', 'Laravel') }}</h4>
 
                 <div class="mb-5" style="background-color: #000000; height:5px;"></div>
