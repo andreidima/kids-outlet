@@ -126,14 +126,14 @@ class ProdusOperatieController extends Controller
         return request()->validate(
             [
                 'produs_id' => 'required',
-                'nume' => 'required|max:100',
+                'nume' => 'nullable|max:100',
                 'numar_de_faza' => [
                     'nullable',
                     'max:50',
                     Rule::unique('App\Models\ProdusOperatie')->ignore($produs_operatie),
                 ],
                 'timp' => 'nullable',
-                'pret' => 'required|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'norma' => 'nullable|numeric|between:0,99999',
                 'observatii' => 'nullable|max:1000',
             ],
