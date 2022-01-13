@@ -8,6 +8,7 @@ use App\Http\Controllers\PontajController;
 use App\Http\Controllers\ProdusController;
 use App\Http\Controllers\ProdusOperatieController;
 use App\Http\Controllers\NormaLucrataController;
+use App\Http\Controllers\ImportFisierExcelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,5 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
+
+    Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
 });
 
