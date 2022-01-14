@@ -67,7 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 
-    Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
-    Route::get('/import/import-produse-operatii/setare-norme-infinit', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNormeInfinit']);
+    // Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
+    // Route::get('/import/import-produse-operatii/setare-norme-infinit', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNormeInfinit']);
 });
 
