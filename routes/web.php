@@ -68,5 +68,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 
     Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
+    Route::get('/import/import-produse-operatii/setare-norme-infinit', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNormeInfinit']);
 });
 

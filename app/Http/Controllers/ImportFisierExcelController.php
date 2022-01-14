@@ -31,4 +31,15 @@ class ImportFisierExcelController extends Controller
             $produs_operatie->save();
         }
     }
+
+    public function importProduseOperatiiSetareNormeInfinit()
+    {
+        // dd('hi');
+        $produse_operatii = ProdusOperatie::all();
+
+        foreach ($produse_operatii as $produs_operatie) {
+            $produs_operatie->norma = 999999;
+            $produs_operatie->save();
+        }
+    }
 }
