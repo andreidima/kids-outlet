@@ -20,34 +20,34 @@
 
                 <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
 
+                    <h4 class="alert-success p-2">
+                        Comanda a fost introdusă cu success!
+                    </h4>
+
                 <h4 class="mb-4">
+
                     <small>Produs:</small> {{ $angajat->produs_nume }}
                     <br>
                     <small>Număr de fază:</small> {{ $angajat->numar_de_faza }}
                     <br>
                     <small>Operație:</small> {{ $angajat->operatie_nume }}
-                    {{-- <br>
                     <br>
-                    <small>Preț pe bucată:</small> {{ $angajat->pret_pe_bucata }} lei --}}
+                    {{-- <br> --}}
+                    {{-- <small>Număr de bucăți adăugate la ultima comandă:</small> {{ $angajat->cantitate }} --}}
+                    <small>Număr de bucăți adăugate:</small> {{ $angajat->cantitate }}
+                    {{-- <br>
+                    <small>Număr de bucăți în total:</small> {{ $angajat->cantitate_total }}
+                    <br>
+                    <br>
+                    <small>Preț pe bucată:</small> {{ $angajat->pret_pe_bucata }} lei
+                    <br>
+                    <small>Suma totală:</small> {{ $angajat->cantitate_total * $angajat->pret_pe_bucata }} lei --}}
                 </h4>
+
                 @include('errors')
 
-                <h4 class="text-center">NUMĂR DE BUCĂȚI</h4>
+                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
 
-                <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-3"
-                    autocomplete="off"
-                >
-                        @csrf
-
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <input class="form-control form-control-lg mb-3" type="text" name="numar_de_bucati">
-
-                            <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">ADAUGĂ</button>
-                            <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">RENUNȚĂ</a>
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

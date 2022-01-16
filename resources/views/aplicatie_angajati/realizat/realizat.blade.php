@@ -69,7 +69,7 @@
                     </form>
                 </div>
 
-                @php
+                {{-- @php
                     $suma_totala = 0;
                 @endphp
                 @forelse ($norme_lucrate->groupBy('numar_de_faza') as $norme_lucrate_per_numar_de_faza)
@@ -94,7 +94,24 @@
                         <br>
                         {{ $suma_totala }} lei
                     </b>
-                </h4>
+                </h4> --}}
+
+
+                @forelse ($norme_lucrate->groupBy('produs_operatie_id') as $norme_lucrate_per_operatie)
+                    {{-- @forelse ($norme_lucrate_per_produs->groupBy('numar_de_faza') as $norme_lucrate_per_numar_de_faza_per_numar_de_faza) --}}
+                        <div class="mb-4 px-1" style="background-color:#007e6b;">
+                            <small>Produs:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->produs->nume }}
+                            <br>
+                            <small>Număr de fază:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->numar_de_faza }}
+                            <br>
+                            <small>Operație:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->nume }}
+                            <br>
+                            <small>Număr de bucăți în total:</small> {{ $norme_lucrate_per_operatie->sum('cantitate') }}
+                        </div>
+                    {{-- @empty
+                    @endforelse --}}
+                @empty
+                @endforelse
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
 

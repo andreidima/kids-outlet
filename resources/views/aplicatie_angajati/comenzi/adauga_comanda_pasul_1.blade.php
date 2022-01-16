@@ -26,22 +26,25 @@
 
                 @include('errors')
 
-                <h4 class="text-center">NUMĂR DE FAZĂ</h4>
+                <h4 class="text-center">ALEGE PRODUSUL</h4>
 
-                <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-1"
-                    autocomplete="off"
-                >
-                        @csrf
+                @foreach ($produse as $produs)
+                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-1"
+                        autocomplete="off"
+                    >
+                            @csrf
 
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <input class="form-control form-control-lg mb-3" type="text" name="numar_de_faza">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <input class="form-control form-control-lg mb-3" type="hidden" name="id" value="{{ $produs->id }}">
 
-                            <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">SELECTEAZĂ</button>
-                            <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">RENUNȚĂ</a>
+                                <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">{{ $produs->nume }}</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                @endforeach
+
+                <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">RENUNȚĂ</a>
             </div>
         </div>
     </div>

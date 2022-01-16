@@ -23,9 +23,11 @@ use App\Http\Controllers\ImportFisierExcelController;
 
 Auth::routes(['register' => false, 'password.request' => false, 'reset' => false]);
 
-    Route::get('/', function () {
-        return view('first_page');
-    });
+    // Route::get('/', function () {
+    //     return view('first_page');
+    // });
+
+Route::redirect('/', '/aplicatie-angajati');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -41,10 +43,14 @@ Route::get('/aplicatie-angajati/meniul-principal', [AngajatAplicatieController::
 Route::get('/aplicatie-angajati/adauga-comanda-pasul-1', [AngajatAplicatieController::class, 'adaugaComandaPasul1']);
 Route::post('/aplicatie-angajati/adauga-comanda-pasul-1', [AngajatAplicatieController::class, 'postadaugaComandaPasul1']);
 Route::get('/aplicatie-angajati/adauga-comanda-pasul-2', [AngajatAplicatieController::class, 'adaugaComandaPasul2']);
-Route::post('/aplicatie-angajati/adauga-comanda-pasul-2', [AngajatAplicatieController::class, 'postAdaugaComandaPasul2']);
+Route::post('/aplicatie-angajati/adauga-comanda-pasul-2', [AngajatAplicatieController::class, 'postadaugaComandaPasul2']);
 Route::get('/aplicatie-angajati/adauga-comanda-pasul-3', [AngajatAplicatieController::class, 'adaugaComandaPasul3']);
+Route::post('/aplicatie-angajati/adauga-comanda-pasul-3', [AngajatAplicatieController::class, 'postAdaugaComandaPasul3']);
+Route::get('/aplicatie-angajati/adauga-comanda-pasul-4', [AngajatAplicatieController::class, 'adaugaComandaPasul4']);
 
-Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::class, 'pontaj']);
+// Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::class, 'pontaj']);
+Route::get('/aplicatie-angajati/pontaj', [AngajatAplicatieController::class, 'pontajPontator']);
+Route::post('/aplicatie-angajati/pontaj', [AngajatAplicatieController::class, 'postPontajPontator']);
 
 Route::get('/aplicatie-angajati/realizat', [AngajatAplicatieController::class, 'realizat'])->name('aplicatie_angajati.realizat');;
 

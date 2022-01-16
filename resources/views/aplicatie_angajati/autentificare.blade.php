@@ -19,7 +19,7 @@
 
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <input class="form-control form-control-lg mb-3" type="text" name="cod_de_acces">
+                            <input class="form-control form-control-lg mb-3" type="text" name="cod_de_acces" autofocus>
 
                             <button type="submit" class="btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">AUTENTIFICARE</button>
                         </div>

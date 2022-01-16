@@ -30,6 +30,6 @@ class NormaLucrata extends Model
      */
     public function produs_operatie()
     {
-        return $this->belongsTo(ProdusOperatie::class, 'numar_de_faza', 'numar_de_faza');
+        return $this->belongsTo(ProdusOperatie::class);
     }
 }

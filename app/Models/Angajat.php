@@ -17,6 +17,20 @@ class Angajat extends Model
         return "/angajati/{$this->id}";
     }
 
+    public function roluri()
+    {
+        return $this->HasMany('App\Models\AngajatRol');
+    }
+
+    public function hasRol($rol)
+        {
+            if ($this->roluri()->where('rol', $rol)->first()) {
+                return true;
+            }
+            // else
+            return false;
+        }
+
     public function pontaj()
     {
         return $this->HasMany('App\Models\Pontaj', 'angajat_id');

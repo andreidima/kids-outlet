@@ -73,10 +73,10 @@
                                     {{ $produs_operatie->pret }}
                                 </td>
                                 <td>
-                                    {{ $produs_operatie->norma }}
+                                    {{ $produs_operatie->norma_totala }}
                                 </td>
                                 <td>
-                                    {{ $produs_operatie->norma_efectuata }}
+                                    {{ $produs_operatie->norma_totala_efectuata }}
                                 </td>
                                 <td class="d-flex justify-content-end">
                                     <a href="{{ $produs_operatie->path() }}"
