@@ -96,8 +96,9 @@
                                         $suma_totala = 0;
                                     @endphp
                                     @forelse ($angajat->norme_lucrate
-                                                            ->where('created_at', '>', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
-                                                            ->where('created_at', '<', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua+1))
+                                                            // ->where('created_at', '>', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
+                                                            // ->where('created_at', '<', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua+1))
+                                                            ->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('YYYY-MM-DD'))
                                             as $norma_lucrata)
                                             @php
                                                 $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;

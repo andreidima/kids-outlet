@@ -6,7 +6,6 @@
         <div class="col-lg-6">
             <h4 class="mb-0"><a href="{{ route('pontaje.afisare_lunar') }}">
                 <i class="fas fa-user-clock me-1"></i>Pontaje</a> /
-                {{-- {{ \Carbon\Carbon::parse($search_data)->isoFormat('MMMM YYYY') }} --}}
                 {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
                 -
                 {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
@@ -53,88 +52,6 @@
             </form>
         </div>
     </div>
-{{--
-    <div class="card-body px-0 py-3">
-
-        @include ('errors')
-
-        <div class="table-responsive rounded mb-4">
-            <table class="table table-striped table-hover table-sm rounded table-bordered">
-                <thead class="text-white rounded" style="background-color:#e66800;">
-                    <tr class="" style="padding:2rem">
-                        <th style="min-width: 50px;">Nr. Crt.</th>
-                        <th style="min-width: 150px;">Nume</th>
-                        @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
-                            <th class="text-center" style="min-width: 120px;">
-                                {{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD.MM.YYYY') }}
-                            </th>
-                        @endfor
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($pontaje->groupBy('angajat.nume') as $pontaje_per_persoana)
-                        <tr>
-                            <td align="">
-                                {{ $loop->iteration }}
-                            </td>
-                            <td>
-                                {{ $pontaje_per_persoana->first()->angajat->nume ?? '' }}
-                            </td>
-
-                            @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
-                                <td class="text-center">
-                                    @forelse ($pontaje_per_persoana->groupBy('data') as $pontaje_per_persoana_per_zi)
-                                        @php
-                                            $timp_total = \Carbon\Carbon::today();
-                                        @endphp
-                                        @forelse ($pontaje_per_persoana_per_zi as $pontaj)
-                                            @if (\Carbon\Carbon::parse($pontaj->data) == \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
-
-                                                @if ($loop->iteration > 1)
-                                                    <br>
-                                                @endif
-                                                {{ $pontaj->ora_sosire ? \Carbon\Carbon::parse($pontaj->ora_sosire)->isoFormat('HH:mm') : '' }}
-                                                -
-                                                {{ $pontaj->ora_plecare ? \Carbon\Carbon::parse($pontaj->ora_plecare)->isoFormat('HH:mm') : '' }}
-
-                                                @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
-                                                    @php
-                                                        $ora_sosire = new \Carbon\Carbon($pontaj->ora_sosire);
-                                                        $ora_plecare = new \Carbon\Carbon($pontaj->ora_plecare);
-
-                                                        $timp_in_minute = $ora_plecare->diffInMinutes($ora_sosire);
-
-                                                        $timp_total->addMinutes($timp_in_minute);
-                                                    @endphp
-                                                @endif
-                                            @endif
-                                        @empty
-                                        @endforelse
-
-                                        @if ($timp_total->diffInMinutes(\Carbon\Carbon::today()) > 0)
-                                            <br>
-                                            Total:
-                                            <b>
-                                            {{ \Carbon\Carbon::parse($timp_total->diffInSeconds(\Carbon\Carbon::today()))->isoFormat('HH:mm') }}
-                                            </b>
-                                        @endif
-                                    @empty
-                                    @endforelse
-                                </td>
-                            @endfor
-                        </tr>
-                    @empty
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-                <nav>
-                    <ul class="pagination pagination-sm justify-content-center">
-                        {{$pontaje->appends(Request::except('page'))->links()}}
-                    </ul>
-                </nav>
-
-    </div> --}}
 
 
     <div class="card-body px-0 py-3">
@@ -185,11 +102,11 @@
                                             @if (\Carbon\Carbon::parse($pontaj->data) == \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
 
                                                 @if ($loop->iteration > 1)
-                                                    <br>
+                                                    {{-- <br> --}}
                                                 @endif
-                                                {{ $pontaj->ora_sosire ? \Carbon\Carbon::parse($pontaj->ora_sosire)->isoFormat('HH:mm') : '' }}
+                                                {{-- {{ $pontaj->ora_sosire ? \Carbon\Carbon::parse($pontaj->ora_sosire)->isoFormat('HH:mm') : '' }}
                                                 -
-                                                {{ $pontaj->ora_plecare ? \Carbon\Carbon::parse($pontaj->ora_plecare)->isoFormat('HH:mm') : '' }}
+                                                {{ $pontaj->ora_plecare ? \Carbon\Carbon::parse($pontaj->ora_plecare)->isoFormat('HH:mm') : '' }} --}}
 
                                                 @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
                                                     @php
@@ -206,11 +123,11 @@
                                         @endforelse
 
                                             @if ($timp_total->diffInMinutes(\Carbon\Carbon::today()) > 0)
-                                                <br>
+                                                {{-- <br> --}}
                                                 {{-- Total: --}}
-                                                <span class="badge bg-success">
+                                                {{-- <span class="badge bg-success"> --}}
                                                 {{ \Carbon\Carbon::parse($timp_total->diffInSeconds(\Carbon\Carbon::today()))->isoFormat('HH:mm') }}
-                                                </span>
+                                                {{-- </span> --}}
                                             @endif
                                     @empty
                                     @endforelse
@@ -232,37 +149,5 @@
 
 
 </div>
-
-    {{-- Modalele pentru stergere pontaj --}}
-    {{-- @foreach ($pontaje as $pontaj)
-        <div class="modal fade text-dark" id="stergePontaj{{ $pontaj->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white" id="exampleModalLabel">Pontaj: <b>{{ $pontaj->angajat->nume ?? '' }}</b></h5>
-                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="text-align:left;">
-                    Ești sigur ca vrei să ștergi Pontajul?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
-
-                    <form method="POST" action="{{ $pontaj->path() }}">
-                        @method('DELETE')
-                        @csrf
-                        <button
-                            type="submit"
-                            class="btn btn-danger text-white"
-                            >
-                            Șterge Pontaj
-                        </button>
-                    </form>
-
-                </div>
-                </div>
-            </div>
-        </div>
-    @endforeach --}}
 
 @endsection
