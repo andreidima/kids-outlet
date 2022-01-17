@@ -100,6 +100,14 @@
                 @forelse ($norme_lucrate->groupBy('produs_operatie_id') as $norme_lucrate_per_operatie)
                     {{-- @forelse ($norme_lucrate_per_produs->groupBy('numar_de_faza') as $norme_lucrate_per_numar_de_faza_per_numar_de_faza) --}}
                         <div class="mb-4 px-1" style="background-color:#007e6b;">
+                            <small>Data:</small>
+                                {{
+                                    $norme_lucrate_per_operatie->first()->data ?
+                                    \Carbon\Carbon::parse($norme_lucrate_per_operatie->first()->data)->isoFormat('DD.MM.YYYY')
+                                    :
+                                    ''
+                                }}
+                            <br>
                             <small>Produs:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->produs->nume }}
                             <br>
                             <small>Număr de fază:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->numar_de_faza }}

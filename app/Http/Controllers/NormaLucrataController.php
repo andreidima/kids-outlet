@@ -57,6 +57,8 @@ class NormaLucrataController extends Controller
     {
         $norma_lucrata = NormaLucrata::make($this->validateRequest($request));
 
+        $norma_lucrata->data = Carbon::now();
+
         $produs_operatie = ProdusOperatie::where('numar_de_faza', $request->numar_de_faza)->first();
 
         if (($produs_operatie->norma_totala_efectuata + $request->cantitate) > $produs_operatie->norma_totala){

@@ -185,6 +185,7 @@ class AngajatAplicatieController extends Controller
         // ]);
         $norma_lucrata = NormaLucrata::make();
         $norma_lucrata->angajat_id = $angajat->id;
+        $norma_lucrata->data = Carbon::now();
         $norma_lucrata->produs_operatie_id = $produs_operatie->id;
 
 
@@ -246,8 +247,9 @@ class AngajatAplicatieController extends Controller
         // if ($search_data_inceput && $search_data_sfarsit){
             $norme_lucrate = NormaLucrata::with('produs_operatie.produs')
                 ->where('angajat_id', $angajat->id)
-                ->whereDate('created_at', '>=', $search_data_inceput)
-                ->whereDate('created_at', '<=', $search_data_sfarsit)
+                ->whereDate('data', '>=', $search_data_inceput)
+                ->whereDate('data', '<=', $search_data_sfarsit)
+                ->orderBy('data')
                 ->orderBy('produs_operatie_id')
                 ->get();
         // } else{
