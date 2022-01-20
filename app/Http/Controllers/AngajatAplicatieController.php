@@ -319,7 +319,10 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
-        $angajati = Angajat::with('pontaj_azi')->where('nume', '<>', 'Andrei Dima test')->orderBy('nume')->get();
+        $angajati = Angajat::with('pontaj_azi')
+            // ->where('nume', '<>', 'Andrei Dima test')
+            ->where('pontator_id', $angajat->id)
+            ->orderBy('nume')->get();
 
         return view('aplicatie_angajati/pontajPontator/pontaj', compact('angajat', 'angajati'));
     }
