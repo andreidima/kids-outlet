@@ -117,47 +117,85 @@
                                         {{ $angajat->nume }}
                                     </td>
                                     <td class="text-center align-items-center">
-                                        @isset($angajat->pontaj_azi->ora_sosire)
-                                            <h4 class="mb-0">
-                                                {{ $angajat->pontaj_azi->ora_sosire ? \Carbon\Carbon::parse($angajat->pontaj_azi->ora_sosire)->isoFormat('HH:mm') : '' }}
-                                            </h4>
-                                        @else
-                                            <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
-                                                @csrf
+                                        @switch($angajat->pontaj_azi->concediu ?? '')
+                                            @case(0)
+                                                @isset($angajat->pontaj_azi->ora_sosire)
+                                                    <h4 class="mb-0">
+                                                        {{ $angajat->pontaj_azi->ora_sosire ? \Carbon\Carbon::parse($angajat->pontaj_azi->ora_sosire)->isoFormat('HH:mm') : '' }}
+                                                    </h4>
+                                                @else
+                                                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
+                                                        @csrf
 
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="angajat_id" value="{{ $angajat->id }}">
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="moment" value="sosire">
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ \Carbon\Carbon::now() }}">
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="ora" value="{{ \Carbon\Carbon::now() }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="angajat_id" value="{{ $angajat->id }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="moment" value="sosire">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ \Carbon\Carbon::now() }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="ora" value="{{ \Carbon\Carbon::now() }}">
 
-                                                <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
-                                                    SETEAZĂ
-                                                </button>
-                                            </form>
-                                        @endisset
+                                                        <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
+                                                            SETEAZĂ
+                                                        </button>
+                                                    </form>
+                                                @endisset
+                                                @break
+                                            @case(1)
+                                                <h4 class="mb-0">
+                                                    C.M.
+                                                </h4>
+                                                @break
+                                            @case(2)
+                                                <h4 class="mb-0">
+                                                    C.O.
+                                                </h4>
+                                                @break
+                                            @case(3)
+                                                <h4 class="mb-0">
+                                                    C.F.P.
+                                                </h4>
+                                                @break
+                                        @endswitch
                                     </td>
                                     <td class="text-center">
-                                        @isset($angajat->pontaj_azi->ora_plecare)
-                                            <h4 class="mb-0">
-                                                {{ $angajat->pontaj_azi->ora_plecare ? \Carbon\Carbon::parse($angajat->pontaj_azi->ora_plecare)->isoFormat('HH:mm') : '' }}
-                                            </h4>
-                                        @else
-                                            <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
-                                                @csrf
+                                        @switch($angajat->pontaj_azi->concediu ?? '')
+                                            @case(0)
+                                                @isset($angajat->pontaj_azi->ora_plecare)
+                                                    <h4 class="mb-0">
+                                                        {{ $angajat->pontaj_azi->ora_plecare ? \Carbon\Carbon::parse($angajat->pontaj_azi->ora_plecare)->isoFormat('HH:mm') : '' }}
+                                                    </h4>
+                                                @else
+                                                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
+                                                        @csrf
 
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="angajat_id" value="{{ $angajat->id }}">
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="moment" value="plecare">
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ \Carbon\Carbon::now() }}">
-                                                <input class="form-control form-control-lg mb-3" type="hidden" name="ora" value="{{ \Carbon\Carbon::now() }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="angajat_id" value="{{ $angajat->id }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="moment" value="plecare">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ \Carbon\Carbon::now() }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="ora" value="{{ \Carbon\Carbon::now() }}">
 
-                                                <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
-                                                    SETEAZĂ
-                                                </button>
-                                            </form>
-                                        @endisset
+                                                        <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
+                                                            SETEAZĂ
+                                                        </button>
+                                                    </form>
+                                                @endisset
+                                                @break
+                                            @case(1)
+                                                <h4 class="mb-0">
+                                                    C.M.
+                                                </h4>
+                                                @break
+                                            @case(2)
+                                                <h4 class="mb-0">
+                                                    C.O.
+                                                </h4>
+                                                @break
+                                            @case(3)
+                                                <h4 class="mb-0">
+                                                    C.F.P.
+                                                </h4>
+                                                @break
+                                        @endswitch
                                     </td>
-                                    <td>
-                                        <a class="btn btn-primary text-white" href="#" role="button">
+                                    <td class="text-center">
+                                        <a class="btn btn-primary text-white" href="/aplicatie-angajati/pontaj/{{ $angajat->id }}/modifica" role="button">
                                             MODIFICĂ
                                         </a>
                                     </td>

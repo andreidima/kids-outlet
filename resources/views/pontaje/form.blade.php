@@ -8,7 +8,7 @@
                 <label for="nume" class="mb-0 ps-3">{{ $pontaj->angajat->nume ?? '' }}</label> --}}
                 <label for="angajat_id" class="mb-0 ps-3">Angajat:</label>
                 <select name="angajat_id"
-                    class="form-select form-select-sm rounded-pill {{ $errors->has('angajat_id') ? 'is-invalid' : '' }}"
+                    class="form-select rounded-pill {{ $errors->has('angajat_id') ? 'is-invalid' : '' }}"
                 >
                         <option value='' selected>Selectează</option>
                     @foreach ($angajati as $angajat)
@@ -19,7 +19,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-4 mb-2">
+            <div class="col-lg-4 mb-4">
                 <label for="data" class="mb-0 ps-1">Data:</label>
                     <vue2-datepicker
                         data-veche="{{ old('data', ($pontaj->data ?? '')) }}"
@@ -30,7 +30,7 @@
                         :latime="{ width: '125px' }"
                     ></vue2-datepicker>
             </div>
-            <div class="col-lg-4 mb-2 text-lg-center">
+            <div class="col-lg-4 mb-4 text-lg-center">
                 <label for="data" class="mb-0 ps-1">Ora sosire:</label>
                     <vue2-datepicker
                         data-veche="{{ old('ora_sosire', ($pontaj->ora_sosire ?? '')) }}"
@@ -41,7 +41,7 @@
                         :latime="{ width: '90px' }"
                     ></vue2-datepicker>
             </div>
-            <div class="col-lg-4 mb-2 text-lg-end">
+            <div class="col-lg-4 mb-5 text-lg-end">
                 <label for="data" class="mb-0 pe-2">Ora plecare:</label>
                     <vue2-datepicker
                         data-veche="{{ old('ora_plecare', ($pontaj->ora_plecare ?? '')) }}"
@@ -52,12 +52,48 @@
                         :latime="{ width: '90px' }"
                     ></vue2-datepicker>
             </div>
+            <div class="col-lg-6">
+                <div class="form-check mb-3">
+                    <input class="form-check-input form-check-input-lg" type="radio" value="0" name="concediu" id="prezent_la_muna"
+                        {{ (old('concediu', $pontaj->concediu) == '0') || (old('concediu', $pontaj->concediu) == '') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="prezent_la_muna">
+                        Prezent la muncă
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-check mb-3">
+                    <input class="form-check-input form-check-input-lg" type="radio" value="1" name="concediu" id="concediu_medical"
+                        {{ old('concediu', $pontaj->concediu) == '1' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="concediu_medical">
+                        Concediu medical
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" value="2" name="concediu" id="concediu_de_odihna"
+                        {{ old('concediu', $pontaj->concediu) == '2' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="concediu_de_odihna">
+                        Concediu de odihnă
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" value="3" name="concediu" id="concediu_fara_plata"
+                        {{ old('concediu', $pontaj->concediu) == '3' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="concediu_fara_plata">
+                        Concediu fără plată
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="row py-2 justify-content-center">
             <div class="col-lg-8 d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary text-white btn-sm me-2 rounded-pill">{{ $buttonText }}</button>
-                <a class="btn btn-secondary btn-sm rounded-pill" href="/pontaje">Renunță</a>
+                <button type="submit" class="btn btn-primary text-white me-2 rounded-pill">{{ $buttonText }}</button>
+                <a class="btn btn-secondary rounded-pill" href="/pontaje/afisare-lunar">Renunță</a>
             </div>
         </div>
     </div>

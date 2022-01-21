@@ -118,17 +118,34 @@
                                                         $timp_total->addMinutes($timp_in_minute);
                                                     @endphp
                                                 @endif
+
+                                                <a href="/pontaje/{{ $pontaj_per_data->first()->id }}/modifica">
+                                                    @switch($pontaj_per_data->first()->concediu ?? '')
+                                                        @case(0)
+                                                            {{-- @if ($timp_total->diffInMinutes(\Carbon\Carbon::today()) > 0) --}}
+                                                                {{-- <br> --}}
+                                                                {{-- Total: --}}
+                                                                {{-- <span class="badge bg-success"> --}}
+                                                                {{ \Carbon\Carbon::parse($timp_total->diffInSeconds(\Carbon\Carbon::today()))->isoFormat('HH:mm') }}
+                                                                {{-- </span> --}}
+                                                            {{-- @endif --}}
+                                                            @break
+                                                        @case(1)
+                                                                C.M.
+                                                            @break
+                                                        @case(2)
+                                                                C.O.
+                                                            @break
+                                                        @case(3)
+                                                                C.F.P.
+                                                            @break
+                                                    @endswitch
+                                                </a>
+
                                             @endif
                                         @empty
                                         @endforelse
 
-                                            @if ($timp_total->diffInMinutes(\Carbon\Carbon::today()) > 0)
-                                                {{-- <br> --}}
-                                                {{-- Total: --}}
-                                                {{-- <span class="badge bg-success"> --}}
-                                                {{ \Carbon\Carbon::parse($timp_total->diffInSeconds(\Carbon\Carbon::today()))->isoFormat('HH:mm') }}
-                                                {{-- </span> --}}
-                                            @endif
                                     @empty
                                     @endforelse
                                 </td>

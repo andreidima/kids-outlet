@@ -329,6 +329,25 @@ class AngajatAplicatieController extends Controller
 
     /**
      * Pontaj de catre pontator
+     * Modificare
+     */
+    public function pontajModificaPontator(Request $request, Angajat $angajat_de_pontat = null)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+        $angajat = $request->session()->get('angajat');
+
+        $pontaj = Pontaj::firstOrCreate([
+            'angajat_id' => $angajat_de_pontat->id,
+            'data' => Carbon::now()->toDateString()
+        ]);
+
+        return view('aplicatie_angajati/pontajPontator/pontajModifica', compact('angajat', 'pontaj'));
+    }
+
+    /**
+     * Pontaj de catre pontator
      */
     public function postPontajPontator(Request $request)
     {
@@ -362,6 +381,18 @@ class AngajatAplicatieController extends Controller
                     $pontaj->ora_plecare = $request->ora;
                     $pontaj->save();
                 }
+                break;
+            case 'modificare_particularizata':
+                $request->validate(
+                        [
+                            'ora_sosire' => '',
+                            'ora_plecare' => 'nullable|after:ora_sosire'
+                        ]
+                    );
+                $pontaj->ora_sosire = $request->ora_sosire;
+                $pontaj->ora_plecare = $request->ora_plecare;
+                $pontaj->concediu = $request->concediu;
+                $pontaj->save();
                 break;
         }
 

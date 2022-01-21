@@ -7,6 +7,7 @@ use App\Models\Angajat;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 use Carbon\Carbon;
 
@@ -59,7 +60,7 @@ class PontajController extends Controller
     {
         $pontaj = Pontaj::create($this->validateRequest($request));
 
-        return redirect('/pontaje')->with('status', 'Pontajul pentru „' . ($pontaj->angajat->nume ?? '') . '” a fost adăugat cu succes!');
+        return redirect('/pontaje/afisare-lunar')->with('status', 'Pontajul pentru „' . ($pontaj->angajat->nume ?? '') . '” a fost adăugat cu succes!');
     }
 
     /**
@@ -79,9 +80,14 @@ class PontajController extends Controller
      * @param  \App\Models\Pontaj  $pontaj
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pontaj $pontaj)
+    public function edit(Request $request, Pontaj $pontaj)
     {
         $angajati = Angajat::orderBy('nume')->get();
+
+        if(empty($request->session()->get('pontaj_return_url'))){
+            $pontaj_return_url = url()->previous();
+            $request->session()->put('pontaj_return_url', $pontaj_return_url);
+        }
 
         return view('pontaje.edit', compact('pontaj', 'angajati'));
     }
@@ -95,9 +101,14 @@ class PontajController extends Controller
      */
     public function update(Request $request, Pontaj $pontaj)
     {
-        $pontaj->update($this->validateRequest($request));
+        $pontaj->update($this->validateRequest($request, $pontaj));
 
-        return redirect('/pontaje')->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
+        if(empty($pontaj_return_url = $request->session()->get('pontaj_return_url'))){
+            $pontaj_return_url = '/pontaje/afisare-lunar';
+        }
+        $request->session()->forget('pontaj_return_url');
+
+        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
     }
 
     /**
@@ -109,7 +120,8 @@ class PontajController extends Controller
     public function destroy(Pontaj $pontaj)
     {
         $pontaj->delete();
-        return back()->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
+        // return back()->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
+        return redirect('/pontaje/afisare-lunar')->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
     }
 
     /**
@@ -117,14 +129,37 @@ class PontajController extends Controller
      *
      * @return array
      */
-    protected function validateRequest(Request $request)
+    protected function validateRequest(Request $request, Pontaj $pontaj = null)
     {
-        return request()->validate([
-            'angajat_id' => 'required',
-            'data' => 'required',
-            'ora_sosire' => 'nullable',
-            'ora_plecare' => 'nullable'
-        ]);
+        return request()->validate(
+            [
+                'angajat_id' => 'required',
+                // 'data' => 'required',
+                'data' => ($request->_method !== "PATCH") ?
+                    [
+                        'required',
+                        Rule::unique('pontaje')->where(function ($query) use ($request) {
+                            return $query->where('angajat_id', $request->angajat_id)
+                                ->where('data', $request->data);
+                        }),
+                    ]
+                    :
+                    [
+                        'required',
+                        Rule::unique('pontaje')->ignore($pontaj->id)->where(function ($query) use ($request) {
+                            return $query->where('angajat_id', $request->angajat_id)
+                                ->where('data', $request->data);
+                        }),
+                    ],
+                'ora_sosire' => 'nullable',
+                'ora_plecare' => 'nullable|after:ora_sosire',
+                'concediu' => 'nullable',
+                'return_url' => 'nullable',
+            ],
+            [
+                'data.unique' => 'Există deja un pontaj pentru acest angajat, pentru data calendaristică selectată'
+            ]
+        );
     }
 
     /**
