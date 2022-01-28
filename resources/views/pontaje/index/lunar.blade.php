@@ -3,9 +3,11 @@
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-        <div class="col-lg-6">
-            <h4 class="mb-0"><a href="{{ route('pontaje.afisare_lunar') }}">
-                <i class="fas fa-user-clock me-1"></i>Pontaje</a> /
+        <div class="col-lg-4">
+            <h4 class="mb-2">
+                <i class="fas fs-4 fa-user-clock me-1"></i>Pontaje /
+            {{-- </h4>
+            <h4 class="mb-0"> --}}
                 {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
                 -
                 {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
@@ -42,14 +44,19 @@
                     </div>
                 </div>
                 <div class="row input-group custom-search-form justify-content-center">
-                    <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
+                    <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-3 shadow" type="submit">
                         <i class="fas fa-search text-white me-1"></i>Caută
                     </button>
-                    <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ route('pontaje.afisare_lunar') }}" role="button">
+                    <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-3 shadow" href="{{ route('pontaje.afisare_lunar') }}" role="button">
                         <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                     </a>
                 </div>
             </form>
+        </div>
+        <div class="col-lg-2 text-lg-end">
+            <a class="btn btn-sm bg-success text-white border border-dark rounded-3 shadow" href="{{ route('pontaje.create') }}" role="button">
+                <i class="fas fa-plus-square text-white me-1"></i>Adaugă pontaj
+            </a>
         </div>
     </div>
 

@@ -47,6 +47,8 @@ class PontajController extends Controller
     {
         $angajati = Angajat::orderBy('nume')->get();
 
+        $request->session()->get('pontaj_return_url') ?? $request->session()->put('pontaj_return_url', url()->previous());
+
         return view('pontaje.create', compact('angajati'));
     }
 
@@ -60,7 +62,12 @@ class PontajController extends Controller
     {
         $pontaj = Pontaj::create($this->validateRequest($request));
 
-        return redirect('/pontaje/afisare-lunar')->with('status', 'Pontajul pentru „' . ($pontaj->angajat->nume ?? '') . '” a fost adăugat cu succes!');
+        if(empty($pontaj_return_url = $request->session()->get('pontaj_return_url'))){
+            $pontaj_return_url = '/pontaje/afisare-lunar';
+        }
+        $request->session()->forget('pontaj_return_url');
+
+        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru „' . ($pontaj->angajat->nume ?? '') . '” a fost adăugat cu succes!');
     }
 
     /**
@@ -82,12 +89,14 @@ class PontajController extends Controller
      */
     public function edit(Request $request, Pontaj $pontaj)
     {
-        $angajati = Angajat::orderBy('nume')->get();
+        $request->session()->get('pontaj_return_url') ?? $request->session()->put('pontaj_return_url', url()->previous());
+        // if(empty($request->session()->get('pontaj_return_url'))){
+        //     $pontaj_return_url = url()->previous();
+        //     $request->session()->put('pontaj_return_url', $pontaj_return_url);
+        // }
+        // $request->session()->put('pontaj_return_url', url()->previous());
 
-        if(empty($request->session()->get('pontaj_return_url'))){
-            $pontaj_return_url = url()->previous();
-            $request->session()->put('pontaj_return_url', $pontaj_return_url);
-        }
+        $angajati = Angajat::orderBy('nume')->get();
 
         return view('pontaje.edit', compact('pontaj', 'angajati'));
     }
@@ -117,11 +126,17 @@ class PontajController extends Controller
      * @param  \App\Models\Pontaj  $pontaj
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pontaj $pontaj)
+    public function destroy(Request $request, Pontaj $pontaj)
     {
         $pontaj->delete();
-        // return back()->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
-        return redirect('/pontaje/afisare-lunar')->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
+
+        if(empty($pontaj_return_url = $request->session()->get('pontaj_return_url'))){
+            $pontaj_return_url = '/pontaje/afisare-lunar';
+        } else {
+            $request->session()->forget('pontaj_return_url');
+        }
+
+        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
     }
 
     /**
@@ -133,24 +148,24 @@ class PontajController extends Controller
     {
         return request()->validate(
             [
-                'angajat_id' => 'required',
+                // 'angajat_id' => 'required',
                 // 'data' => 'required',
-                'data' => ($request->_method !== "PATCH") ?
-                    [
-                        'required',
-                        Rule::unique('pontaje')->where(function ($query) use ($request) {
-                            return $query->where('angajat_id', $request->angajat_id)
-                                ->where('data', $request->data);
-                        }),
-                    ]
-                    :
-                    [
-                        'required',
-                        Rule::unique('pontaje')->ignore($pontaj->id)->where(function ($query) use ($request) {
-                            return $query->where('angajat_id', $request->angajat_id)
-                                ->where('data', $request->data);
-                        }),
-                    ],
+                // 'data' => ($request->_method !== "PATCH") ?
+                //     [
+                //         'required',
+                //         Rule::unique('pontaje')->where(function ($query) use ($request) {
+                //             return $query->where('angajat_id', $request->angajat_id)
+                //                 ->where('data', $request->data);
+                //         }),
+                //     ]
+                //     :
+                //     [
+                //         'required',
+                //         Rule::unique('pontaje')->ignore($pontaj->id)->where(function ($query) use ($request) {
+                //             return $query->where('angajat_id', $request->angajat_id)
+                //                 ->where('data', $request->data);
+                //         }),
+                //     ],
                 'ora_sosire' => 'nullable',
                 'ora_plecare' => 'nullable|after:ora_sosire',
                 'concediu' => 'nullable',

@@ -66,6 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('angajati', AngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
 
     Route::get('pontaje/afisare-lunar', [PontajController::class, 'afisareLunar'],  ['parameters' => ['pontaje' => 'pontaj']])->name('pontaje.afisare_lunar');
+    Route::get('pontaje/{angajat}/{data}/adauga', [PontajController::class, 'adaugaPontaj']);
     Route::resource('pontaje', PontajController::class,  ['parameters' => ['pontaje' => 'pontaj']]);
 
     Route::resource('produse', ProdusController::class,  ['parameters' => ['produse' => 'produs']]);

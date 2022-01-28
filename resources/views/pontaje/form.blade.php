@@ -3,9 +3,12 @@
 <div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px" id="app1">
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
-            <div class="col-lg-12 mb-4">
-                {{-- <label for="nume" class="mb-0 ps-3">Nume:*</label>
-                <label for="nume" class="mb-0 ps-3">{{ $pontaj->angajat->nume ?? '' }}</label> --}}
+            <div class="col-lg-12 mb-4 text-center">
+                Angajat: <b>{{ $pontaj->angajat->nume }}</b>
+                <br>
+                Data: <b>{{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->angajat->data)->isoFormat('DD.MM.YYYY') : '' }}</b>
+            </div>
+            {{-- <div class="col-lg-12 mb-4">
                 <label for="angajat_id" class="mb-0 ps-3">Angajat:</label>
                 <select name="angajat_id"
                     class="form-select rounded-pill {{ $errors->has('angajat_id') ? 'is-invalid' : '' }}"
@@ -29,8 +32,8 @@
                         format="DD-MM-YYYY"
                         :latime="{ width: '125px' }"
                     ></vue2-datepicker>
-            </div>
-            <div class="col-lg-4 mb-4 text-lg-center">
+            </div> --}}
+            <div class="col-lg-6 mb-4 text-lg-center">
                 <label for="data" class="mb-0 ps-1">Ora sosire:</label>
                     <vue2-datepicker
                         data-veche="{{ old('ora_sosire', ($pontaj->ora_sosire ?? '')) }}"
@@ -41,7 +44,7 @@
                         :latime="{ width: '90px' }"
                     ></vue2-datepicker>
             </div>
-            <div class="col-lg-4 mb-5 text-lg-end">
+            <div class="col-lg-6 mb-5 text-lg-center">
                 <label for="data" class="mb-0 pe-2">Ora plecare:</label>
                     <vue2-datepicker
                         data-veche="{{ old('ora_plecare', ($pontaj->ora_plecare ?? '')) }}"
@@ -52,7 +55,7 @@
                         :latime="{ width: '90px' }"
                     ></vue2-datepicker>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 ">
                 <div class="form-check mb-3">
                     <input class="form-check-input form-check-input-lg" type="radio" value="0" name="concediu" id="prezent_la_muna"
                         {{ (old('concediu', $pontaj->concediu) == '0') || (old('concediu', $pontaj->concediu) == '') ? 'checked' : '' }}>
@@ -61,7 +64,7 @@
                     </label>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 ">
                 <div class="form-check mb-3">
                     <input class="form-check-input form-check-input-lg" type="radio" value="1" name="concediu" id="concediu_medical"
                         {{ old('concediu', $pontaj->concediu) == '1' ? 'checked' : '' }}>
@@ -92,8 +95,8 @@
 
         <div class="row py-2 justify-content-center">
             <div class="col-lg-8 d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary text-white me-2 rounded-pill">{{ $buttonText }}</button>
-                <a class="btn btn-secondary rounded-pill" href="/pontaje/afisare-lunar">Renunță</a>
+                <button type="submit" class="btn btn-primary text-white me-2 rounded-3 border-dark shadow">{{ $buttonText }}</button>
+                <a class="btn btn-secondary rounded-3 border-dark shadow" href="{{ Session::get('pontaj_return_url') }}">Renunță</a>
             </div>
         </div>
     </div>
