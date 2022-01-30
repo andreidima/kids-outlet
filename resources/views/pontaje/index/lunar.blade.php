@@ -3,7 +3,7 @@
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <h4 class="mb-2">
                 <i class="fas fs-4 fa-user-clock me-1"></i>Pontaje /
             {{-- </h4>
@@ -13,12 +13,12 @@
                 {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
             </h4>
         </div>
-        <div class="col-lg-6" id="app1">
+        <div class="col-lg-7" id="app1">
             <form class="needs-validation" novalidate method="GET" action="{{ route('pontaje.afisare_lunar') }}">
                 @csrf
                 <div class="row mb-1 input-group custom-search-form justify-content-center">
                     <div class="col-lg-6">
-                        <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
+                        <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume"
                                 value="{{ $search_nume }}">
                     </div>
                     <div class="col-lg-6 d-flex">
@@ -43,21 +43,31 @@
                         ></vue2-datepicker>
                     </div>
                 </div>
-                <div class="row input-group custom-search-form justify-content-center">
-                    <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-3 shadow" type="submit">
+                <div class="row mb-2 input-group custom-search-form justify-content-center">
+                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit">
                         <i class="fas fa-search text-white me-1"></i>Caută
                     </button>
-                    <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-3 shadow" href="{{ route('pontaje.afisare_lunar') }}" role="button">
+                    <a class="btn btn-sm bg-secondary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" href="{{ route('pontaje.afisare_lunar') }}" role="button">
                         <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                     </a>
                 </div>
+                <div class="row input-group custom-search-form justify-content-center">
+                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="saptamana_anterioara">
+                        << Săptămâna anterioară
+                    </button>
+                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="saptamana_urmatoare">
+                        Săptămâna următoare >>
+                    </button>
+                </div>
             </form>
         </div>
-        <div class="col-lg-2 text-lg-end">
+        {{-- <div class="col-lg-2 text-lg-end">
             <a class="btn btn-sm bg-success text-white border border-dark rounded-3 shadow" href="{{ route('pontaje.create') }}" role="button">
                 <i class="fas fa-plus-square text-white me-1"></i>Adaugă pontaj
             </a>
-        </div>
+        </div> --}}
     </div>
 
 
@@ -69,7 +79,7 @@
             <table class="table table-striped table-hover table-sm rounded table-bordered">
                 <thead class="text-white rounded" style="background-color:#e66800;">
                     <tr class="" style="padding:2rem">
-                        <th style="min-width: 50px;">Nr. Crt.</th>
+                        <th style="min-width: 50px;">#</th>
                         <th style="min-width: 170px;">Nume</th>
                         @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                             <th class="text-center" style="min-width: 120px;">
@@ -100,20 +110,17 @@
 
                             @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                                 <td class="text-center">
-                                    @forelse ($angajat->pontaj->groupBy('data') as $pontaj_per_data)
+                                    {{-- @forelse ($angajat->pontaj->groupBy('data') as $pontaj_per_data)
                                         @php
                                             $timp_total = \Carbon\Carbon::today();
                                         @endphp
 
                                         @forelse ($pontaj_per_data as $pontaj)
+
                                             @if (\Carbon\Carbon::parse($pontaj->data) == \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
 
                                                 @if ($loop->iteration > 1)
-                                                    {{-- <br> --}}
                                                 @endif
-                                                {{-- {{ $pontaj->ora_sosire ? \Carbon\Carbon::parse($pontaj->ora_sosire)->isoFormat('HH:mm') : '' }}
-                                                -
-                                                {{ $pontaj->ora_plecare ? \Carbon\Carbon::parse($pontaj->ora_plecare)->isoFormat('HH:mm') : '' }} --}}
 
                                                 @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
                                                     @php
@@ -129,13 +136,7 @@
                                                 <a href="/pontaje/{{ $pontaj_per_data->first()->id }}/modifica">
                                                     @switch($pontaj_per_data->first()->concediu ?? '')
                                                         @case(0)
-                                                            {{-- @if ($timp_total->diffInMinutes(\Carbon\Carbon::today()) > 0) --}}
-                                                                {{-- <br> --}}
-                                                                {{-- Total: --}}
-                                                                {{-- <span class="badge bg-success"> --}}
                                                                 {{ \Carbon\Carbon::parse($timp_total->diffInSeconds(\Carbon\Carbon::today()))->isoFormat('HH:mm') }}
-                                                                {{-- </span> --}}
-                                                            {{-- @endif --}}
                                                             @break
                                                         @case(1)
                                                                 C.M.
@@ -154,7 +155,39 @@
                                         @endforelse
 
                                     @empty
-                                    @endforelse
+                                    @endforelse --}}
+                                    @if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
+                                        @forelse ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj)
+                                            <a href="/pontaje/{{ $pontaj->id }}/modifica">
+                                                @switch($pontaj->concediu)
+                                                    @case(0)
+                                                        @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
+                                                            {{
+                                                                \Carbon\Carbon::parse(
+                                                                    \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire))
+                                                                )->isoFormat('HH:mm')
+                                                            }}
+                                                        @else
+                                                            00:00
+                                                        @endif
+                                                        @break
+                                                    @case(1)
+                                                            C.M.
+                                                        @break
+                                                    @case(2)
+                                                            C.O.
+                                                        @break
+                                                    @case(3)
+                                                            C.F.P.
+                                                        @break
+                                                @endswitch
+                                            </a>
+                                        @empty
+                                            <a href="/pontaje/{{ $angajat->id }}/{{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}/adauga">
+                                                <i class="fas fa-plus-square"></i>
+                                            </a>
+                                        @endforelse
+                                    @endif
                                 </td>
                             @endfor
                         </tr>

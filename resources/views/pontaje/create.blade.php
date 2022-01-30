@@ -16,9 +16,8 @@
                 >
                     <form  class="needs-validation" novalidate method="POST" action="/pontaje">
 
-
                                 @include ('pontaje.form', [
-                                    'pontaj' => new App\Models\Pontaj,
+                                    // 'pontaj' => new App\Models\Pontaj,
                                     'buttonText' => 'Adaugă Pontajul'
                                 ])
                     </form>

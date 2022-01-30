@@ -5,8 +5,12 @@
         <div class="row">
             <div class="col-lg-12 mb-4 text-center">
                 Angajat: <b>{{ $pontaj->angajat->nume }}</b>
+                <input class="" type="hidden" name="angajat_id" value="{{ $pontaj->angajat_id }}" />
+
                 <br>
-                Data: <b>{{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->angajat->data)->isoFormat('DD.MM.YYYY') : '' }}</b>
+
+                Data: <b>{{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->data)->isoFormat('DD.MM.YYYY') : '' }}</b>
+                <input class="" type="hidden" name="data" value="{{ $pontaj->data }}" />
             </div>
             {{-- <div class="col-lg-12 mb-4">
                 <label for="angajat_id" class="mb-0 ps-3">Angajat:</label>

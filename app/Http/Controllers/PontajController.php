@@ -43,13 +43,16 @@ class PontajController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, $angajat = null, $data = null)
     {
-        $angajati = Angajat::orderBy('nume')->get();
+        $pontaj = Pontaj::firstOrNew([
+            'angajat_id' => $angajat,
+            'data' => $data
+        ]);
 
         $request->session()->get('pontaj_return_url') ?? $request->session()->put('pontaj_return_url', url()->previous());
 
-        return view('pontaje.create', compact('angajati'));
+        return view('pontaje.create', compact('pontaj'));
     }
 
     /**
@@ -117,7 +120,7 @@ class PontajController extends Controller
         }
         $request->session()->forget('pontaj_return_url');
 
-        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
+        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru „' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
     }
 
     /**
@@ -148,8 +151,8 @@ class PontajController extends Controller
     {
         return request()->validate(
             [
-                // 'angajat_id' => 'required',
-                // 'data' => 'required',
+                'angajat_id' => 'required',
+                'data' => 'required',
                 // 'data' => ($request->_method !== "PATCH") ?
                 //     [
                 //         'required',
@@ -186,8 +189,18 @@ class PontajController extends Controller
     {
         $search_nume = \Request::get('search_nume');
         $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
-        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::now()->endOfWeek()->toDateString();
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
 
+        switch ($request->input('action')) {
+            case 'saptamana_anterioara':
+                    $search_data_inceput = \Carbon\Carbon::parse($search_data_inceput)->subDays(7)->startOfWeek()->toDateString();
+                    $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+                break;
+            case 'saptamana_urmatoare':
+                    $search_data_inceput = \Carbon\Carbon::parse($search_data_sfarsit)->addDays(7)->startOfWeek()->toDateString();
+                    $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+                break;
+        }
 
         if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
             return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
@@ -247,5 +260,19 @@ class PontajController extends Controller
         // dd($angajati);
 
         return view('pontaje.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function adaugaPontaj(Request $request, Angajat $angajat, $data = null)
+    {
+        $angajati = Angajat::orderBy('nume')->get();
+
+        $request->session()->get('pontaj_return_url') ?? $request->session()->put('pontaj_return_url', url()->previous());
+
+        return view('pontaje.create', compact('angajati'));
     }
 }
