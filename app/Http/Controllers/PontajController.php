@@ -35,6 +35,8 @@ class PontajController extends Controller
             ->latest()
             ->simplePaginate(25);
 
+        $request->session()->forget('pontaj_return_url');
+
         return view('pontaje.index', compact('pontaje', 'search_nume', 'search_data'));
     }
 
@@ -65,12 +67,8 @@ class PontajController extends Controller
     {
         $pontaj = Pontaj::create($this->validateRequest($request));
 
-        if(empty($pontaj_return_url = $request->session()->get('pontaj_return_url'))){
-            $pontaj_return_url = '/pontaje/afisare-lunar';
-        }
-        $request->session()->forget('pontaj_return_url');
-
-        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru „' . ($pontaj->angajat->nume ?? '') . '” a fost adăugat cu succes!');
+        return redirect($request->session()->get('pontaj_return_url') ?? ('/pontaje/afisare_lunar'))
+            ->with('status', 'Pontajul pentru „' . ($pontaj->angajat->nume ?? '') . '” a fost adăugat cu succes!');
     }
 
     /**
@@ -92,14 +90,9 @@ class PontajController extends Controller
      */
     public function edit(Request $request, Pontaj $pontaj)
     {
-        $request->session()->get('pontaj_return_url') ?? $request->session()->put('pontaj_return_url', url()->previous());
-        // if(empty($request->session()->get('pontaj_return_url'))){
-        //     $pontaj_return_url = url()->previous();
-        //     $request->session()->put('pontaj_return_url', $pontaj_return_url);
-        // }
-        // $request->session()->put('pontaj_return_url', url()->previous());
-
         $angajati = Angajat::orderBy('nume')->get();
+
+        $request->session()->get('pontaj_return_url') ?? $request->session()->put('pontaj_return_url', url()->previous());
 
         return view('pontaje.edit', compact('pontaj', 'angajati'));
     }
@@ -115,12 +108,8 @@ class PontajController extends Controller
     {
         $pontaj->update($this->validateRequest($request, $pontaj));
 
-        if(empty($pontaj_return_url = $request->session()->get('pontaj_return_url'))){
-            $pontaj_return_url = '/pontaje/afisare-lunar';
-        }
-        $request->session()->forget('pontaj_return_url');
-
-        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru „' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
+        return redirect($request->session()->get('pontaj_return_url') ?? ('/pontaje/afisare_lunar'))
+            ->with('status', 'Pontajul pentru „' . $pontaj->angajat->nume . '" a fost modificat cu succes!');
     }
 
     /**
@@ -133,13 +122,8 @@ class PontajController extends Controller
     {
         $pontaj->delete();
 
-        if(empty($pontaj_return_url = $request->session()->get('pontaj_return_url'))){
-            $pontaj_return_url = '/pontaje/afisare-lunar';
-        } else {
-            $request->session()->forget('pontaj_return_url');
-        }
-
-        return redirect($pontaj_return_url)->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
+        return redirect($request->session()->get('pontaj_return_url') ?? ('/pontaje/afisare_lunar'))
+            ->with('status', 'Pontajul pentru "' . $pontaj->angajat->nume . '" a fost șters cu succes!');
     }
 
     /**
@@ -191,6 +175,10 @@ class PontajController extends Controller
         $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
         $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
 
+        if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
+            return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
+        }
+
         switch ($request->input('action')) {
             case 'saptamana_anterioara':
                     $search_data_inceput = \Carbon\Carbon::parse($search_data_inceput)->subDays(7)->startOfWeek()->toDateString();
@@ -201,50 +189,6 @@ class PontajController extends Controller
                     $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
                 break;
         }
-
-        if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
-            return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
-        }
-
-        // $pontaje = Pontaj::with('angajat')
-        //     ->when($search_nume, function (Builder $query, $search_nume) {
-        //         $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
-        //             $query->where('nume', 'like', '%' . $search_nume . '%');
-        //         });
-        //     })
-        //     ->whereDate('data', '>=', $search_data_inceput)
-        //     ->whereDate('data', '<=', $search_data_sfarsit)
-        //     ->get()
-        //     ->sortBy('angajat.nume');
-
-        // $pontaje = Pontaj::
-        //     when($search_nume, function (Builder $query, $search_nume) {
-        //         $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
-        //             $query->where('nume', 'like', '%' . $search_nume . '%');
-        //         });
-        //     })
-        //     ->whereDate('data', '>=', $search_data_inceput)
-        //     ->whereDate('data', '<=', $search_data_sfarsit)
-        //     ->join('angajati', 'angajati.id', '=', 'angajat_id')
-        //     ->orderBy('angajati.nume')
-        //     ->groupBy('angajat_id')
-        //     ->paginate();
-
-        // $pontaje = DB::table('pontaje')
-        //     ->join('angajati', 'angajati.id', '=', 'angajat_id')
-        //     ->select('pontaje.*', 'angajati.nume')
-        //     ->when($search_nume, function (Builder $query, $search_nume) {
-        //         $query->whereHas('angajat', function (Builder $query) use ($search_nume) {
-        //             $query->where('nume', 'like', '%' . $search_nume . '%');
-        //         });
-        //     })
-        //     ->whereDate('data', '>=', $search_data_inceput)
-        //     ->whereDate('data', '<=', $search_data_sfarsit)
-        //     // ->orderBy('angajati.nume')
-        //     ->groupBy('pontaje.angajat_id')
-        //     ->get();
-
-        // dd($pontaje);
 
         $angajati = Angajat::with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
                 $query->whereDate('data', '>=', $search_data_inceput)
@@ -257,22 +201,28 @@ class PontajController extends Controller
             // ->groupBy('angajat_id')
             ->paginate(10);
 
-        // dd($angajati);
+        switch ($request->input('action')) {
+            case 'export_pdf':
+                    // if ($request->view_type === 'export-html') {
+                    //     return view('pontaje.export.pontajePdf', compact('angajati', 'search_data'));
+                    // } elseif ($request->view_type === 'export-pdf') {
+                        $pdf = \PDF::loadView('pontaje.export.pontajePdf', compact('angajati', 'search_data_inceput', 'search_data_sfarsit'))
+                            ->setPaper('a4', 'landscape');
+                        $pdf->getDomPDF()->set_option("enable_php", true);
+                        // return $pdf->download('Raport Pontaj, ' .
+                        //     \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') .
+                        //     ' - ' .
+                        //     \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') .
+                        //     '.pdf');
+                        return $pdf->stream();
+                    // }
+                break;
+            default:
+                $request->session()->forget('pontaj_return_url');
 
-        return view('pontaje.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
-    }
+                return view('pontaje.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
+                break;
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function adaugaPontaj(Request $request, Angajat $angajat, $data = null)
-    {
-        $angajati = Angajat::orderBy('nume')->get();
-
-        $request->session()->get('pontaj_return_url') ?? $request->session()->put('pontaj_return_url', url()->previous());
-
-        return view('pontaje.create', compact('angajati'));
     }
 }

@@ -12,6 +12,11 @@
                 -
                 {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
             </h4>
+            <div>
+                <form class="needs-validation" novalidate method="GET" action="{{ route('pontaje.afisare_lunar') }}">
+                    @csrf
+                </form>
+            </div>
         </div>
         <div class="col-lg-7" id="app1">
             <form class="needs-validation" novalidate method="GET" action="{{ route('pontaje.afisare_lunar') }}">
@@ -44,7 +49,8 @@
                     </div>
                 </div>
                 <div class="row mb-2 input-group custom-search-form justify-content-center">
-                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit">
+                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="cautare">
                         <i class="fas fa-search text-white me-1"></i>Caută
                     </button>
                     <a class="btn btn-sm bg-secondary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" href="{{ route('pontaje.afisare_lunar') }}" role="button">
@@ -52,13 +58,17 @@
                     </a>
                 </div>
                 <div class="row input-group custom-search-form justify-content-center">
-                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
+                    <button class="btn btn-sm btn-primary text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
                         name="action" value="saptamana_anterioara">
                         << Săptămâna anterioară
                     </button>
-                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
+                    <button class="btn btn-sm btn-primary text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
                         name="action" value="saptamana_urmatoare">
                         Săptămâna următoare >>
+                    </button>
+                    <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="export_pdf">
+                        <i class="fas fa-file-pdf me-1"></i>Export PDF
                     </button>
                 </div>
             </form>
@@ -86,10 +96,16 @@
                                 {{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD.MM.YYYY') }}
                             </th>
                         @endfor
+                        <th class="text-center">
+                            Total
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($angajati as $angajat)
+                        @php
+                            $timp_total = \Carbon\Carbon::today();
+                        @endphp
                         <tr>
                             <td style="">
                                 {{ $loop->iteration }}
@@ -162,6 +178,9 @@
                                                 @switch($pontaj->concediu)
                                                     @case(0)
                                                         @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
+                                                            @php
+                                                                $timp_total->addSeconds(\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire)))
+                                                            @endphp
                                                             {{
                                                                 \Carbon\Carbon::parse(
                                                                     \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire))
@@ -190,6 +209,11 @@
                                     @endif
                                 </td>
                             @endfor
+                            <td class="text-center">
+                                {{
+                                    number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4)
+                                }}
+                            </td>
                         </tr>
                     @empty
                     @endforelse
