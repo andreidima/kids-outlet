@@ -10,6 +10,7 @@ use App\Http\Controllers\ProdusOperatieController;
 use App\Http\Controllers\NormaLucrataController;
 use App\Http\Controllers\ImportFisierExcelController;
 use App\Http\Controllers\InserareDateDeTestController;
+use App\Http\Controllers\InserareAngajatiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +80,10 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
     // Route::get('/import/import-produse-operatii/setare-norme-infinit', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNormeInfinit']);
 
-    Route::get('/inserare-pontaje-de-test', [InserareDateDeTestController::class, 'inserarePontaje']);
-    Route::get('/inserare-comenzi-de-test', [InserareDateDeTestController::class, 'inserareComenzi']);
+    // Route::get('inserare-amgajati', [InserareAngajatiController::class, 'inserareAngajati']);
+    // Route::get('inserare-amgajati-pontatori', [InserareAngajatiController::class, 'inserareAngajatiPontatori']);
+
+    // Route::get('/inserare-pontaje-de-test', [InserareDateDeTestController::class, 'inserarePontaje']);
+    // Route::get('/inserare-comenzi-de-test', [InserareDateDeTestController::class, 'inserareComenzi']);
 });
 

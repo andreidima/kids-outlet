@@ -45,4 +45,10 @@ class Angajat extends Model
     {
         return $this->HasMany('App\Models\NormaLucrata', 'angajat_id');
     }
+
+    public function angajati_de_pontat()
+    {
+        // return $this->HasMany('App\Models\Angajat', 'angajat_id');
+        return $this->belongsToMany(Angajat::class, 'angajati_pontatori', 'pontator_angajat_id', 'angajat_id');
+    }
 }
