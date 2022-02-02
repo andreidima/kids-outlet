@@ -32,7 +32,10 @@
                 {{-- @php
                     dd($angajat->roluri->first());
                 @endphp --}}
-                @if ($angajat->hasRol('pontaj'))
+                {{-- @if ($angajat->hasRol('pontaj'))
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A; border:2px solid white;">PONTAJ</a>
+                @endif --}}
+                @if ($angajat->angajati_de_pontat->count() > 0 )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A; border:2px solid white;">PONTAJ</a>
                 @endif
 

@@ -319,9 +319,8 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
-        $angajati = Angajat::with('pontaj_azi')
-            // ->where('nume', '<>', 'Andrei Dima test')
-            ->where('pontator_id', $angajat->id)
+        $angajati = $angajat->angajati_de_pontat()
+            ->with('pontaj_azi')
             ->orderBy('nume')->get();
 
         return view('aplicatie_angajati/pontajPontator/pontaj', compact('angajat', 'angajati'));
@@ -393,6 +392,50 @@ class AngajatAplicatieController extends Controller
                 $pontaj->ora_plecare = $request->ora_plecare;
                 $pontaj->concediu = $request->concediu;
                 $pontaj->save();
+                break;
+        }
+
+        return redirect('/aplicatie-angajati/pontaj');
+    }
+
+    /**
+     * Pontaj de catre pontator
+     */
+    public function pontajPonteazaToti(Request $request, $moment = null)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+        $angajat = $request->session()->get('angajat');
+
+        $angajati = $angajat->angajati_de_pontat()->get();
+
+        switch ($moment) {
+            case 'sosire':
+                foreach ($angajati as $angajat){
+                    $pontaj = Pontaj::firstOrCreate([
+                        'angajat_id' => $angajat->id,
+                        'data' => Carbon::now()->toDateString()
+                    ]);
+                    empty($pontaj->concediu) ? ($pontaj->concediu = 0) : '';
+                    if (empty($pontaj->ora_sosire) && ($pontaj->concediu === 0)){
+                        $pontaj->ora_sosire = Carbon::now()->toTimeString();
+                        $pontaj->save();
+                    }
+                }
+                break;
+            case 'plecare':
+                foreach ($angajati as $angajat){
+                    $pontaj = Pontaj::firstOrCreate([
+                        'angajat_id' => $angajat->id,
+                        'data' => Carbon::now()->toDateString()
+                    ]);
+                    empty($pontaj->concediu) ? ($pontaj->concediu = 0) : '';
+                    if (empty($pontaj->ora_plecare) && ($pontaj->concediu === 0)){
+                        $pontaj->ora_plecare = Carbon::now()->toTimeString();
+                        $pontaj->save();
+                    }
+                }
                 break;
         }
 

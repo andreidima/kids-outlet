@@ -201,6 +201,27 @@
                                     </td>
                                 </tr>
                             @endforeach
+
+                            <tr class="">
+                                <td class="bg-warning py-5">
+                                    Toți Angajații
+                                </td>
+                                <td class="text-center bg-warning py-5">
+                                    <a class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;"
+                                        href="/aplicatie-angajati/pontaj/sosire/ponteaza-toti" role="button">
+                                        SETEAZĂ
+                                    </a>
+                                </td>
+                                <td class="text-center bg-warning py-5">
+                                    <a class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;"
+                                        href="/aplicatie-angajati/pontaj/plecare/ponteaza-toti" role="button">
+                                        SETEAZĂ
+                                    </a>
+                                </td>
+                                <td class="text-center bg-warning">
+                                </td>
+                            </tr>
+
                         </tbody>
                     </table>
                 </div>

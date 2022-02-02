@@ -145,6 +145,8 @@
                     </tr>
                 @empty
                 @endforelse
+                </tbody>
+            </table>
 
 
                 {{-- Here's the magic. This MUST be inside body tag. Page count / total, centered at bottom of page --}}

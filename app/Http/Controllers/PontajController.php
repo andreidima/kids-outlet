@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+use Illuminate\Support\Facades\Storage;
+
 use Carbon\Carbon;
 
 class PontajController extends Controller
@@ -197,9 +202,11 @@ class PontajController extends Controller
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
+            ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('nume')
             // ->groupBy('angajat_id')
-            ->paginate(10);
+            // ->paginate(10);
+            ->get();
 
         switch ($request->input('action')) {
             case 'export_pdf':
@@ -216,6 +223,103 @@ class PontajController extends Controller
                         //     '.pdf');
                         return $pdf->stream();
                     // }
+                break;
+            case 'export_excel':
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+
+
+
+                $sheet->setCellValue('A1', 'Raport Pontaj - ' . Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
+                $sheet->getStyle('A1')->getFont()->setSize(14);
+                $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                // $sheet->setCellValue('A2', Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
+                // $sheet->getStyle('A2')->getFont()->setSize(14);
+
+
+                $sheet->setCellValue('A4', 'Nume');
+                // $sheet->getColumnDimension('D')->setWidth(40, 'pt');
+                for ($ziua = 0; $ziua <= Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+                    $sheet->setCellValueByColumnAndRow(($ziua+2), 4 , Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD'));
+                }
+
+                $sheet->setCellValueByColumnAndRow(($ziua+2), 4 , 'Total ore lucrate');
+
+                $rand = 5;
+                foreach ($angajati as $angajat){
+                    $timp_total = Carbon::today();
+
+                    $sheet->setCellValue('A' . $rand, $angajat->nume);
+
+                    for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+                        if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
+                            foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
+                                switch ($pontaj->concediu){
+                                        case '0':
+                                            if ($pontaj->ora_sosire && $pontaj->ora_plecare){
+                                                // se calculaeaza secundele lucrate
+                                                $secunde = \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire));
+                                                // daca sunt mai mult de 8 ore, se reduce la 8 ore
+                                                ($secunde > 28800) ? $secunde = 28800 : '';
+                                                // se aduna la timpul total
+                                                $timp_total->addSeconds($secunde);
+
+                                                $sheet->setCellValueByColumnAndRow(($ziua+2), $rand, \Carbon\Carbon::parse($secunde)->isoFormat('HH:mm'));
+                                            }
+                                            break;
+                                        case '1':
+                                            $sheet->setCellValueByColumnAndRow(($ziua+2), $rand, 'C.M.');
+                                            break;
+                                        case '2':
+                                            $sheet->setCellValueByColumnAndRow(($ziua+2), $rand, 'C.O.');
+                                            break;
+                                        case '3':
+                                            $sheet->setCellValueByColumnAndRow(($ziua+2), $rand, 'C.F.P.');
+                                            break;
+                                }
+                            }
+                        }
+                    }
+
+                    $sheet->setCellValueByColumnAndRow(($ziua+2), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
+
+                    $rand ++;
+                }
+
+                // Se parcug toate coloanele si se stabileste latimea AUTO
+                foreach ($sheet->getColumnIterator() as $column) {
+                    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                }
+                // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
+                $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+
+
+
+
+                $writer = new Xlsx($spreadsheet);
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="Raport Pontaje.xlsx"');
+                $writer->save('php://output');
+                exit();
+
+                // try {
+                //     Storage::makeDirectory('fisiere_temporare');
+                //     $writer = new Xlsx($spreadsheet);
+                //     $writer->save(storage_path(
+                //         'app/fisiere_temporare/' .
+                //         'Raport Pontaje' . '.xlsx'
+                //     ));
+                // } catch (Exception $e) { }
+
+                // return response()->download(storage_path(
+                //     'app/fisiere_temporare/' .
+                //     'Raport Pontaje' . '.xlsx'
+                // ));
+
                 break;
             default:
                 $request->session()->forget('pontaj_return_url');

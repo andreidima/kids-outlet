@@ -66,9 +66,13 @@
                         name="action" value="saptamana_urmatoare">
                         Săptămâna următoare >>
                     </button>
-                    <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                    {{-- <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
                         name="action" value="export_pdf">
                         <i class="fas fa-file-pdf me-1"></i>Export PDF
+                    </button> --}}
+                    <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="export_excel">
+                        Export Excel
                     </button>
                 </div>
             </form>
@@ -220,11 +224,11 @@
                 </tbody>
             </table>
         </div>
-                <nav>
+                {{-- <nav>
                     <ul class="pagination pagination-sm justify-content-center">
                         {{$angajati->appends(Request::except('page'))->links()}}
                     </ul>
-                </nav>
+                </nav> --}}
 
     </div>
 
