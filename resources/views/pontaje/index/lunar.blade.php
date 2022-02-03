@@ -23,7 +23,7 @@
                 @csrf
                 <div class="row mb-1 input-group custom-search-form justify-content-center">
                     <div class="col-lg-6">
-                        <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume"
+                        <input type="text" class="form-control form-control-sm me-1 border rounded-3" id="search_nume" name="search_nume" placeholder="Nume"
                                 value="{{ $search_nume }}">
                     </div>
                     <div class="col-lg-6 d-flex">
@@ -100,7 +100,7 @@
                                 {{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD.MM.YYYY') }}
                             </th>
                         @endfor
-                        <th class="text-center">
+                        <th class="text-center" style="min-width: 120px;">
                             Total
                         </th>
                     </tr>
@@ -224,11 +224,11 @@
                 </tbody>
             </table>
         </div>
-                {{-- <nav>
+                <nav>
                     <ul class="pagination pagination-sm justify-content-center">
                         {{$angajati->appends(Request::except('page'))->links()}}
                     </ul>
-                </nav> --}}
+                </nav>
 
     </div>
 

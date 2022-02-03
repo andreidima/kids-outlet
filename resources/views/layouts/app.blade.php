@@ -43,7 +43,7 @@
                                 <i class="fas fa-users me-1"></i>Angajați
                             </a>
                         </li>
-                        <li class="nav-item me-3 dropdown">
+                        {{-- <li class="nav-item me-3 dropdown">
                             <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-clock me-1"></i>Pontaje
                             </a>
@@ -52,6 +52,11 @@
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ route('pontaje.afisare_lunar') }}">Vizualizare tabelară</a></li>
                             </ul>
+                        </li> --}}
+                        <li class="nav-item me-3">
+                            <a class="nav-link active" aria-current="page" href="{{ route('pontaje.afisare_lunar') }}">
+                                <i class="fas fa-user-clock me-1"></i>Pontaje
+                            </a>
                         </li>
                         <li class="nav-item me-3 dropdown">
                             <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

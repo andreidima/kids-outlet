@@ -51,12 +51,12 @@
                 <table class="table table-striped table-hover table-sm rounded">
                     <thead class="text-white rounded" style="background-color:#e66800;">
                         <tr class="" style="padding:2rem">
-                            <th>Nr. Crt.</th>
+                            <th>#</th>
                             <th>Angajat</th>
-                            <th>Număr de fază</th>
                             <th>Produs</th>
                             <th>Operație</th>
                             <th class="text-center">Cantitate</th>
+                            <th class="text-center">Suma</th>
                             <th class="text-center">Data lucrării</th>
                             <th class="text-end">Acțiuni</th>
                         </tr>
@@ -71,9 +71,6 @@
                                     <b>{{ $norma_lucrata->angajat->nume ?? '' }}</b>
                                 </td>
                                 <td>
-                                    {{ $norma_lucrata->numar_de_faza }}
-                                </td>
-                                <td>
                                     {{ $norma_lucrata->produs_operatie->produs->nume ?? '' }}
                                 </td>
                                 <td>
@@ -83,14 +80,17 @@
                                     {{ $norma_lucrata->cantitate }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $norma_lucrata->created_at ? \Carbon\Carbon::parse($norma_lucrata->created_at)->isoFormat('DD.MM.YYYY') : '' }}
+                                    {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
                                 </td>
                                 <td class="d-flex justify-content-end">
-                                    <a href="{{ $norma_lucrata->path() }}"
+                                    {{-- <a href="{{ $norma_lucrata->path() }}"
                                         class="flex me-1"
                                     >
                                         <span class="badge bg-success">Vizualizează</span>
-                                    </a>
+                                    </a> --}}
                                     <a href="{{ $norma_lucrata->path() }}/modifica"
                                         class="flex me-1"
                                     >

@@ -40,8 +40,6 @@ class PontajController extends Controller
             ->latest()
             ->simplePaginate(25);
 
-        $request->session()->forget('pontaj_return_url');
-
         return view('pontaje.index', compact('pontaje', 'search_nume', 'search_data'));
     }
 
@@ -205,8 +203,8 @@ class PontajController extends Controller
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('nume')
             // ->groupBy('angajat_id')
-            // ->paginate(10);
-            ->get();
+            ->paginate(10);
+            // ->get();
 
         switch ($request->input('action')) {
             case 'export_pdf':

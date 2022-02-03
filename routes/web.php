@@ -76,6 +76,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('produse-operatii', ProdusOperatieController::class,  ['parameters' => ['produse-operatii' => 'produs_operatie']]);
 
     Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
+    Route::get('norme-lucrate/per-angajat-per-data/{angajat}/{data}', [NormaLucrataController::class, 'index']);
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 
     // Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);

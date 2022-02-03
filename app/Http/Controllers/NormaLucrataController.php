@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\NormaLucrata;
 use App\Models\Angajat;
+use App\Models\Produs;
 use App\Models\ProdusOperatie;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 
 class NormaLucrataController extends Controller
 {
@@ -15,10 +17,10 @@ class NormaLucrataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $angajat = null, $data = null)
     {
         $search_nume = \Request::get('search_nume');
-        $search_data = \Request::get('search_data');
+        $search_data = $data ?? \Request::get('search_data');
 
         $norme_lucrate = NormaLucrata::with('angajat', 'produs_operatie.produs')
             ->when($search_nume, function (Builder $query, $search_nume) {
@@ -26,11 +28,18 @@ class NormaLucrataController extends Controller
                     $query->where('nume', 'like', '%' . $search_nume . '%');
                 });
             })
+            ->when($angajat, function (Builder $query, $angajat) {
+                $query->whereHas('angajat', function (Builder $query) use ($angajat) {
+                    $query->where('id', $angajat);
+                });
+            })
             ->when($search_data, function ($query, $search_data) {
-                return $query->whereDate('created_at', '=', $search_data);
+                return $query->whereDate('data', '=', $search_data);
             })
             ->latest()
             ->simplePaginate(25);
+
+        $request->session()->forget('norme_lucrate_return_url');
 
         return view('norme_lucrate.index', compact('norme_lucrate', 'search_nume', 'search_data'));
     }
@@ -40,11 +49,14 @@ class NormaLucrataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $angajati = Angajat::orderBy('nume')->get();
+        $produse = Produs::orderBy('nume')->get();
 
-        return view('norme_lucrate.create', compact('angajati'));
+        $request->session()->get('norme_lucrate_return_url') ?? $request->session()->put('norme_lucrate_return_url', url()->previous());
+
+        return view('norme_lucrate.create', compact('angajati', 'produse'));
     }
 
     /**
@@ -55,22 +67,18 @@ class NormaLucrataController extends Controller
      */
     public function store(Request $request)
     {
-        $norma_lucrata = NormaLucrata::make($this->validateRequest($request));
+        $this->validateRequest($request);
 
-        $norma_lucrata->data = Carbon::now();
+        $produs_operatie = ProdusOperatie::where('produs_id', $request->produs_id)->where('numar_de_faza', $request->numar_de_faza)->first();
+        $produs_operatie->norma_totala_efectuata += $request->cantitate;
+        $produs_operatie->save();
 
-        $produs_operatie = ProdusOperatie::where('numar_de_faza', $request->numar_de_faza)->first();
+        $norma_lucrata = NormaLucrata::make($request->except('produs_id', 'numar_de_faza', 'date'));
+        $norma_lucrata->produs_operatie_id = $produs_operatie->id;
+        $norma_lucrata->save();
 
-        if (($produs_operatie->norma_totala_efectuata + $request->cantitate) > $produs_operatie->norma_totala){
-            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $request->numar_de_faza . '". Mai puteți adăuga maxim "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata ?? '') . '"!');
-        } else {
-            $norma_lucrata->save();
-
-            $produs_operatie->norma_totala_efectuata += $request->cantitate;
-            $produs_operatie->save();
-
-            return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru angajatul "' . ($norma_lucrata->angajat->nume ?? '') . '" și numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost adăugată cu succes!');
-        }
+        return redirect($request->session()->get('norme_lucrate_return_url') ?? ('/norme-lucrate'))
+            ->with('status', 'Norma Lucrată pentru angajatul "' . ($norma_lucrata->angajat->nume ?? '') . '" a fost adăugată cu succes!');
     }
 
     /**
@@ -90,11 +98,14 @@ class NormaLucrataController extends Controller
      * @param  \App\Models\NormaLucrata  $norma_lucrata
      * @return \Illuminate\Http\Response
      */
-    public function edit(NormaLucrata $norma_lucrata)
+    public function edit(Request $request, NormaLucrata $norma_lucrata)
     {
         $angajati = Angajat::orderBy('nume')->get();
+        $produse = Produs::orderBy('nume')->get();
 
-        return view('norme_lucrate.edit', compact('norma_lucrata', 'angajati'));
+        $request->session()->get('norme_lucrate_return_url') ?? $request->session()->put('norme_lucrate_return_url', url()->previous());
+
+        return view('norme_lucrate.edit', compact('norma_lucrata', 'angajati', 'produse'));
     }
 
     /**
@@ -106,20 +117,19 @@ class NormaLucrataController extends Controller
      */
     public function update(Request $request, NormaLucrata $norma_lucrata)
     {
-        $produs_operatie = ProdusOperatie::where('numar_de_faza', $norma_lucrata->numar_de_faza)->first();
-        // Se verifica sa nu se depaseasca norma
-        // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
-        if (($produs_operatie->norma_totala_efectuata - $norma_lucrata->cantitate + $request->cantitate) > $produs_operatie->norma_totala){
-            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $norma_lucrata->numar_de_faza . '". Cantitatea maximă este "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata + $norma_lucrata->cantitate ?? '') . '"!');
-        } else {
-            $produs_operatie->norma_totala_efectuata = $produs_operatie->norma_totala_efectuata - $norma_lucrata->cantitate + $request->cantitate;
-            $produs_operatie->save();
+        $this->validateRequest($request);
 
-            $norma_lucrata->cantitate = $request->cantitate;
-            $norma_lucrata->save();
+        $produs_operatie = ProdusOperatie::where('produs_id', $request->produs_id)->where('numar_de_faza', $request->numar_de_faza)->first();
+        $produs_operatie->norma_totala_efectuata += $request->cantitate - $norma_lucrata->cantitate;
+        $produs_operatie->save();
 
-            return redirect('norme-lucrate')->with('status', 'Norma Lucrată pentru numărul de fază "' . ($norma_lucrata->numar_de_faza ?? '') . '" a fost modificată cu succes!');
-        }
+        $norma_lucrata->data = $request->data;
+        $norma_lucrata->produs_operatie_id = $produs_operatie->id;
+        $norma_lucrata->cantitate = $request->cantitate;
+        $norma_lucrata->save();
+
+        return redirect($request->session()->get('norme_lucrate_return_url') ?? ('/norme-lucrate'))
+            ->with('status', 'Norma Lucrată pentru angajatul "' . ($norma_lucrata->angajat->nume ?? '') . '" a fost modificată cu succes!');
     }
 
     /**
@@ -128,9 +138,9 @@ class NormaLucrataController extends Controller
      * @param  \App\Models\NormaLucrata  $norma_lucrata
      * @return \Illuminate\Http\Response
      */
-    public function destroy(NormaLucrata $norma_lucrata)
+    public function destroy(Request $request, NormaLucrata $norma_lucrata)
     {
-        if ($produs_operatie = ProdusOperatie::where('numar_de_faza', $norma_lucrata->numar_de_faza)->first()){
+        if ($produs_operatie = $norma_lucrata->produs_operatie){
             $produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
             $produs_operatie->save();
         }
@@ -148,9 +158,28 @@ class NormaLucrataController extends Controller
     protected function validateRequest(Request $request)
     {
         return request()->validate([
-            'angajat_id' => 'required',
-            'numar_de_faza' => 'required|exists:produse_operatii' ,
-            'cantitate' => 'required|integer|between:1,9999',
+            'angajat_id' => ($request->_method !== "PATCH") ? 'required' : '',
+            'data' => 'required',
+            'produs_id' => 'required',
+            'numar_de_faza' => [
+                'required',
+                Rule::exists('produse_operatii', 'numar_de_faza')
+                ->where('produs_id', $request->produs_id),
+            ],
+            'cantitate' => ['required', 'integer', 'between:1,9999',
+                // function ($attribute, $value, $fail) use ($request) {
+                //     $produs_operatie = ProdusOperatie::where('produs_id', $request->produs_id)->where('numar_de_faza', $request->numar_de_faza)->first();
+                //     if($produs_operatie){
+                //         if (($request->_method !== "PATCH") &&
+                //             (($produs_operatie->norma_totala_efectuata + $request->cantitate) > $produs_operatie->norma_totala))
+                //         {
+                //             $fail('Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $request->numar_de_faza .
+                //                 '". Mai puteți adăuga maxim "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata ?? '') . '"!');
+                //         } else {
+                //         }
+                //     }
+                // },
+            ],
         ]);
     }
 
@@ -163,11 +192,21 @@ class NormaLucrataController extends Controller
     {
         $search_nume = \Request::get('search_nume');
         $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
-        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::now()->endOfWeek()->toDateString();
-
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
 
         if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
             return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
+        }
+
+        switch ($request->input('action')) {
+            case 'saptamana_anterioara':
+                    $search_data_inceput = \Carbon\Carbon::parse($search_data_inceput)->subDays(7)->startOfWeek()->toDateString();
+                    $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+                break;
+            case 'saptamana_urmatoare':
+                    $search_data_inceput = \Carbon\Carbon::parse($search_data_sfarsit)->addDays(7)->startOfWeek()->toDateString();
+                    $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+                break;
         }
 
         $angajati = Angajat::with(['norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
@@ -178,8 +217,10 @@ class NormaLucrataController extends Controller
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
+            ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('nume')
             ->paginate(10);
+            // ->get();
 
         // dd($angajati);
 

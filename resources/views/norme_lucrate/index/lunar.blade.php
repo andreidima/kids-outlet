@@ -3,20 +3,33 @@
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-        <div class="col-lg-6">
-            <h4 class="mb-0"><a href="{{ route('norme-lucrate.afisare_lunar') }}">
+        <div class="col-lg-5">
+            {{-- <h4 class="mb-0"><a href="{{ route('norme-lucrate.afisare_lunar') }}">
                 <i class="fas fa-clipboard-list me-1"></i>Norme lucrate</a> /
                 {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
                 -
                 {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
+            </h4> --}}
+            <h4 class="mb-2">
+                <i class="fas fs-4 fa-clipboard-list me-1"></i>Norme lucrate /
+            {{-- </h4>
+            <h4 class="mb-0"> --}}
+                {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
+                -
+                {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
             </h4>
+            <div>
+                <form class="needs-validation" novalidate method="GET" action="{{ route('pontaje.afisare_lunar') }}">
+                    @csrf
+                </form>
+            </div>
         </div>
-        <div class="col-lg-6" id="app1">
+        <div class="col-lg-7" id="app1">
             <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.afisare_lunar') }}">
                 @csrf
                 <div class="row mb-1 input-group custom-search-form justify-content-center">
                     <div class="col-lg-6">
-                        <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
+                        <input type="text" class="form-control form-control-sm me-1 border rounded-3" id="search_nume" name="search_nume" placeholder="Nume" autofocus
                                 value="{{ $search_nume }}">
                     </div>
                     <div class="col-lg-6 d-flex">
@@ -41,13 +54,31 @@
                         ></vue2-datepicker>
                     </div>
                 </div>
-                <div class="row input-group custom-search-form justify-content-center">
-                    <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
+                <div class="row mb-2 input-group custom-search-form justify-content-center">
+                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3" type="submit">
                         <i class="fas fa-search text-white me-1"></i>Caută
                     </button>
-                    <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ route('norme-lucrate.afisare_lunar') }}" role="button">
+                    <a class="btn btn-sm bg-secondary text-white col-md-4 mx-1 border border-dark rounded-3" href="{{ route('norme-lucrate.afisare_lunar') }}" role="button">
                         <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                     </a>
+                </div>
+                <div class="row input-group custom-search-form justify-content-center">
+                    <button class="btn btn-sm btn-primary text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="saptamana_anterioara">
+                        << Săptămâna anterioară
+                    </button>
+                    <button class="btn btn-sm btn-primary text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="saptamana_urmatoare">
+                        Săptămâna următoare >>
+                    </button>
+                    {{-- <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="export_pdf">
+                        <i class="fas fa-file-pdf me-1"></i>Export PDF
+                    </button> --}}
+                    <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                        name="action" value="export_excel">
+                        Export Excel
+                    </button>
                 </div>
             </form>
         </div>
@@ -61,13 +92,16 @@
             <table class="table table-striped table-hover table-sm rounded table-bordered">
                 <thead class="text-white rounded" style="background-color:#e66800;">
                     <tr class="" style="padding:2rem">
-                        <th style="min-width: 50px;">Nr. Crt.</th>
+                        <th style="min-width: 50px;">#</th>
                         <th style="min-width: 170px;">Nume</th>
                         @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                             <th class="text-center" style="min-width: 120px;">
                                 {{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD.MM.YYYY') }}
                             </th>
                         @endfor
+                        <th class="text-center" style="min-width: 120px;">
+                            Total
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,6 +124,9 @@
                                 </div>
                             </td>
 
+                            @php
+                                $suma_totala_pe_toata_perioada = 0;
+                            @endphp
                             @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                                 <td class="text-center">
                                     @php
@@ -106,7 +143,14 @@
                                     @empty
                                     @endforelse
 
-                                    {{ ($suma_totala <> '0') ? ($suma_totala . ' lei') : '' }}
+                                    <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}"
+                                        target="_blank">
+                                        {{ ($suma_totala <> '0') ? ($suma_totala . ' lei') : '' }}
+                                    </a>
+
+                                    @php
+                                        $suma_totala_pe_toata_perioada += $suma_totala;
+                                    @endphp
 
                                     {{-- @forelse ($angajat->norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
                                         @forelse ($norme_lucrate_per_data as $norma_lucrata)
@@ -130,6 +174,9 @@
                                     @endforelse --}}
                                 </td>
                             @endfor
+                            <td class="text-center">
+                                {{ ($suma_totala_pe_toata_perioada <> '0') ? ($suma_totala_pe_toata_perioada . ' lei') : '' }}
+                            </td>
                         </tr>
                     @empty
                     @endforelse
