@@ -37,7 +37,8 @@
                 </form>
             </div>
             <div class="col-lg-3 text-end">
-                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('norme-lucrate.create') }}" role="button">
+                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8"
+                    href="/norme-lucrate/adauga/per-angajat-per-data/{{ $angajat  }}/{{ $search_data }}" role="button">
                     <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă lucrată
                 </a>
             </div>
@@ -56,6 +57,7 @@
                             <th>Produs</th>
                             <th>Operație</th>
                             <th class="text-center">Cantitate</th>
+                            <th class="text-center">Preț</th>
                             <th class="text-center">Suma</th>
                             <th class="text-center">Data lucrării</th>
                             <th class="text-end">Acțiuni</th>
@@ -78,6 +80,9 @@
                                 </td>
                                 <td class="text-center">
                                     {{ $norma_lucrata->cantitate }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $norma_lucrata->produs_operatie->pret }}
                                 </td>
                                 <td class="text-center">
                                     {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }}

@@ -14,7 +14,7 @@
                     @foreach ($angajati as $angajat)
                         <option
                             value='{{ $angajat->id }}'
-                            {{ ($angajat->id == old('angajat_id', $norma_lucrata->angajat->id ?? '')) ? 'selected' : '' }}
+                            {{ ($angajat->id == old('angajat_id', $norma_lucrata->angajat->id ?? $angajat_id ?? '')) ? 'selected' : '' }}
                         >{{ $angajat->nume }} </option>
                     @endforeach
                 </select>
@@ -22,7 +22,7 @@
             <div class="col-lg-4 mb-4">
                 <label for="data" class="mb-0 ps-1">Data:</label>
                     <vue2-datepicker
-                        data-veche="{{ old('data', ($norma_lucrata->data ?? '')) }}"
+                        data-veche="{{ old('data', ($norma_lucrata->data ?? $data ?? '')) }}"
                         nume-camp-db="data"
                         tip="date"
                         value-type="YYYY-MM-DD"

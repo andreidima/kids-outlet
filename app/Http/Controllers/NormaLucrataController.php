@@ -19,7 +19,7 @@ class NormaLucrataController extends Controller
      */
     public function index(Request $request, $angajat = null, $data = null)
     {
-        $search_nume = \Request::get('search_nume');
+        $search_nume = $angajat ? Angajat::find($angajat)->nume : '' ?? \Request::get('search_nume');
         $search_data = $data ?? \Request::get('search_data');
 
         $norme_lucrate = NormaLucrata::with('angajat', 'produs_operatie.produs')
@@ -28,11 +28,11 @@ class NormaLucrataController extends Controller
                     $query->where('nume', 'like', '%' . $search_nume . '%');
                 });
             })
-            ->when($angajat, function (Builder $query, $angajat) {
-                $query->whereHas('angajat', function (Builder $query) use ($angajat) {
-                    $query->where('id', $angajat);
-                });
-            })
+            // ->when($angajat, function (Builder $query, $angajat) {
+            //     $query->whereHas('angajat', function (Builder $query) use ($angajat) {
+            //         $query->where('id', $angajat);
+            //     });
+            // })
             ->when($search_data, function ($query, $search_data) {
                 return $query->whereDate('data', '=', $search_data);
             })
@@ -41,7 +41,7 @@ class NormaLucrataController extends Controller
 
         $request->session()->forget('norme_lucrate_return_url');
 
-        return view('norme_lucrate.index', compact('norme_lucrate', 'search_nume', 'search_data'));
+        return view('norme_lucrate.index', compact('norme_lucrate', 'search_nume', 'search_data', 'angajat'));
     }
 
     /**
@@ -49,14 +49,14 @@ class NormaLucrataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, $angajat_id = null, $data = null)
     {
         $angajati = Angajat::orderBy('nume')->get();
         $produse = Produs::orderBy('nume')->get();
 
         $request->session()->get('norme_lucrate_return_url') ?? $request->session()->put('norme_lucrate_return_url', url()->previous());
 
-        return view('norme_lucrate.create', compact('angajati', 'produse'));
+        return view('norme_lucrate.create', compact('angajati', 'produse', 'angajat_id', 'data'));
     }
 
     /**
