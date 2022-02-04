@@ -17,9 +17,10 @@ class NormaLucrataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $angajat = null, $data = null)
+    public function index(Request $request,Angajat $angajat = null, $data = null)
     {
-        $search_nume = $angajat ? Angajat::find($angajat)->nume : '' ?? \Request::get('search_nume');
+        // $search_nume = $angajat ? Angajat::find($angajat)->nume : \Request::get('search_nume');
+        $search_nume = $angajat->nume ?? \Request::get('search_nume');
         $search_data = $data ?? \Request::get('search_data');
 
         $norme_lucrate = NormaLucrata::with('angajat', 'produs_operatie.produs')
@@ -40,6 +41,7 @@ class NormaLucrataController extends Controller
             ->simplePaginate(25);
 
         $request->session()->forget('norme_lucrate_return_url');
+        $request->session()->get('norme_lucrate_afisare_tabelara_return_url') ?? $request->session()->put('norme_lucrate_afisare_tabelara_return_url', url()->previous());
 
         return view('norme_lucrate.index', compact('norme_lucrate', 'search_nume', 'search_data', 'angajat'));
     }
@@ -54,9 +56,13 @@ class NormaLucrataController extends Controller
         $angajati = Angajat::orderBy('nume')->get();
         $produse = Produs::orderBy('nume')->get();
 
+        $norma_lucrata = new NormaLucrata;
+        $norma_lucrata->angajat_id = $angajat_id;
+        $norma_lucrata->data = $data;
+
         $request->session()->get('norme_lucrate_return_url') ?? $request->session()->put('norme_lucrate_return_url', url()->previous());
 
-        return view('norme_lucrate.create', compact('angajati', 'produse', 'angajat_id', 'data'));
+        return view('norme_lucrate.create', compact('norma_lucrata', 'angajati', 'produse', 'angajat_id', 'data'));
     }
 
     /**
@@ -140,9 +146,9 @@ class NormaLucrataController extends Controller
      */
     public function destroy(Request $request, NormaLucrata $norma_lucrata)
     {
-        if ($produs_operatie = $norma_lucrata->produs_operatie){
-            $produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
-            $produs_operatie->save();
+        if ($norma_lucrata->produs_operatie){
+            $norma_lucrata->produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
+            $norma_lucrata->produs_operatie->update();
         }
 
         $norma_lucrata->delete();
@@ -223,6 +229,8 @@ class NormaLucrataController extends Controller
             // ->get();
 
         // dd($angajati);
+
+        $request->session()->forget('norme_lucrate_afisare_tabelara_return_url');
 
         return view('norme_lucrate.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
     }

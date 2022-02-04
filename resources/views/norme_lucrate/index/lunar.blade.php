@@ -143,8 +143,7 @@
                                     @empty
                                     @endforelse
 
-                                    <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}"
-                                        target="_blank">
+                                    <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
                                         {{ ($suma_totala <> '0') ? ($suma_totala . ' lei') : '' }}
                                     </a>
 

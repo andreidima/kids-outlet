@@ -3,6 +3,7 @@
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
         <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
+            @if (!$angajat)
             <div class="col-lg-3">
                 <h4 class="mb-0"><a href="{{ route('norme-lucrate.index') }}"><i class="fas fa-clipboard-list me-1"></i>Norme lucrate</a></h4>
             </div>
@@ -38,10 +39,25 @@
             </div>
             <div class="col-lg-3 text-end">
                 <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8"
-                    href="/norme-lucrate/adauga/per-angajat-per-data/{{ $angajat  }}/{{ $search_data }}" role="button">
+                    href="{{ route('norme-lucrate.create') }}" role="button">
                     <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă lucrată
                 </a>
             </div>
+            @else
+                <div class="col-lg-9">
+                    <h4 class="mb-0">
+                        <i class="fas fs-4 fa-clipboard-list me-1"></i>
+                        Norme lucrate / {{ $angajat->nume }} /
+                        {{ $search_data ? \Carbon\Carbon::parse($search_data)->isoFormat('DD.MM.YYYY') : '' }}
+                    </h4>
+                </div>
+                <div class="col-lg-3 text-end">
+                    <a class="btn btn-sm bg-success border border-dark text-white rounded-3 shadow col-md-8"
+                        href="/norme-lucrate/adauga/per-angajat-per-data/{{ $angajat->id ?? '' }}/{{ $search_data }}" role="button">
+                        <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă lucrată
+                    </a>
+                </div>
+            @endif
         </div>
 
         <div class="card-body px-0 py-3">
@@ -49,17 +65,22 @@
             @include ('errors')
 
             <div class="table-responsive rounded">
-                <table class="table table-striped table-hover table-sm rounded">
+                <table class="table table-striped table-hover table-sm rounded mb-0">
                     <thead class="text-white rounded" style="background-color:#e66800;">
                         <tr class="" style="padding:2rem">
                             <th>#</th>
-                            <th>Angajat</th>
+                            @if (!$angajat)
+                                <th>Angajat</th>
+                            @endif
                             <th>Produs</th>
+                            <th>Nr. fază</th>
                             <th>Operație</th>
                             <th class="text-center">Cantitate</th>
                             <th class="text-center">Preț</th>
                             <th class="text-center">Suma</th>
-                            <th class="text-center">Data lucrării</th>
+                            @if (!$angajat)
+                                <th class="text-center">Data lucrării</th>
+                            @endif
                             <th class="text-end">Acțiuni</th>
                         </tr>
                     </thead>
@@ -69,11 +90,16 @@
                                 <td align="">
                                     {{ ($norme_lucrate ->currentpage()-1) * $norme_lucrate ->perpage() + $loop->index + 1 }}
                                 </td>
-                                <td>
-                                    <b>{{ $norma_lucrata->angajat->nume ?? '' }}</b>
-                                </td>
+                                @if (!$angajat)
+                                    <td>
+                                        <b>{{ $norma_lucrata->angajat->nume ?? '' }}</b>
+                                    </td>
+                                @endif
                                 <td>
                                     {{ $norma_lucrata->produs_operatie->produs->nume ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $norma_lucrata->produs_operatie->numar_de_faza ?? '' }}
                                 </td>
                                 <td>
                                     {{ $norma_lucrata->produs_operatie->nume ?? '' }}
@@ -87,29 +113,33 @@
                                 <td class="text-center">
                                     {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }}
                                 </td>
-                                <td class="text-center">
-                                    {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
-                                </td>
-                                <td class="d-flex justify-content-end">
-                                    {{-- <a href="{{ $norma_lucrata->path() }}"
-                                        class="flex me-1"
-                                    >
-                                        <span class="badge bg-success">Vizualizează</span>
-                                    </a> --}}
-                                    <a href="{{ $norma_lucrata->path() }}/modifica"
-                                        class="flex me-1"
-                                    >
-                                        <span class="badge bg-primary">Modifică</span>
-                                    </a>
-                                    <div style="flex" class="">
-                                        <a
-                                            href="#"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#stergeNormaLucrata{{ $norma_lucrata->id }}"
-                                            title="Șterge NormaLucrata"
-                                            >
-                                            <span class="badge bg-danger">Șterge</span>
+                                @if (!$angajat)
+                                    <td class="text-center">
+                                        {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
+                                    </td>
+                                @endif
+                                <td class="">
+                                    <div class="d-flex justify-content-end">
+                                        {{-- <a href="{{ $norma_lucrata->path() }}"
+                                            class="flex me-1"
+                                        >
+                                            <span class="badge bg-success">Vizualizează</span>
+                                        </a> --}}
+                                        <a href="{{ $norma_lucrata->path() }}/modifica"
+                                            class="flex me-1"
+                                        >
+                                            <span class="badge bg-primary">Modifică</span>
                                         </a>
+                                        <div style="flex" class="">
+                                            <a
+                                                href="#"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#stergeNormaLucrata{{ $norma_lucrata->id }}"
+                                                title="Șterge NormaLucrata"
+                                                >
+                                                <span class="badge bg-danger">Șterge</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -120,13 +150,21 @@
                 </table>
             </div>
 
-                <nav>
-                    <ul class="pagination pagination-sm justify-content-center">
+                <nav class="">
+                    <ul class="pagination justify-content-center">
                         {{$norme_lucrate->appends(Request::except('page'))->links()}}
                     </ul>
                 </nav>
 
         </div>
+
+        @if ($angajat)
+            <div class="row mb-2 py-2 justify-content-center">
+                <div class="d-grid gap-2 col-lg-2">
+                    <a class="btn btn-secondary rounded-3 shadow" href="{{ Session::get('norme_lucrate_afisare_tabelara_return_url') }}">Înapoi</a>
+                </div>
+            </div>
+        @endif
     </div>
 
     {{-- Modalele pentru stergere norma_lucrata --}}
