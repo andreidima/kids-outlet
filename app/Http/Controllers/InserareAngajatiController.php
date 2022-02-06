@@ -422,6 +422,14 @@ class InserareAngajatiController extends Controller
         //     }
         // }
 
+        // Se adauga angajatii din „moda” la angajatul „Labunt Elena”
+        foreach ($angajati as $angajat){
+            if (($angajat->id > 3) && ($angajat->id >= 66)){
+                $angajat_labunt_elena = Angajat::find(73);
+                $angajat_labunt_elena->angajati_de_pontat()->attach($angajat);
+            }
+        }
+
         echo ('done');
     }
 }
