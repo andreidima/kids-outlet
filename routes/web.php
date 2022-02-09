@@ -84,7 +84,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/import/import-produse-operatii/setare-norme-infinit', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNormeInfinit']);
 
     // Route::get('inserare-angajati', [InserareAngajatiController::class, 'inserareAngajati']);
-    Route::get('inserare-angajati-pontatori', [InserareAngajatiController::class, 'inserareAngajatiPontatori']);
+    // Route::get('inserare-angajati-pontatori', [InserareAngajatiController::class, 'inserareAngajatiPontatori']);
 
     // Route::get('/inserare-pontaje-de-test', [InserareDateDeTestController::class, 'inserarePontaje']);
     // Route::get('/inserare-comenzi-de-test', [InserareDateDeTestController::class, 'inserareComenzi']);

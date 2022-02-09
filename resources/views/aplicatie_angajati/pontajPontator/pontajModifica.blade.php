@@ -21,9 +21,15 @@
 
                 <div class="mb-2" style="background-color: #000000; height:5px;"></div>
 
-                <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
+                {{-- <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4> --}}
 
-                <h4 class="mb-4">PONTAJ {{ $pontaj->angajat->nume  }}, {{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->data)->isoFormat('DD.MM.YYYY') : ''}}  </h4>
+                <h4 class="mb-4">
+                    Pontaj: {{ $pontaj->angajat->nume  }}
+                    <br>
+                    Cod de acces: {{ $pontaj->angajat->cod_de_acces }}
+                    <br>
+                    Data: {{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->data)->isoFormat('DD.MM.YYYY') : ''}}
+                </h4>
 
                 @include('errors')
 
