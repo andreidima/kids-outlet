@@ -3,7 +3,7 @@
 @section('content')
     {{-- <div class="container-fluid vh-100 py-2" style="background-color: #DFDCE3;">
         <div class="row p-2 vh-100 align-items-center"> --}}
-    <div class="container" style="background-color: #DFDCE3;">
+    <div class="container-fluid" style="background-color: #DFDCE3;">
         <div class="row p-2 align-items-center">
             <div class="col-md-6 col-lg-3 p-3 mx-auto border border-dark text-white shadow-lg" style="background-color: #4ABDAC;">
                 <div class="d-flex justify-content-between">

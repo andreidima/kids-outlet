@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container" style="background-color: #DFDCE3;">
+    <div class="container-fluid" style="background-color: #DFDCE3;">
         <div class="row p-2 align-items-center">
             <div class="col-md-6 col-lg-3 p-3 mx-auto border border-dark text-white shadow-lg" style="background-color: #4ABDAC;">
                 <h4 class="pb-1">{{ config('app.name', 'Laravel') }}</h4>

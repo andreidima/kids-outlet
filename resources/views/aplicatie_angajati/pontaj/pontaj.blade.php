@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container py-2" style="background-color: #DFDCE3;">
+    <div class="container-fluid" style="background-color: #DFDCE3;">
         <div class="row p-2 align-items-center">
             <div class="col-md-6 col-lg-3 p-3 mx-auto border border-dark text-white shadow-lg" style="background-color: #4ABDAC;">
                 <div class="d-flex justify-content-between">
