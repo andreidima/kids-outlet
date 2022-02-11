@@ -90,4 +90,3 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/inserare-pontaje-de-test', [InserareDateDeTestController::class, 'inserarePontaje']);
     // Route::get('/inserare-comenzi-de-test', [InserareDateDeTestController::class, 'inserareComenzi']);
 });
-

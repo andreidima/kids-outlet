@@ -158,6 +158,8 @@ class AngajatAplicatieController extends Controller
             return redirect('/aplicatie-angajati');
         }
 
+        $request->session()->put('submitForm', 'true');
+
         $angajat = $request->session()->get('angajat');
         return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_3', compact('angajat'));
     }
@@ -173,39 +175,40 @@ class AngajatAplicatieController extends Controller
                 ]
             );
 
-        $angajat = $request->session()->get('angajat');
+        if(!empty($request->session()->get('submitForm'))){
+            $angajat = $request->session()->get('angajat');
 
-        $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
+            $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
 
-        // In prima faza norma daca era pentru acelasi numar de faza se aduna la aceasi inregistrare
-        // Pentru un control maxim, acum norma se adauga individual de fiecare data
-        // $norma_lucrata = NormaLucrata::firstOrNew([
-        //     'angajat_id' => $angajat->id,
-        //     'numar_de_faza' => $angajat->numar_de_faza
-        // ]);
-        $norma_lucrata = NormaLucrata::make();
-        $norma_lucrata->angajat_id = $angajat->id;
-        $norma_lucrata->data = Carbon::now();
-        $norma_lucrata->produs_operatie_id = $produs_operatie->id;
+            // In prima faza norma daca era pentru acelasi numar de faza se aduna la aceasi inregistrare
+            // Pentru un control maxim, acum norma se adauga individual de fiecare data
+            // $norma_lucrata = NormaLucrata::firstOrNew([
+            //     'angajat_id' => $angajat->id,
+            //     'numar_de_faza' => $angajat->numar_de_faza
+            // ]);
+            $norma_lucrata = NormaLucrata::make();
+            $norma_lucrata->angajat_id = $angajat->id;
+            $norma_lucrata->data = Carbon::now();
+            $norma_lucrata->produs_operatie_id = $produs_operatie->id;
 
+            // Se verifica sa nu se depaseasca norma
+            // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
+            if (($produs_operatie->norma_totala_efectuata + $request->numar_de_bucati) > $produs_operatie->norma_totala){
+                return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $norma_lucrata->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata) . '"!');
+            } else {
+                $produs_operatie->norma_totala_efectuata += $request->numar_de_bucati;
+                $produs_operatie->save();
 
-        // Se verifica sa nu se depaseasca norma
-        // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
-        if (($produs_operatie->norma_totala_efectuata + $request->numar_de_bucati) > $produs_operatie->norma_totala){
-            return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $norma_lucrata->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata) . '"!');
-        } else {
-            $produs_operatie->norma_totala_efectuata += $request->numar_de_bucati;
-            $produs_operatie->save();
+                $norma_lucrata->cantitate = $request->numar_de_bucati;
+                $norma_lucrata->save();
+            }
 
-            $norma_lucrata->cantitate = $request->numar_de_bucati;
-            $norma_lucrata->save();
+            $angajat->cantitate = $request->numar_de_bucati;
+
+            $request->session()->forget('submitForm');
+
+            $request->session()->put('angajat', $angajat);
         }
-
-
-        $angajat->cantitate = $request->numar_de_bucati;
-        // $angajat->cantitate_total = NormaLucrata::where('angajat_id', $angajat->id)->where('numar_de_faza', $angajat->numar_de_faza)->sum('cantitate');
-
-        $request->session()->put('angajat', $angajat);
 
         return redirect('/aplicatie-angajati/adauga-comanda-pasul-4');
     }
