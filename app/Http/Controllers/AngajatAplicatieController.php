@@ -261,6 +261,13 @@ class AngajatAplicatieController extends Controller
         return view('aplicatie_angajati/realizat/realizat', compact('angajat', ($norme_lucrate ? 'norme_lucrate' : ''), 'search_data_inceput', 'search_data_sfarsit'));
     }
 
+    public function stergeNormaLucrata(NormaLucrata $norma_lucrata)
+    {
+        $norma_lucrata->delete();
+
+        return back()->with('success', 'Comanda a fost ștearsă cu succes!');
+    }
+
     /**
      *
      */

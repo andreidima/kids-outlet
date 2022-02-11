@@ -57,6 +57,7 @@ Route::get('/aplicatie-angajati/pontaj/{moment}/ponteaza-toti', [AngajatAplicati
 Route::get('/aplicatie-angajati/pontaj/{angajat_de_pontat}/modifica', [AngajatAplicatieController::class, 'pontajModificaPontator']);
 
 Route::get('/aplicatie-angajati/realizat', [AngajatAplicatieController::class, 'realizat'])->name('aplicatie_angajati.realizat');
+Route::get('/aplicatie-angajati/norma-lucrata/{norma_lucrata}/sterge', [AngajatAplicatieController::class, 'stergeNormaLucrata']);
 
 
 

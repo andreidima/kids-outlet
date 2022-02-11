@@ -97,27 +97,27 @@
                 </h4> --}}
 
 
-                @forelse ($norme_lucrate->groupBy('produs_operatie_id') as $norme_lucrate_per_operatie)
-                    {{-- @forelse ($norme_lucrate_per_produs->groupBy('numar_de_faza') as $norme_lucrate_per_numar_de_faza_per_numar_de_faza) --}}
+                @forelse ($norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
+                    @forelse ($norme_lucrate_per_data as $norma_lucrata)
                         <div class="mb-4 px-1" style="background-color:#007e6b;">
-                            <small>Data:</small>
-                                {{
-                                    $norme_lucrate_per_operatie->first()->data ?
-                                    \Carbon\Carbon::parse($norme_lucrate_per_operatie->first()->data)->isoFormat('DD.MM.YYYY')
-                                    :
-                                    ''
-                                }}
+                            <small>Data:</small> {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
                             <br>
-                            <small>Produs:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->produs->nume }}
+                            <small>Produs:</small> {{ $norma_lucrata->produs_operatie->produs->nume }}
                             <br>
-                            <small>Număr de fază:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->numar_de_faza }}
+                            <small>Număr de fază:</small> {{ $norma_lucrata->produs_operatie->numar_de_faza }}
                             <br>
-                            <small>Operație:</small> {{ $norme_lucrate_per_operatie->first()->produs_operatie->nume }}
+                            <small>Operație:</small> {{ $norma_lucrata->produs_operatie->nume }}
                             <br>
-                            <small>Număr de bucăți în total:</small> {{ $norme_lucrate_per_operatie->sum('cantitate') }}
+                            <small>Număr de bucăți:</small> {{ $norma_lucrata->cantitate }}
+                            @if ($norma_lucrata->data === \Carbon\Carbon::now()->toDateString())
+                                <br>
+                                <div class="text-start">
+                                    <a class="btn btn-sm text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button" style="background-color: #FC4A1A; border:1px solid white;">ȘTERGE COMANDA</a>
+                                </div>
+                            @endif
                         </div>
-                    {{-- @empty
-                    @endforelse --}}
+                    @empty
+                    @endforelse
                 @empty
                 @endforelse
 

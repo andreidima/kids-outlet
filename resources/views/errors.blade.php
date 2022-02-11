@@ -12,6 +12,7 @@
     <div class="alert alert-success mb-2" role="alert">
         {{ session('status') }}
         {{ session('succes') }}
+        {{ session('success') }}
     </div>
 @elseif (session()->has('eroare') || session()->has('error'))
     <div class="alert alert-danger mb-2" role="alert">
