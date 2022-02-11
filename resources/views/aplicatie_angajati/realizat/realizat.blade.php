@@ -112,7 +112,18 @@
                             @if ($norma_lucrata->data === \Carbon\Carbon::now()->toDateString())
                                 <br>
                                 <div class="text-start">
-                                    <a class="btn btn-sm text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button" style="background-color: #FC4A1A; border:1px solid white;">ȘTERGE COMANDA</a>
+                                    <a
+                                        href="#"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#stergeComanda{{ $norma_lucrata->id }}"
+                                        title="Șterge Comanda"
+                                        class="btn btn-sm text-white"
+                                        style="background-color: #FC4A1A; border:1px solid white;"
+                                        >
+                                        {{-- <span class="badge bg-danger"> --}}
+                                            ȘTERGE COMANDA
+                                        {{-- </span> --}}
+                                    </a>
                                 </div>
                             @endif
                         </div>
@@ -126,4 +137,45 @@
             </div>
         </div>
     </div>
+
+    {{-- Modalele pentru stergere --}}
+    @foreach ($norme_lucrate as $norma_lucrata)
+        <div class="modal fade text-dark" id="stergeComanda{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title text-white" id="exampleModalLabel">
+                        Produs: <b>{{ $norma_lucrata->produs_operatie->produs->nume }}</b>
+                        <br>
+                        Operație: <b>{{ $norma_lucrata->produs_operatie->nume }}</b>
+                        <br>
+                        Cantitate: <b>{{ $norma_lucrata->cantitate }}</b>
+                    </h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="text-align:left;">
+                    Ești sigur ca vrei să ștergi Comanda?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+
+                    <a class="btn btn-danger text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button">ȘTERGE COMANDA</a>
+                    {{-- <form method="POST" action="{{ $norma_lucrata->path() }}">
+                        @method('DELETE')
+                        @csrf
+                        <button
+                            type="submit"
+                            class="btn btn-danger text-white"
+                            >
+                            Șterge Comandă
+                        </button>
+                    </form> --}}
+
+                </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+
 @endsection

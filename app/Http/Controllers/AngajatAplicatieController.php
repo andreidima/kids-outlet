@@ -261,11 +261,24 @@ class AngajatAplicatieController extends Controller
         return view('aplicatie_angajati/realizat/realizat', compact('angajat', ($norme_lucrate ? 'norme_lucrate' : ''), 'search_data_inceput', 'search_data_sfarsit'));
     }
 
-    public function stergeNormaLucrata(NormaLucrata $norma_lucrata)
+    public function stergeNormaLucrata(Request $request, NormaLucrata $norma_lucrata)
     {
-        $norma_lucrata->delete();
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+        $angajat = $request->session()->get('angajat');
 
-        return back()->with('success', 'Comanda a fost ștearsă cu succes!');
+        if (($norma_lucrata->data === \Carbon\Carbon::now()->toDateString()) && ($norma_lucrata->angajat_id === $angajat->id)){
+            $norma_lucrata->produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
+            $norma_lucrata->produs_operatie->save();
+            $norma_lucrata->delete();
+
+            $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
+
+            return back()->with('success', 'Comanda a fost ștearsă cu succes!');
+        } else {
+            return back()->with('error', 'Această comandă nu poate fi ștearsă!');
+        }
     }
 
     /**
