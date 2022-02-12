@@ -32,6 +32,6 @@ class ProdusOperatie extends Model
      */
     public function norme_lucrate()
     {
-        return $this->hasMany(NormaLucrata::class, 'numar_de_faza', 'numar_de_faza');
+        return $this->hasMany(NormaLucrata::class, 'produs_operatie_id');
     }
 }
