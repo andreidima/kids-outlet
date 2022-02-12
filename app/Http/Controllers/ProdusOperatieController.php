@@ -136,7 +136,7 @@ class ProdusOperatieController extends Controller
                     })->ignore($produs_operatie),
                 ],
                 'timp' => '',
-                'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,4})?$/',
+                'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'pret_pe_minut' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'timp_total' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'norma' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
