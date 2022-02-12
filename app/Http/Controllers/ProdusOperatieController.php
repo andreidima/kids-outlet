@@ -130,15 +130,31 @@ class ProdusOperatieController extends Controller
                 'numar_de_faza' => [
                     'nullable',
                     'max:50',
-                    Rule::unique('App\Models\ProdusOperatie')->ignore($produs_operatie),
+                    Rule::unique('App\Models\ProdusOperatie')->where(function ($query) use ($request) {
+                        $query->where('produs_id', $request->produs_id)
+                            ->where('numar_de_faza', $request->numar_de_faza);
+                    })->ignore($produs_operatie),
                 ],
-                'timp' => 'nullable',
-                'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
-                'norma' => 'nullable|numeric|between:0,99999',
+                'timp' => '',
+                'pret' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,4})?$/',
+                'pret_pe_minut' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'timp_total' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'norma' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'pret_100_pe_minut' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'pret_100_pe_faze' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'J' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
+                'norma_totala' => 'nullable|numeric|between:0,99999',
+                'norma_totala_efectuata' => 'nullable|numeric|between:0,99999',
                 'observatii' => 'nullable|max:1000',
             ],
             [
                 'pret.regex' => 'Prețul poate avea la partea zecimală maxim 5 cifre.',
+                'pret_pe_minut.regex' => 'Prețul pe minut poate avea la partea zecimală maxim 5 cifre.',
+                'timp_total.regex' => 'Timpul total poate avea la partea zecimală maxim 5 cifre.',
+                'norma.regex' => 'Norma poate avea la partea zecimală maxim 5 cifre.',
+                'pret_100_pe_minut.regex' => 'Prețul 100 pe minut poate avea la partea zecimală maxim 5 cifre.',
+                'pret_100_pe_faze.regex' => 'Prețul 100 pe faze poate avea la partea zecimală maxim 5 cifre.',
+                'J.regex' => 'J poate avea la partea zecimală maxim 5 cifre.',
             ]
         );
     }

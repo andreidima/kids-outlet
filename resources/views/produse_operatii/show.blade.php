@@ -44,7 +44,7 @@
                                     {{ $produs_operatie->numar_de_faza }}
                                 </td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td>
                                     Timp
                                 </td>
@@ -67,7 +67,7 @@
                                 <td>
                                     {{ $produs_operatie->norma }}
                                 </td>
-                            </tr>
+                            </tr> --}}
                         </table>
                     </div>
 

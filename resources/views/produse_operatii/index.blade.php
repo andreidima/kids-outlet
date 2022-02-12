@@ -44,8 +44,8 @@
                             <th>Produs</th>
                             <th>Nume operație</th>
                             <th>Număr de fază</th>
-                            <th>Timp</th>
-                            <th>Preț</th>
+                            {{-- <th>Timp</th>
+                            <th>Preț</th> --}}
                             <th>Norma</th>
                             <th>Norma efectuată</th>
                             <th class="text-end">Acțiuni</th>
@@ -66,12 +66,12 @@
                                 <td>
                                     <b>{{ $produs_operatie->numar_de_faza }}</b>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     {{ $produs_operatie->timp ? \Carbon\Carbon::parse($produs_operatie->timp)->isoFormat('HH:mm') : '' }}
                                 </td>
                                 <td>
                                     {{ $produs_operatie->pret }}
-                                </td>
+                                </td> --}}
                                 <td>
                                     {{ $produs_operatie->norma_totala }}
                                 </td>
