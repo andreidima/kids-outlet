@@ -436,7 +436,7 @@ class AngajatAplicatieController extends Controller
         switch ($moment) {
             case 'sosire':
                 foreach ($angajati as $angajat){
-                    $pontaj = Pontaj::firstOrCreate([
+                    $pontaj = Pontaj::firstOrNew([
                         'angajat_id' => $angajat->id,
                         'data' => Carbon::now()->toDateString()
                     ]);
@@ -449,7 +449,7 @@ class AngajatAplicatieController extends Controller
                 break;
             case 'plecare':
                 foreach ($angajati as $angajat){
-                    $pontaj = Pontaj::firstOrCreate([
+                    $pontaj = Pontaj::firstOrNew([
                         'angajat_id' => $angajat->id,
                         'data' => Carbon::now()->toDateString()
                     ]);
