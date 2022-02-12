@@ -3,7 +3,7 @@
 <div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px" id="app1">
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
-            <div class="col-lg-12 mb-2">
+            <div class="col-lg-12 mb-4">
                 <label for="nume" class="mb-0 ps-3">Nume:*</label>
                 <input
                     type="text"
@@ -47,10 +47,20 @@
                 <textarea class="form-control form-control-sm {{ $errors->has('observatii') ? 'is-invalid' : '' }}"
                     name="observatii" rows="2">{{ old('observatii', $produs->observatii) }}</textarea>
             </div> --}}
+            <div class="col-lg-12 mb-4 mx-auto d-flex align-items-center justify-content-center">
+                <div class="form-check">
+                    <input class="form-check-input" type="hidden" name="activ" value="0" />
+                    <input class="form-check-input" type="checkbox" value="1" name="activ" id="activ"
+                        {{ old('activ', $produs->activ) == '1' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="activ">
+                        Activ
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="row py-2 justify-content-center">
-            <div class="col-lg-8 d-flex justify-content-center">
+            <div class="col-lg-12 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary text-white btn-sm me-2 rounded-pill">{{ $buttonText }}</button>
                 {{-- <a class="btn btn-secondary btn-sm mr-4 rounded-pill" href="{{ $client_neserios->path() }}">Renunță</a>  --}}
                 <a class="btn btn-secondary btn-sm rounded-pill" href="/produse">Renunță</a>

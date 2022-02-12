@@ -111,6 +111,7 @@ class ProdusController extends Controller
     {
         return request()->validate([
             'nume' => 'required|max:100',
+            'activ' => ''
             // 'client_pret' => 'nullable|numeric|between:0.00,99999.99',
             // 'cost_produs' => 'nullable|numeric|between:0.00,99999.99',
             // 'cantitate' => 'nullable|numeric|between:0,99999',
