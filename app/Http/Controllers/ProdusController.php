@@ -21,9 +21,6 @@ class ProdusController extends Controller
             when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
-            ->when($search_telefon, function ($query, $search_telefon) {
-                return $query->where('telefon', 'like', '%' . $search_telefon . '%');
-            })
             ->latest()
             ->simplePaginate(25);
 
@@ -113,11 +110,11 @@ class ProdusController extends Controller
     protected function validateRequest(Request $request)
     {
         return request()->validate([
-            'nume' => 'nullable|max:100',
-            'client_pret' => 'nullable|numeric|between:0.00,99999.99',
-            'cost_produs' => 'nullable|numeric|between:0.00,99999.99',
-            'cantitate' => 'nullable|numeric|between:0,99999',
-            'observatii' => 'nullable|max:1000',
+            'nume' => 'required|max:100',
+            // 'client_pret' => 'nullable|numeric|between:0.00,99999.99',
+            // 'cost_produs' => 'nullable|numeric|between:0.00,99999.99',
+            // 'cantitate' => 'nullable|numeric|between:0,99999',
+            // 'observatii' => 'nullable|max:1000',
         ]);
     }
 }

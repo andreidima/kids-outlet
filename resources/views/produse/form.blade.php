@@ -13,7 +13,7 @@
                     value="{{ old('nume', $produs->nume) }}"
                     required>
             </div>
-            <div class="col-lg-12 mb-2">
+            {{-- <div class="col-lg-12 mb-2">
                 <label for="client_pret" class="mb-0 ps-3">Client preț:</label>
                 <input
                     type="text"
@@ -22,8 +22,8 @@
                     placeholder=""
                     value="{{ old('client_pret', $produs->client_pret) }}">
                 <small class="ps-3">Punct(.) pentru zecimalele</small>
-            </div>
-            <div class="col-lg-12 mb-2">
+            </div> --}}
+            {{-- <div class="col-lg-12 mb-2">
                 <label for="cost_produs" class="mb-0 ps-3">Cost produs:</label>
                 <input
                     type="text"
@@ -32,8 +32,8 @@
                     placeholder=""
                     value="{{ old('cost_produs', $produs->cost_produs) }}">
                 <small class="ps-3">Punct(.) pentru zecimalele</small>
-            </div>
-            <div class="col-lg-12 mb-2">
+            </div> --}}
+            {{-- <div class="col-lg-12 mb-2">
                 <label for="cantitate" class="mb-0 ps-3">Cantitate:</label>
                 <input
                     type="text"
@@ -41,12 +41,12 @@
                     name="cantitate"
                     placeholder=""
                     value="{{ old('cantitate', $produs->cantitate) }}">
-            </div>
-            <div class="col-lg-12 mb-2">
+            </div> --}}
+            {{-- <div class="col-lg-12 mb-2">
                 <label for="observatii" class="mb-0 ps-3">Observații:</label>
                 <textarea class="form-control form-control-sm {{ $errors->has('observatii') ? 'is-invalid' : '' }}"
                     name="observatii" rows="2">{{ old('observatii', $produs->observatii) }}</textarea>
-            </div>
+            </div> --}}
         </div>
 
         <div class="row py-2 justify-content-center">

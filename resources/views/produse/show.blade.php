@@ -28,7 +28,7 @@
                                     {{ $produs->nume }}
                                 </td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td>
                                     Client preț
                                 </td>
@@ -59,7 +59,7 @@
                                 <td>
                                     {{ $produs->observatii }}
                                 </td>
-                            </tr>
+                            </tr> --}}
                         </table>
                     </div>
 

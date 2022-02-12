@@ -12,8 +12,6 @@
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
                         <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
                                 value="{{ $search_nume }}">
-                        <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_telefon" name="search_telefon" placeholder="Telefon" autofocus
-                                value="{{ $search_telefon }}">
                     </div>
                     <div class="row input-group custom-search-form justify-content-center">
                         <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
@@ -42,9 +40,9 @@
                         <tr class="" style="padding:2rem">
                             <th>Nr. Crt.</th>
                             <th>Nume</th>
-                            <th>Client preț</th>
+                            {{-- <th>Client preț</th>
                             <th>Cost produs</th>
-                            <th>Cantitate</th>
+                            <th>Cantitate</th> --}}
                             <th class="text-end">Acțiuni</th>
                         </tr>
                     </thead>
@@ -57,7 +55,7 @@
                                 <td>
                                     <b>{{ $produs->nume }}</b>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     {{ $produs->client_pret }}
                                 </td>
                                 <td>
@@ -65,7 +63,7 @@
                                 </td>
                                 <td>
                                     {{ $produs->cantitate }}
-                                </td>
+                                </td> --}}
                                 <td class="d-flex justify-content-end">
                                     <a href="{{ $produs->path() }}"
                                         class="flex me-1"
