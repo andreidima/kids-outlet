@@ -25,8 +25,11 @@
 
                 <h4 class="mb-4">
                     Pontaj: {{ $pontaj->angajat->nume  }}
-                    <br>
-                    Cod de acces: {{ $pontaj->angajat->cod_de_acces }}
+                    {{-- Doar angajatul Mocanu Geanina, cu id = 4, poate vedea codurile de acces --}}
+                        @if ($angajat->id === 4)
+                            <br>
+                            Cod de acces: {{ $pontaj->angajat->cod_de_acces }}
+                        @endif
                     <br>
                     Data: {{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->data)->isoFormat('DD.MM.YYYY') : ''}}
                 </h4>

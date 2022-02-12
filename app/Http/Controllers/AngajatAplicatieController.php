@@ -360,7 +360,7 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
-        $pontaj = Pontaj::firstOrCreate([
+        $pontaj = Pontaj::firstOrNew([
             'angajat_id' => $angajat_de_pontat->id,
             'data' => Carbon::now()->toDateString()
         ]);
@@ -380,7 +380,7 @@ class AngajatAplicatieController extends Controller
 
         // dd($request);
 
-        $pontaj = Pontaj::firstOrCreate([
+        $pontaj = Pontaj::firstOrNew([
             'angajat_id' => $request->angajat_id,
             'data' => Carbon::parse($request->data)->toDateString()
         ]);
