@@ -100,16 +100,16 @@
                                 {{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD.MM.YYYY') }}
                             </th>
                         @endfor
-                        <th class="text-center" style="min-width: 120px;">
+                        {{-- <th class="text-center" style="min-width: 120px;">
                             Total
-                        </th>
+                        </th> --}}
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($angajati as $angajat)
-                        @php
+                        {{-- @php
                             $timp_total = \Carbon\Carbon::today();
-                        @endphp
+                        @endphp --}}
                         <tr>
                             <td style="">
                                 {{ $loop->iteration }}
@@ -130,78 +130,58 @@
 
                             @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                                 <td class="text-center">
-                                    {{-- @forelse ($angajat->pontaj->groupBy('data') as $pontaj_per_data)
-                                        @php
-                                            $timp_total = \Carbon\Carbon::today();
-                                        @endphp
-
-                                        @forelse ($pontaj_per_data as $pontaj)
-
-                                            @if (\Carbon\Carbon::parse($pontaj->data) == \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
-
-                                                @if ($loop->iteration > 1)
-                                                @endif
-
-                                                @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
-                                                    @php
-                                                        $ora_sosire = new \Carbon\Carbon($pontaj->ora_sosire);
-                                                        $ora_plecare = new \Carbon\Carbon($pontaj->ora_plecare);
-
-                                                        $timp_in_minute = $ora_plecare->diffInMinutes($ora_sosire);
-
-                                                        $timp_total->addMinutes($timp_in_minute);
-                                                    @endphp
-                                                @endif
-
-                                                <a href="/pontaje/{{ $pontaj_per_data->first()->id }}/modifica">
-                                                    @switch($pontaj_per_data->first()->concediu ?? '')
-                                                        @case(0)
-                                                                {{ \Carbon\Carbon::parse($timp_total->diffInSeconds(\Carbon\Carbon::today()))->isoFormat('HH:mm') }}
-                                                            @break
-                                                        @case(1)
-                                                                C.M.
-                                                            @break
-                                                        @case(2)
-                                                                C.O.
-                                                            @break
-                                                        @case(3)
-                                                                C.F.P.
-                                                            @break
-                                                    @endswitch
-                                                </a>
-
-                                            @endif
-                                        @empty
-                                        @endforelse
-
-                                    @empty
-                                    @endforelse --}}
                                     @if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
                                         @forelse ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj)
-                                            <a href="/pontaje/{{ $pontaj->id }}/modifica">
+                                            <a href="/pontaje/{{ $pontaj->id }}/modifica" style="text-decoration: none;">
                                                 @switch($pontaj->concediu)
                                                     @case(0)
                                                         @if ($pontaj->ora_sosire && $pontaj->ora_plecare)
-                                                            @php
+                                                            {{-- @php
                                                                 $timp_total->addSeconds(\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire)))
-                                                            @endphp
-                                                            {{
+                                                            @endphp --}}
+                                                            {{-- {{
                                                                 \Carbon\Carbon::parse(
                                                                     \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire))
                                                                 )->isoFormat('HH:mm')
-                                                            }}
+                                                            }} --}}
+                                                            @switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)))
+                                                                @case(1)
+                                                                @case(2)
+                                                                        2
+                                                                    @break
+                                                                @case(3)
+                                                                @case(4)
+                                                                @case(5)
+                                                                        4
+                                                                    @break
+                                                                @case(6)
+                                                                @case(7)
+                                                                @case(8)
+                                                                @case(9)
+                                                                @case(10)
+                                                                @case(11)
+                                                                @case(12)
+                                                                        8
+                                                                    @break
+                                                                @default
+                                                                        {{ \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)) }}
+                                                                    @break
+                                                            @endswitch
                                                         @else
-                                                            00:00
+                                                            <span class="text-danger">0</span>
                                                         @endif
                                                         @break
                                                     @case(1)
-                                                            C.M.
+                                                            M
                                                         @break
                                                     @case(2)
-                                                            C.O.
+                                                            O
                                                         @break
                                                     @case(3)
-                                                            C.F.P.
+                                                            Î
+                                                        @break
+                                                    @case(4)
+                                                            N
                                                         @break
                                                 @endswitch
                                             </a>
@@ -213,22 +193,22 @@
                                     @endif
                                 </td>
                             @endfor
-                            <td class="text-center">
+                            {{-- <td class="text-center">
                                 {{
                                     number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4)
                                 }}
-                            </td>
+                            </td> --}}
                         </tr>
                     @empty
                     @endforelse
                 </tbody>
             </table>
         </div>
-                <nav>
+                {{-- <nav>
                     <ul class="pagination pagination-sm justify-content-center">
                         {{$angajati->appends(Request::except('page'))->links()}}
                     </ul>
-                </nav>
+                </nav> --}}
 
     </div>
 

@@ -10,6 +10,13 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+
+use Carbon\Carbon;
+
 class NormaLucrataController extends Controller
 {
     /**
@@ -216,22 +223,162 @@ class NormaLucrataController extends Controller
         }
 
         $angajati = Angajat::with(['norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
-                $query->whereDate('created_at', '>=', $search_data_inceput)
-                    ->whereDate('created_at', '<=', $search_data_sfarsit);
+                $query->whereDate('data', '>=', $search_data_inceput)
+                    ->whereDate('data', '<=', $search_data_sfarsit);
             }])
-            ->with('norme_lucrate.produs_operatie')
+            ->with('norme_lucrate.produs_operatie.produs')
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('nume')
-            ->paginate(10);
-            // ->get();
+            // ->take(2)
+            // ->paginate(10);
+            ->get();
 
-        // dd($angajati);
+        // foreach ($angajati as $angajat){
+        //     echo $angajat->nume . '<br>';
+        //     foreach ($angajat->norme_lucrate as $norma_lucrata){
+        //         echo $norma_lucrata->produs_operatie->produs->nume . ' --- ' . $norma_lucrata->produs_operatie->nume . ' --- ' . $norma_lucrata->cantitate;
+        //         echo '<br>';
+        //     }
+        //         echo '<br>';
+        // }
+        // dD($angajati->groupby('norme_lucrate'));
+        // foreach ($angajati->groupby('norme_lucrate.produs_operatie.produs') as $angajat){
+        //     echo $angajat->first()->norme_lucrate->first() . '<br>';
+        // }
 
-        $request->session()->forget('norme_lucrate_afisare_tabelara_return_url');
+        $produse = Produs::whereHas('produse_operatii', function ($query) use ($search_data_inceput, $search_data_sfarsit){
+                return $query->whereHas('norme_lucrate', function ($query) use ($search_data_inceput, $search_data_sfarsit){
+                    return $query->whereDate('data', '>=', $search_data_inceput)
+                        ->whereDate('data', '<=', $search_data_sfarsit);
+                });
+            })
 
-        return view('norme_lucrate.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
+                // ->whereDate('norme_lucrate.data', '>=', $search_data_inceput)
+                // ->whereDate('norme_lucrate.data', '<=', $search_data_sfarsit)
+            // with(['produse_operatii.norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+            //     $query->whereDate('data', '>=', $search_data_inceput)
+            //         ->whereDate('data', '<=', $search_data_sfarsit);
+            // }])
+            ->get();
+
+        foreach ($produse as $produs){
+            echo $produs->nume . '<br>';
+        }
+
+
+        switch ($request->input('action')) {
+            case 'export_excel':
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+
+                $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+                $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+
+                $sheet->setCellValue('A1', 'Norme lucrate - ' . Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
+                $sheet->getStyle('A1')->getFont()->setSize(14);
+                $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                // $sheet->setCellValue('A2', Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
+                // $sheet->getStyle('A2')->getFont()->setSize(14);
+
+                $sheet->setCellValue('A4', 'Nr.');
+                $sheet->setCellValue('B4', 'Nume Prenume');
+                // $sheet->getColumnDimension('D')->setWidth(40, 'pt');
+                for ($ziua = 0; $ziua <= Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+                    $sheet->setCellValueByColumnAndRow(($ziua+3), 4 , Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD'));
+                }
+
+                // $sheet->setCellValueByColumnAndRow(($ziua+3), 4 , 'Total ore lucrate');
+
+                $rand = 5;
+                foreach ($angajati as $angajat){
+                    // $timp_total = Carbon::today();
+
+                    $sheet->setCellValue('A' . $rand, $rand-4);
+                    $sheet->setCellValue('B' . $rand, $angajat->nume);
+
+                    // for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+                    //     if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
+                    //         foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
+                    //             switch ($pontaj->concediu){
+                    //                     case '0':
+                    //                         if ($pontaj->ora_sosire && $pontaj->ora_plecare){
+                    //                             switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
+                    //                                 case 1:
+                    //                                 case 2: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 2);
+                    //                                     break;
+                    //                                 case 3:
+                    //                                 case 4:
+                    //                                 case 5: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 4);;
+                    //                                     break;
+                    //                                 case 6:
+                    //                                 case 7:
+                    //                                 case 9:
+                    //                                 case 10:
+                    //                                 case 11:
+                    //                                 case 12: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 8);
+                    //                                     break;
+                    //                                 default: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)));
+                    //                                     break;
+                    //                             }
+                    //                         }
+                    //                         break;
+                    //                     case '1':
+                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'M');
+                    //                         break;
+                    //                     case '2':
+                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'O');
+                    //                         break;
+                    //                     case '3':
+                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'Î');
+                    //                         break;
+                    //                     case '4':
+                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'N');
+                    //                         break;
+                    //             }
+                    //         }
+                    //     }
+
+                        // $sheet->getCellByColumnAndRow(($ziua+3), $rand)->getStyle()
+                        //     ->getBorders()
+                        //     ->getOutline()
+                        //     ->setBorderStyle(Border::BORDER_THIN);
+                            // ->setColor(new Color('FFFF0000'));;
+                    // }
+
+                    // $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
+
+                    $rand ++;
+                }
+
+                // Se parcug toate coloanele si se stabileste latimea AUTO
+                // foreach ($sheet->getColumnIterator() as $column) {
+                //     $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                // }
+                // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
+                // $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
+                // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+
+                $writer = new Xlsx($spreadsheet);
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="Raport Norme lucrate.xlsx"');
+                $writer->save('php://output');
+                exit();
+
+                break;
+            default:
+                    $request->session()->forget('norme_lucrate_afisare_tabelara_return_url');
+
+                    return view('norme_lucrate.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
+                break;
+        }
     }
 }

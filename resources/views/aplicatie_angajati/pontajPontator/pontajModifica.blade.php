@@ -94,10 +94,17 @@
                                         </label>
                                     </div>
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="radio" value="3" name="concediu" id="concediu_fara_plata"
+                                        <input class="form-check-input" type="radio" value="3" name="concediu" id="invoit"
                                             {{ old('concediu', $pontaj->concediu) == '3' ? 'checked' : '' }}>
-                                        <label class="form-check-label px-1 fs-5 bg-primary border border-1 shadow shadow-sm" for="concediu_fara_plata">
-                                            Concediu fără plată
+                                        <label class="form-check-label px-1 fs-5 bg-primary border border-1 shadow shadow-sm" for="invoit">
+                                            Învoit
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio" value="4" name="concediu" id="nemotivat"
+                                            {{ old('concediu', $pontaj->concediu) == '4' ? 'checked' : '' }}>
+                                        <label class="form-check-label px-1 fs-5 bg-primary border border-1 shadow shadow-sm" for="nemotivat">
+                                            Nemotivat
                                         </label>
                                     </div>
                                 </div>

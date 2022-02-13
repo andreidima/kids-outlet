@@ -195,11 +195,11 @@
                     </span>
             </div>
         </div> --}}
-                <nav>
+                {{-- <nav>
                     <ul class="pagination pagination-sm justify-content-center">
                         {{$angajati->appends(Request::except('page'))->links()}}
                     </ul>
-                </nav>
+                </nav> --}}
 
     </div>
 

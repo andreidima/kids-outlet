@@ -86,12 +86,21 @@
                     </label>
                 </div>
             </div>
+            <div class="col-lg-6">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" value="3" name="concediu" id="invoit"
+                        {{ old('concediu', $pontaj->concediu) == '3' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="invoit">
+                        Învoit
+                    </label>
+                </div>
+            </div>
             <div class="col-lg-6 mb-4">
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="radio" value="3" name="concediu" id="concediu_fara_plata"
-                        {{ old('concediu', $pontaj->concediu) == '3' ? 'checked' : '' }}>
-                    <label class="form-check-label" for="concediu_fara_plata">
-                        Concediu fără plată
+                    <input class="form-check-input" type="radio" value="4" name="concediu" id="nemotivat"
+                        {{ old('concediu', $pontaj->concediu) == '4' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="nemotivat">
+                        Nemotivat
                     </label>
                 </div>
             </div>
