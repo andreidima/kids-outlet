@@ -13,7 +13,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
-
 use Illuminate\Support\Facades\Storage;
 
 use Carbon\Carbon;
@@ -284,10 +283,17 @@ class PontajController extends Controller
                                                         break;
                                                     case 6:
                                                     case 7:
+                                                    case 8:
                                                     case 9:
                                                     case 10:
                                                     case 11:
-                                                    case 12: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 8);
+                                                    case 12:
+                                                    case 13:
+                                                    case 14:
+                                                    case 15:
+                                                    case 16:
+                                                    case 17:
+                                                    case 18: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 8);
                                                         break;
                                                     default: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)));
                                                         break;

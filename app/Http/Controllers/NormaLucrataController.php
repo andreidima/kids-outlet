@@ -14,6 +14,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use Illuminate\Support\Facades\Storage;
 
 use Carbon\Carbon;
 
@@ -255,18 +256,11 @@ class NormaLucrataController extends Controller
                         ->whereDate('data', '<=', $search_data_sfarsit);
                 });
             })
-
-                // ->whereDate('norme_lucrate.data', '>=', $search_data_inceput)
-                // ->whereDate('norme_lucrate.data', '<=', $search_data_sfarsit)
-            // with(['produse_operatii.norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
-            //     $query->whereDate('data', '>=', $search_data_inceput)
-            //         ->whereDate('data', '<=', $search_data_sfarsit);
-            // }])
             ->get();
 
-        foreach ($produse as $produs){
-            echo $produs->nume . '<br>';
-        }
+        // foreach ($produse as $produs){
+        //     echo $produs->nume . '<br>';
+        // }
 
 
         switch ($request->input('action')) {
@@ -288,9 +282,8 @@ class NormaLucrataController extends Controller
 
                 $sheet->setCellValue('A4', 'Nr.');
                 $sheet->setCellValue('B4', 'Nume Prenume');
-                // $sheet->getColumnDimension('D')->setWidth(40, 'pt');
-                for ($ziua = 0; $ziua <= Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
-                    $sheet->setCellValueByColumnAndRow(($ziua+3), 4 , Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD'));
+                foreach ($produse as $index=>$produs){
+                    $sheet->setCellValueByColumnAndRow(($index+3), 4 , $produs->nume);
                 }
 
                 // $sheet->setCellValueByColumnAndRow(($ziua+3), 4 , 'Total ore lucrate');
@@ -302,6 +295,18 @@ class NormaLucrataController extends Controller
                     $sheet->setCellValue('A' . $rand, $rand-4);
                     $sheet->setCellValue('B' . $rand, $angajat->nume);
 
+
+                    foreach ($produse as $index=>$produs){
+                        $suma = 0;
+                        foreach ($produs->produse_operatii as $produs_operatie){
+                            foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
+                                $suma += $norma_lucrata->cantitate * $produs_operatie->pret;
+                            }
+                        }
+                        if ($suma > 0){
+                            $sheet->setCellValueByColumnAndRow(($index+3), $rand , $suma);
+                        }
+                    }
                     // for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
                     //     if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
                     //         foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
@@ -357,14 +362,14 @@ class NormaLucrataController extends Controller
                 }
 
                 // Se parcug toate coloanele si se stabileste latimea AUTO
-                // foreach ($sheet->getColumnIterator() as $column) {
-                //     $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
-                // }
+                foreach ($sheet->getColumnIterator() as $column) {
+                    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                }
                 // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
-                // $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
-                // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
-                // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
-                // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 
                 $writer = new Xlsx($spreadsheet);
