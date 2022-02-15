@@ -38,11 +38,13 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item me-3">
-                            <a class="nav-link active" aria-current="page" href="{{ route('angajati.index') }}">
-                                <i class="fas fa-users me-1"></i>Angajați
-                            </a>
-                        </li>
+                        @if (auth()->user()->name === "Andrei Dima")
+                            <li class="nav-item me-3">
+                                <a class="nav-link active" aria-current="page" href="{{ route('angajati.index') }}">
+                                    <i class="fas fa-users me-1"></i>Angajați
+                                </a>
+                            </li>
+                        @endif
                         {{-- <li class="nav-item me-3 dropdown">
                             <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-clock me-1"></i>Pontaje
@@ -53,31 +55,33 @@
                                 <li><a class="dropdown-item" href="{{ route('pontaje.afisare_lunar') }}">Vizualizare tabelară</a></li>
                             </ul>
                         </li> --}}
-                        <li class="nav-item me-3">
-                            <a class="nav-link active" aria-current="page" href="{{ route('pontaje.afisare_lunar') }}">
-                                <i class="fas fa-user-clock me-1"></i>Pontaje
-                            </a>
-                        </li>
                         <li class="nav-item me-3 dropdown">
                             <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-clipboard-list me-1"></i>Norme lucrate
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ route('norme-lucrate.index') }}">Administrare</a></li>
-                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ route('norme-lucrate.afisare_lunar') }}">Vizualizare tabelară</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ route('norme-lucrate.index') }}">Administrare</a></li>
                             </ul>
                         </li>
                         <li class="nav-item me-3">
-                            <a class="nav-link active" aria-current="page" href="{{ route('produse.index') }}">
-                                <i class="fas fa-tshirt me-1"></i>Produse
+                            <a class="nav-link active" aria-current="page" href="{{ route('pontaje.afisare_lunar') }}">
+                                <i class="fas fa-user-clock me-1"></i>Pontaje
                             </a>
                         </li>
-                        <li class="nav-item me-3">
-                            <a class="nav-link active" aria-current="page" href="{{ route('produse-operatii.index') }}">
-                                <i class="fas fa-tasks me-1"></i>Produse operații
-                            </a>
-                        </li>
+                        @if (auth()->user()->name === "Andrei Dima")
+                            <li class="nav-item me-3">
+                                <a class="nav-link active" aria-current="page" href="{{ route('produse.index') }}">
+                                    <i class="fas fa-tshirt me-1"></i>Produse
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link active" aria-current="page" href="{{ route('produse-operatii.index') }}">
+                                    <i class="fas fa-tasks me-1"></i>Produse operații
+                                </a>
+                            </li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->

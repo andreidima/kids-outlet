@@ -58,11 +58,11 @@
                     </a>
                 </div>
                 <div class="row input-group custom-search-form justify-content-center">
-                    <button class="btn btn-sm btn-primary text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
                         name="action" value="saptamana_anterioara">
                         << Săptămâna anterioară
                     </button>
-                    <button class="btn btn-sm btn-primary text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
+                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
                         name="action" value="saptamana_urmatoare">
                         Săptămâna următoare >>
                     </button>
@@ -145,6 +145,7 @@
                                                                 )->isoFormat('HH:mm')
                                                             }} --}}
                                                             @switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)))
+                                                                @case(0)
                                                                 @case(1)
                                                                 @case(2)
                                                                         2

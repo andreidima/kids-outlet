@@ -12,7 +12,7 @@
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
                         <div class="col-lg-8">
-                            <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
+                            <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Angajat" autofocus
                                     value="{{ $search_nume }}">
                         </div>
                         <div class="col-lg-4 d-flex">

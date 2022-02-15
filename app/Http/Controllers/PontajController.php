@@ -274,6 +274,7 @@ class PontajController extends Controller
                                             // }
                                             if ($pontaj->ora_sosire && $pontaj->ora_plecare){
                                                 switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
+                                                    case 0:
                                                     case 1:
                                                     case 2: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 2);
                                                         break;

@@ -285,8 +285,7 @@ class NormaLucrataController extends Controller
                 foreach ($produse as $index=>$produs){
                     $sheet->setCellValueByColumnAndRow(($index+3), 4 , $produs->nume);
                 }
-
-                // $sheet->setCellValueByColumnAndRow(($ziua+3), 4 , 'Total ore lucrate');
+                $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'Realizat');
 
                 $rand = 5;
                 foreach ($angajati as $angajat){
@@ -295,7 +294,7 @@ class NormaLucrataController extends Controller
                     $sheet->setCellValue('A' . $rand, $rand-4);
                     $sheet->setCellValue('B' . $rand, $angajat->nume);
 
-
+                    $suma_totala = 0;
                     foreach ($produse as $index=>$produs){
                         $suma = 0;
                         foreach ($produs->produse_operatii as $produs_operatie){
@@ -305,58 +304,13 @@ class NormaLucrataController extends Controller
                         }
                         if ($suma > 0){
                             $sheet->setCellValueByColumnAndRow(($index+3), $rand , $suma);
+                            $suma_totala += $suma;
                         }
                     }
-                    // for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
-                    //     if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
-                    //         foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
-                    //             switch ($pontaj->concediu){
-                    //                     case '0':
-                    //                         if ($pontaj->ora_sosire && $pontaj->ora_plecare){
-                    //                             switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
-                    //                                 case 1:
-                    //                                 case 2: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 2);
-                    //                                     break;
-                    //                                 case 3:
-                    //                                 case 4:
-                    //                                 case 5: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 4);;
-                    //                                     break;
-                    //                                 case 6:
-                    //                                 case 7:
-                    //                                 case 9:
-                    //                                 case 10:
-                    //                                 case 11:
-                    //                                 case 12: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 8);
-                    //                                     break;
-                    //                                 default: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)));
-                    //                                     break;
-                    //                             }
-                    //                         }
-                    //                         break;
-                    //                     case '1':
-                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'M');
-                    //                         break;
-                    //                     case '2':
-                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'O');
-                    //                         break;
-                    //                     case '3':
-                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'Î');
-                    //                         break;
-                    //                     case '4':
-                    //                         $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'N');
-                    //                         break;
-                    //             }
-                    //         }
-                    //     }
 
-                        // $sheet->getCellByColumnAndRow(($ziua+3), $rand)->getStyle()
-                        //     ->getBorders()
-                        //     ->getOutline()
-                        //     ->setBorderStyle(Border::BORDER_THIN);
-                            // ->setColor(new Color('FFFF0000'));;
-                    // }
-
-                    // $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
+                    if ($suma_totala > 0){
+                        $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala);
+                    }
 
                     $rand ++;
                 }
