@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid" style="background-color: #DFDCE3;">
+    <div class="container-fluid" style="background-color: #DFDCE3;" id="app1">
         <div class="row p-2 align-items-center">
             <div class="col-md-6 col-lg-5 p-0 mx-auto border border-dark text-white shadow-lg" style="background-color: #4ABDAC;">
                 <div class="d-flex justify-content-between">
@@ -21,9 +21,27 @@
 
                 <div class="mb-2" style="background-color: #000000; height:5px;"></div>
 
-                <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
+                {{-- <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4> --}}
 
-                <h4 class="mb-4"><b>PONTAJ</b>: {{ \Carbon\Carbon::today()->isoFormat('DD.MM.YYYY') }}  </h4>
+                <div class="d-flex align-items-center">
+                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
+                        <label for="data" class="mb-0 pe-2">Data:</label>
+                            <vue2-datepicker
+                                data-veche="{{ old('data', $data) }}"
+                                nume-camp-db="data"
+                                tip="date"
+                                value-type="YYYY-MM-DD"
+                                format="DD-MM-YYYY"
+                                :latime="{ width: '125px' }"
+                                disabled
+                            ></vue2-datepicker>
+                        <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
+                            Selectează
+                        </button>
+                    </form>
+                </div>
+
+                <h4 class="mb-4 text-center"><b>PONTAJ</b>: {{ \Carbon\Carbon::today()->isoFormat('DD.MM.YYYY') }}  </h4>
 
                 @include('errors')
 
@@ -150,7 +168,12 @@
                                                 @break
                                             @case(3)
                                                 <h4 class="mb-0">
-                                                    C.F.P.
+                                                    Î
+                                                </h4>
+                                                @break
+                                            @case(4)
+                                                <h4 class="mb-0">
+                                                    N
                                                 </h4>
                                                 @break
                                         @endswitch
@@ -189,7 +212,12 @@
                                                 @break
                                             @case(3)
                                                 <h4 class="mb-0">
-                                                    C.F.P.
+                                                    Î
+                                                </h4>
+                                                @break
+                                            @case(4)
+                                                <h4 class="mb-0">
+                                                    N
                                                 </h4>
                                                 @break
                                         @endswitch

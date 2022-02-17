@@ -346,7 +346,9 @@ class AngajatAplicatieController extends Controller
             ->with('pontaj_azi')
             ->orderBy('nume')->get();
 
-        return view('aplicatie_angajati/pontajPontator/pontaj', compact('angajat', 'angajati'));
+        $data = \Request::get('search_data') ?? Carbon::now()->toTimeString();
+
+        return view('aplicatie_angajati/pontajPontator/pontaj', compact('angajat', 'angajati', 'data'));
     }
 
     /**
