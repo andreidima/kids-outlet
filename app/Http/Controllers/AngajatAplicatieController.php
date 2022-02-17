@@ -343,7 +343,8 @@ class AngajatAplicatieController extends Controller
         $angajat = $request->session()->get('angajat');
 
         $angajati = $angajat->angajati_de_pontat()
-            ->with('pontaj_azi')
+            // ->with('pontaj_azi')
+            ->with('pontaj')
             ->orderBy('nume')->get();
 
         $data = \Request::get('search_data') ?? Carbon::now()->toTimeString();
