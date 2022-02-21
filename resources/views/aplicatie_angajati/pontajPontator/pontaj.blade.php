@@ -242,7 +242,7 @@
                     <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
                         @csrf
                         <h5 class="text-center">Alege altă dată, pentru a modifica un pontaj din altă zi</h5>
-                        <div class="mb-1 d-flex justify-content-center align-items-center">
+                        <div class="mb-3 d-flex justify-content-center align-items-center">
                             <label for="data_pontaj" class="mb-0 pe-2">Data:</label>
                                 <vue2-datepicker
                                     data-veche="{{ old('data_pontaj', $data_pontaj) }}"
