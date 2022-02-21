@@ -48,7 +48,7 @@ class AngajatAplicatieController extends Controller
     public function deconectare(Request $request)
     {
         $angajat = $request->session()->forget('angajat');
-
+        echo "<a href=”javascript:close_window();”>close</a>";
         return redirect('/');
     }
 
@@ -64,6 +64,9 @@ class AngajatAplicatieController extends Controller
         // Sterge atribute legate de comenzi sau pontaj, pastrare doar atributele angajatului
         $angajat = new Angajat( $request->session()->get('angajat')->only('id', 'nume') );
         $request->session()->put('angajat', $angajat);
+
+        // Sterge data_pontaj
+        $request->session()->forget('data_pontaj');
 
         return view('/aplicatie_angajati/meniul_principal', compact('angajat'));
     }
@@ -238,8 +241,8 @@ class AngajatAplicatieController extends Controller
 
         $angajat = $request->session()->get('angajat');
 
-        $search_data_inceput = \Request::get('search_data_inceput') ? \Carbon\Carbon::parse(\Request::get('search_data_inceput')) : \Carbon\Carbon::today();
-        $search_data_sfarsit = \Request::get('search_data_sfarsit') ? \Carbon\Carbon::parse(\Request::get('search_data_sfarsit')) : \Carbon\Carbon::today();
+        $search_data_inceput = \Request::get('search_data_inceput') ? Carbon::parse(\Request::get('search_data_inceput')) : Carbon::today();
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ? Carbon::parse(\Request::get('search_data_sfarsit')) : Carbon::today();
         // $search_data_inceput = \Request::get('search_data_inceput');
         // $search_data_sfarsit = \Request::get('search_data_sfarsit');
 
@@ -271,12 +274,29 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
-        if (($norma_lucrata->data === \Carbon\Carbon::now()->toDateString()) && ($norma_lucrata->angajat_id === $angajat->id)){
+        if (
+                ($norma_lucrata->angajat_id === $angajat->id)
+                &&
+                (
+                    (
+                        (Carbon::now()->day < 4)
+                        &&
+                        ($norma_lucrata->data >= Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
+                    )
+                    ||
+                    (
+                        (Carbon::now()->day >= 4)
+                        &&
+                        ($norma_lucrata->data >= Carbon::now()->startOfMonth()->toDateString())
+                    )
+                )
+            )
+        {
             $norma_lucrata->produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
             $norma_lucrata->produs_operatie->save();
             $norma_lucrata->delete();
 
-            $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
+            // $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
 
             return back()->with('success', 'Comanda a fost ștearsă cu succes!');
         } else {
@@ -296,12 +316,12 @@ class AngajatAplicatieController extends Controller
 
         // dd($angajat->pontaj_azi()->first()->data);
 
-        $pontaj = Pontaj::where('angajat_id' , $angajat->id)->where('data', \Carbon\Carbon::today())->first();
+        $pontaj = Pontaj::where('angajat_id' , $angajat->id)->where('data', Carbon::today())->first();
         if ($pontaj === null){
             // dd('$pontaj');
             $pontaj = new Pontaj;
             $pontaj->angajat_id = $angajat->id;
-            $pontaj->data = \Carbon\Carbon::now();
+            $pontaj->data = Carbon::now();
         }
         // dd($angajat, $pontaj);
 
@@ -310,7 +330,7 @@ class AngajatAplicatieController extends Controller
                 if ( !empty ($pontaj->ora_sosire) ){
                     // ora de sosire este deja setata
                 } else {
-                    $pontaj->ora_sosire = \Carbon\Carbon::now()->toTimeString();
+                    $pontaj->ora_sosire = Carbon::now()->toTimeString();
                     $pontaj->save();
                 }
                 break;
@@ -318,7 +338,7 @@ class AngajatAplicatieController extends Controller
                 if ( !empty ($pontaj->ora_plecare) ){
                     // ora de plecare este deja setata
                 } else {
-                    $pontaj->ora_plecare = \Carbon\Carbon::now()->toTimeString();
+                    $pontaj->ora_plecare = Carbon::now()->toTimeString();
                     $pontaj->save();
                 }
                 break;
@@ -342,14 +362,19 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
+        $data_pontaj = $request->session()->get('data_pontaj') ?? Carbon::now()->toDateString();
+        $request->session()->put('data_pontaj', $data_pontaj);
+
         $angajati = $angajat->angajati_de_pontat()
             // ->with('pontaj_azi')
-            ->with('pontaj')
+            ->with(['pontaj' => function ($query) use ($data_pontaj) {
+                $query->where('data', $data_pontaj);
+            }])
             ->orderBy('nume')->get();
 
-        $data = \Request::get('search_data') ?? Carbon::now()->toTimeString();
+        // $data = \Request::get('search_data') ?? Carbon::now()->toTimeString();
 
-        return view('aplicatie_angajati/pontajPontator/pontaj', compact('angajat', 'angajati', 'data'));
+        return view('aplicatie_angajati/pontajPontator/pontaj', compact('angajat', 'angajati', 'data_pontaj'));
     }
 
     /**
@@ -363,12 +388,17 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
+        if(empty($request->session()->get('data_pontaj'))){
+            return redirect('/aplicatie-angajati/meniul-principal');
+        }
+        $data_pontaj = $request->session()->get('data_pontaj');
+
         $pontaj = Pontaj::firstOrNew([
             'angajat_id' => $angajat_de_pontat->id,
-            'data' => Carbon::now()->toDateString()
+            'data' => $data_pontaj
         ]);
 
-        return view('aplicatie_angajati/pontajPontator/pontajModifica', compact('angajat', 'pontaj'));
+        return view('aplicatie_angajati/pontajPontator/pontajModifica', compact('angajat', 'pontaj', 'data_pontaj'));
     }
 
     /**
@@ -381,11 +411,15 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
-        // dd($request);
+        if(empty($request->session()->get('data_pontaj'))){
+            return redirect('/aplicatie-angajati/meniul-principal');
+        }
+        $data_pontaj = \Request::get('data_pontaj') ?? $request->session()->get('data_pontaj');
+        $request->session()->put('data_pontaj', $data_pontaj);
 
         $pontaj = Pontaj::firstOrNew([
             'angajat_id' => $request->angajat_id,
-            'data' => Carbon::parse($request->data)->toDateString()
+            'data' => Carbon::parse($data_pontaj)
         ]);
 
         // dd($pontaj);
@@ -434,6 +468,11 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
+        if(empty($request->session()->get('data_pontaj'))){
+            return redirect('/aplicatie-angajati/meniul-principal');
+        }
+        $data_pontaj = $request->session()->get('data_pontaj');
+
         $angajati = $angajat->angajati_de_pontat()->get();
 
         switch ($moment) {
@@ -441,7 +480,7 @@ class AngajatAplicatieController extends Controller
                 foreach ($angajati as $angajat){
                     $pontaj = Pontaj::firstOrNew([
                         'angajat_id' => $angajat->id,
-                        'data' => Carbon::now()->toDateString()
+                        'data' => $data_pontaj
                     ]);
                     empty($pontaj->concediu) ? ($pontaj->concediu = 0) : '';
                     if (empty($pontaj->ora_sosire) && ($pontaj->concediu === 0)){
@@ -454,7 +493,7 @@ class AngajatAplicatieController extends Controller
                 foreach ($angajati as $angajat){
                     $pontaj = Pontaj::firstOrNew([
                         'angajat_id' => $angajat->id,
-                        'data' => Carbon::now()->toDateString()
+                        'data' => $data_pontaj
                     ]);
                     empty($pontaj->concediu) ? ($pontaj->concediu = 0) : '';
                     if (empty($pontaj->ora_plecare) && ($pontaj->concediu === 0)){

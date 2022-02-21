@@ -99,7 +99,7 @@
 
                 @forelse ($norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
                     @forelse ($norme_lucrate_per_data as $norma_lucrata)
-                        <div class="mb-4 px-1" style="background-color:#007e6b;">
+                        <div class="mb-4 px-1 rounded-3" style="background-color:#007e6b;">
                             <small>Data:</small> {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
                             <br>
                             <small>Produs:</small> {{ $norma_lucrata->produs_operatie->produs->nume }}
@@ -109,28 +109,46 @@
                             <small>Operație:</small> {{ $norma_lucrata->produs_operatie->nume }}
                             <br>
                             <small>Număr de bucăți:</small> {{ $norma_lucrata->cantitate }}
-                            @if ($norma_lucrata->data === \Carbon\Carbon::now()->toDateString())
-                                <br>
-                                <div class="text-start">
-                                    <a
-                                        href="#"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#stergeComanda{{ $norma_lucrata->id }}"
-                                        title="Șterge Comanda"
-                                        class="btn btn-sm text-white"
-                                        style="background-color: #FC4A1A; border:1px solid white;"
-                                        >
-                                        {{-- <span class="badge bg-danger"> --}}
-                                            ȘTERGE COMANDA
-                                        {{-- </span> --}}
-                                    </a>
-                                </div>
+                            @if (
+                                    (
+                                        (\Carbon\Carbon::now()->day < 4)
+                                        // (\Carbon\Carbon::parse('2022-02-04')->day < 4)
+                                        &&
+                                        ($norma_lucrata->data >= \Carbon\Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
+                                    )
+                                    ||
+                                    (
+                                        (\Carbon\Carbon::now()->day >= 4)
+                                        // (\Carbon\Carbon::parse('2022-02-04')->day >= 4)
+                                        &&
+                                        ($norma_lucrata->data >= \Carbon\Carbon::now()->startOfMonth()->toDateString())
+                                    )
+                                )
+                                    <br>
+                                    <div class="text-start">
+                                        <a
+                                            href="#"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#stergeComanda{{ $norma_lucrata->id }}"
+                                            title="Șterge Comanda"
+                                            class="btn btn-sm text-white"
+                                            style="background-color: #FC4A1A; border:1px solid white;"
+                                            >
+                                            {{-- <span class="badge bg-danger"> --}}
+                                                ȘTERGE COMANDA
+                                            {{-- </span> --}}
+                                        </a>
+                                    </div>
                             @endif
                         </div>
                     @empty
                     @endforelse
                 @empty
                 @endforelse
+
+                <div class="mb-4 px-1 text-dark rounded-3" style="background-color:#d5ff88;">
+                    Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 3 (inclusiv) a lunii următoare.
+                </div>
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
 
@@ -140,41 +158,45 @@
 
     {{-- Modalele pentru stergere --}}
     @foreach ($norme_lucrate as $norma_lucrata)
-        <div class="modal fade text-dark" id="stergeComanda{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white" id="exampleModalLabel">
-                        Produs: <b>{{ $norma_lucrata->produs_operatie->produs->nume }}</b>
-                        <br>
-                        Operație: <b>{{ $norma_lucrata->produs_operatie->nume }}</b>
-                        <br>
-                        Cantitate: <b>{{ $norma_lucrata->cantitate }}</b>
-                    </h5>
-                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="text-align:left;">
-                    Ești sigur ca vrei să ștergi Comanda?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+        @if (
+                (
+                    (\Carbon\Carbon::now()->day < 4)
+                    &&
+                    ($norma_lucrata->data >= \Carbon\Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
+                )
+                ||
+                (
+                    (\Carbon\Carbon::now()->day >= 4)
+                    &&
+                    ($norma_lucrata->data >= \Carbon\Carbon::now()->startOfMonth()->toDateString())
+                )
+            )
+                <div class="modal fade text-dark" id="stergeComanda{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header bg-danger">
+                            <h5 class="modal-title text-white" id="exampleModalLabel">
+                                Produs: <b>{{ $norma_lucrata->produs_operatie->produs->nume }}</b>
+                                <br>
+                                Operație: <b>{{ $norma_lucrata->produs_operatie->nume }}</b>
+                                <br>
+                                Cantitate: <b>{{ $norma_lucrata->cantitate }}</b>
+                            </h5>
+                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="text-align:left;">
+                            Ești sigur ca vrei să ștergi Comanda?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
 
-                    <a class="btn btn-danger text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button">ȘTERGE COMANDA</a>
-                    {{-- <form method="POST" action="{{ $norma_lucrata->path() }}">
-                        @method('DELETE')
-                        @csrf
-                        <button
-                            type="submit"
-                            class="btn btn-danger text-white"
-                            >
-                            Șterge Comandă
-                        </button>
-                    </form> --}}
+                            <a class="btn btn-danger text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button">ȘTERGE COMANDA</a>
 
+                        </div>
+                        </div>
+                    </div>
                 </div>
-                </div>
-            </div>
-        </div>
+        @endif
     @endforeach
 
 

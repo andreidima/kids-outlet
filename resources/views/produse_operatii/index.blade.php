@@ -10,25 +10,44 @@
                 <form class="needs-validation" novalidate method="GET" action="{{ route('produse-operatii.index') }}">
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
-                        <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Nume" autofocus
-                                value="{{ $search_nume }}">
+                        {{-- <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_produs" name="search_produs" placeholder="Produs" autofocus
+                                value="{{ $search_produs }}"> --}}
+                        <div class="col-lg-8">
+                            {{-- <label for="search_produs_id" class="mb-0 ps-3">Produs</label> --}}
+                            <select name="search_produs_id"
+                                class="form-select bg-white rounded-3 {{ $errors->has('search_produs_id') ? 'is-invalid' : '' }}"
+                            >
+                                    <option value='' selected>Selectează un produs</option>
+                                @foreach ($produse as $produs)
+                                    <option
+                                        value='{{ $produs->id }}'
+                                        {{ ($produs->id == $search_produs_id) ? 'selected' : '' }}
+                                    >{{ $produs->nume }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control border rounded-3" id="search_nume" name="search_nume" placeholder="Operatie" autofocus
+                                    value="{{ $search_nume }}">
+                        </div>
                         {{-- <input type="text" class="form-control form-control-sm col-md-4 me-1 border rounded-pill" id="search_telefon" name="search_telefon" placeholder="Telefon" autofocus
                                 value="{{ $search_telefon }}"> --}}
                     </div>
                     <div class="row input-group custom-search-form justify-content-center">
-                        <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
+                        <button class="btn btn-primary text-white col-md-4 me-1 border border-dark rounded-3" type="submit">
                             <i class="fas fa-search text-white me-1"></i>Caută
                         </button>
-                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ route('produse-operatii.index') }}" role="button">
+                        <a class="btn bg-secondary text-white col-md-4 border border-dark rounded-3" href="{{ route('produse-operatii.index') }}" role="button">
                             <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                         </a>
                     </div>
                 </form>
             </div>
             <div class="col-lg-3 text-end">
-                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('produse-operatii.create', ['last_url' => '/produse-operatii']) }}" role="button">
+                {{-- <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('produse-operatii.create', ['last_url' => '/produse-operatii']) }}" role="button">
                     <i class="fas fa-plus-square text-white me-1"></i>Adaugă operație
-                </a>
+                </a> --}}
             </div>
         </div>
 
@@ -40,31 +59,33 @@
                 <table class="table table-striped table-hover table-sm rounded">
                     <thead class="text-white rounded" style="background-color:#e66800;">
                         <tr class="" style="padding:2rem">
-                            <th>Nr. Crt.</th>
-                            <th>Produs</th>
+                            <th>Fază</th>
+                            {{-- <th>Produs</th> --}}
                             <th>Nume operație</th>
-                            <th>Număr de fază</th>
+                            {{-- <th>Număr de fază</th> --}}
                             {{-- <th>Timp</th>
                             <th>Preț</th> --}}
-                            <th>Norma</th>
+                            <th>Preț</th>
                             <th>Norma efectuată</th>
-                            <th class="text-end">Acțiuni</th>
+                            <th>Norma totală</th>
+                            {{-- <th class="text-end">Acțiuni</th> --}}
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($produse_operatii as $produs_operatie)
                             <tr>
-                                <td align="">
+                                {{-- <td align="">
                                     {{ ($produse_operatii ->currentpage()-1) * $produse_operatii ->perpage() + $loop->index + 1 }}
-                                </td>
-                                <td>
-                                    <b>{{ $produs_operatie->produs->nume ?? '' }}</b>
-                                </td>
-                                <td>
-                                    <b>{{ $produs_operatie->nume }}</b>
-                                </td>
+                                    {{ $loop->iteration }}
+                                </td> --}}
                                 <td>
                                     <b>{{ $produs_operatie->numar_de_faza }}</b>
+                                </td>
+                                {{-- <td>
+                                    <b>{{ $produs_operatie->produs->nume ?? '' }}</b>
+                                </td> --}}
+                                <td>
+                                    <b>{{ $produs_operatie->nume }}</b>
                                 </td>
                                 {{-- <td>
                                     {{ $produs_operatie->timp ? \Carbon\Carbon::parse($produs_operatie->timp)->isoFormat('HH:mm') : '' }}
@@ -73,19 +94,20 @@
                                     {{ $produs_operatie->pret }}
                                 </td> --}}
                                 <td>
-                                    {{ $produs_operatie->norma_totala }}
+                                    {{ $produs_operatie->pret }}
                                 </td>
                                 <td>
                                     {{ $produs_operatie->norma_totala_efectuata }}
                                 </td>
-                                <td class="d-flex justify-content-end">
+                                <td>
+                                    {{ $produs_operatie->norma_totala }}
+                                </td>
+                                {{-- <td class="d-flex justify-content-end">
                                     <a href="{{ $produs_operatie->path() }}"
-                                    {{-- <a href="{{ route('produse-operatii.edit', ['produs_operatie' => $produs_operatie->id, 'last_url' => '/produse-operatii']) }}" --}}
                                         class="flex me-1"
                                     >
                                         <span class="badge bg-success">Vizualizează</span>
                                     </a>
-                                    {{-- <a href="{{ $produs_operatie->path() }}/modifica" --}}
                                     <a href="{{ route('produse-operatii.edit', ['produs_operatie' => $produs_operatie->id, 'last_url' => '/produse-operatii']) }}"
                                         class="flex me-1"
                                     >
@@ -101,26 +123,25 @@
                                             <span class="badge bg-danger">Șterge</span>
                                         </a>
                                     </div>
-                                </td>
+                                </td> --}}
                             </tr>
                         @empty
-                            {{-- <div>Nu s-au gasit rezervări în baza de date. Încearcă alte date de căutare</div> --}}
                         @endforelse
                         </tbody>
                 </table>
             </div>
 
-                <nav>
+                {{-- <nav>
                     <ul class="pagination pagination-sm justify-content-center">
                         {{$produse_operatii->appends(Request::except('page'))->links()}}
                     </ul>
-                </nav>
+                </nav> --}}
 
         </div>
     </div>
 
     {{-- Modalele pentru stergere produs_operatie --}}
-    @foreach ($produse_operatii as $produs_operatie)
+    {{-- @foreach ($produse_operatii as $produs_operatie)
         <div class="modal fade text-dark" id="stergeOperatie{{ $produs_operatie->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -149,6 +170,6 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach --}}
 
 @endsection

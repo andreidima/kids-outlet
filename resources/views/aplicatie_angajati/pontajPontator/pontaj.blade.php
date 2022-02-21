@@ -23,25 +23,7 @@
 
                 {{-- <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4> --}}
 
-                <div class="d-flex align-items-center">
-                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
-                        <label for="data" class="mb-0 pe-2">Data:</label>
-                            <vue2-datepicker
-                                data-veche="{{ old('data', $data) }}"
-                                nume-camp-db="data"
-                                tip="date"
-                                value-type="YYYY-MM-DD"
-                                format="DD-MM-YYYY"
-                                :latime="{ width: '125px' }"
-                                disabled
-                            ></vue2-datepicker>
-                        <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
-                            Selectează
-                        </button>
-                    </form>
-                </div>
-
-                <h4 class="mb-4 text-center"><b>PONTAJ</b>: {{ \Carbon\Carbon::today()->isoFormat('DD.MM.YYYY') }}  </h4>
+                <h2 class="mb-4 text-center"><b>PONTAJ</b>: {{ \Carbon\Carbon::parse($data_pontaj)->isoFormat('DD.MM.YYYY') }}  </h2>
 
                 @include('errors')
 
@@ -135,11 +117,11 @@
                                         {{ $angajat->nume }}
                                     </td>
                                     <td class="text-center align-items-center">
-                                        @switch($angajat->pontaj_azi->concediu ?? '')
+                                        @switch($angajat->pontaj->first()->concediu ?? '')
                                             @case(0)
-                                                @isset($angajat->pontaj_azi->ora_sosire)
+                                                @isset($angajat->pontaj->first()->ora_sosire)
                                                     <h4 class="mb-0">
-                                                        {{ $angajat->pontaj_azi->ora_sosire ? \Carbon\Carbon::parse($angajat->pontaj_azi->ora_sosire)->isoFormat('HH:mm') : '' }}
+                                                        {{ $angajat->pontaj->first()->ora_sosire ? \Carbon\Carbon::parse($angajat->pontaj->first()->ora_sosire)->isoFormat('HH:mm') : '' }}
                                                     </h4>
                                                 @else
                                                     <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
@@ -147,7 +129,7 @@
 
                                                         <input class="form-control form-control-lg mb-3" type="hidden" name="angajat_id" value="{{ $angajat->id }}">
                                                         <input class="form-control form-control-lg mb-3" type="hidden" name="moment" value="sosire">
-                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ \Carbon\Carbon::now() }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ $data_pontaj }}">
                                                         <input class="form-control form-control-lg mb-3" type="hidden" name="ora" value="{{ \Carbon\Carbon::now() }}">
 
                                                         <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
@@ -179,11 +161,11 @@
                                         @endswitch
                                     </td>
                                     <td class="text-center">
-                                        @switch($angajat->pontaj_azi->concediu ?? '')
+                                        @switch($angajat->pontaj->first()->concediu ?? '')
                                             @case(0)
-                                                @isset($angajat->pontaj_azi->ora_plecare)
+                                                @isset($angajat->pontaj->first()->ora_plecare)
                                                     <h4 class="mb-0">
-                                                        {{ $angajat->pontaj_azi->ora_plecare ? \Carbon\Carbon::parse($angajat->pontaj_azi->ora_plecare)->isoFormat('HH:mm') : '' }}
+                                                        {{ $angajat->pontaj->first()->ora_plecare ? \Carbon\Carbon::parse($angajat->pontaj->first()->ora_plecare)->isoFormat('HH:mm') : '' }}
                                                     </h4>
                                                 @else
                                                     <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
@@ -191,7 +173,7 @@
 
                                                         <input class="form-control form-control-lg mb-3" type="hidden" name="angajat_id" value="{{ $angajat->id }}">
                                                         <input class="form-control form-control-lg mb-3" type="hidden" name="moment" value="plecare">
-                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ \Carbon\Carbon::now() }}">
+                                                        <input class="form-control form-control-lg mb-3" type="hidden" name="data" value="{{ $data_pontaj }}">
                                                         <input class="form-control form-control-lg mb-3" type="hidden" name="ora" value="{{ \Carbon\Carbon::now() }}">
 
                                                         <button type="submit" class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
@@ -252,6 +234,31 @@
 
                         </tbody>
                     </table>
+                </div>
+
+
+
+                <div class="py-5 align-items-center">
+                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj" autocomplete="off">
+                        @csrf
+                        <h5 class="text-center">Alege altă dată, pentru a modifica un pontaj din altă zi</h5>
+                        <div class="mb-1 d-flex justify-content-center align-items-center">
+                            <label for="data_pontaj" class="mb-0 pe-2">Data:</label>
+                                <vue2-datepicker
+                                    data-veche="{{ old('data_pontaj', $data_pontaj) }}"
+                                    nume-camp-db="data_pontaj"
+                                    tip="date"
+                                    value-type="YYYY-MM-DD"
+                                    format="DD-MM-YYYY"
+                                    :latime="{ width: '125px' }"
+                                ></vue2-datepicker>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="px-0 mb-0 btn btn-lg w-50 text-white" style="background-color: #FC4A1A; border:2px solid white;">
+                                Selectează
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>

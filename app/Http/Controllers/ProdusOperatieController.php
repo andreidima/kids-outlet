@@ -6,6 +6,7 @@ use App\Models\Produs;
 use App\Models\ProdusOperatie;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProdusOperatieController extends Controller
 {
@@ -16,19 +17,31 @@ class ProdusOperatieController extends Controller
      */
     public function index()
     {
+        $search_produs_id = \Request::get('search_produs_id');
         $search_nume = \Request::get('search_nume');
 
+        $produse = Produs::latest()->get();
+
         $produse_operatii = ProdusOperatie::with('produs')
+            // ->when($search_produs_id, function (Builder $query, $search_produs_id) {
+            //     $query->whereHas('produs', function (Builder $query) use ($search_produs_id) {
+            //         $query->where('nume', 'like', '%' . $search_produs_id . '%');
+            //     });
+            // })
+            ->whereHas('produs', function (Builder $query) use ($search_produs_id) {
+                $query->where('id', $search_produs_id);
+            })
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
             // ->when($search_telefon, function ($query, $search_telefon) {
             //     return $query->where('telefon', 'like', '%' . $search_telefon . '%');
             // })
-            ->latest()
-            ->simplePaginate(25);
+            ->orderBy('numar_de_faza')
+            // ->simplePaginate(25);
+            ->get();
 
-        return view('produse_operatii.index', compact('produse_operatii', 'search_nume'));
+        return view('produse_operatii.index', compact('produse_operatii', 'produse', 'search_produs_id', 'search_nume'));
     }
 
     /**

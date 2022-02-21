@@ -11,7 +11,7 @@
                 <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.index') }}">
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
-                        <div class="col-lg-8">
+                        <div class="col-lg-4">
                             <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Angajat" autofocus
                                     value="{{ $search_nume }}">
                         </div>

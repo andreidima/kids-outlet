@@ -3,7 +3,7 @@
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-        <div class="col-lg-5">
+        <div class="col-lg-3">
             {{-- <h4 class="mb-0"><a href="{{ route('norme-lucrate.afisare_lunar') }}">
                 <i class="fas fa-clipboard-list me-1"></i>Norme lucrate</a> /
                 {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
@@ -11,12 +11,12 @@
                 {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
             </h4> --}}
             <h4 class="mb-2">
-                <i class="fas fs-4 fa-clipboard-list me-1"></i>Norme lucrate /
+                <i class="fas fs-4 fa-clipboard-list me-1"></i>Norme lucrate
             {{-- </h4>
             <h4 class="mb-0"> --}}
-                {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
+                {{-- {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
                 -
-                {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }}
+                {{ \Carbon\Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY') ?? '' }} --}}
             </h4>
             <div>
                 <form class="needs-validation" novalidate method="GET" action="{{ route('pontaje.afisare_lunar') }}">
@@ -24,14 +24,27 @@
                 </form>
             </div>
         </div>
-        <div class="col-lg-7" id="app1">
+        <div class="col-lg-9" id="app1">
             <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.afisare_lunar') }}">
                 @csrf
                 <div class="row mb-1 input-group custom-search-form justify-content-center">
-                    <div class="col-lg-6">
-                        <input type="text" class="form-control form-control-sm me-1 border rounded-3" id="search_nume" name="search_nume" placeholder="Nume" autofocus
-                                value="{{ $search_nume }}">
+                    <div class="col-lg-3">
+                        <select name="search_angajat_id"
+                            class="form-select bg-white rounded-3 {{ $errors->has('search_angajat_id') ? 'is-invalid' : '' }}"
+                        >
+                                <option value='' selected>Alege angajat</option>
+                            @foreach ($angajati_in_search as $angajat)
+                                <option
+                                    value='{{ $angajat->id }}'
+                                    {{ ($angajat->id == $search_angajat_id) ? 'selected' : '' }}
+                                >{{ $angajat->nume }} </option>
+                            @endforeach
+                        </select>
                     </div>
+                    {{-- <div class="col-lg-3">
+                        <input type="text" class="form-control me-1 border rounded-3" id="search_nume" name="search_nume" placeholder="Nume" autofocus
+                                value="{{ $search_nume }}">
+                    </div> --}}
                     <div class="col-lg-6 d-flex">
                         <label for="search_data" class="mb-0 align-self-center me-1">Interval:</label>
                         <vue2-datepicker

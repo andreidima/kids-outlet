@@ -204,7 +204,10 @@ class NormaLucrataController extends Controller
      */
     protected function afisareLunar(Request $request)
     {
+        $search_angajat_id = \Request::get('search_angajat_id');
         $search_nume = \Request::get('search_nume');
+        (!isset($search_nume) && isset($search_angajat_id)) ? ($search_nume = Angajat::find($search_angajat_id)->nume) : '';
+
         $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
         $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
 
@@ -222,6 +225,8 @@ class NormaLucrataController extends Controller
                     $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
                 break;
         }
+
+        $angajati_in_search = Angajat::select('id', 'nume')->where('id', '>', 3)->orderBy('nume')->get();
 
         $angajati = Angajat::with(['norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
                 $query->whereDate('data', '>=', $search_data_inceput)
@@ -336,7 +341,7 @@ class NormaLucrataController extends Controller
             default:
                     $request->session()->forget('norme_lucrate_afisare_tabelara_return_url');
 
-                    return view('norme_lucrate.index.lunar', compact('angajati', 'search_nume', 'search_data_inceput', 'search_data_sfarsit'));
+                    return view('norme_lucrate.index.lunar', compact('angajati', 'angajati_in_search', 'search_nume','search_angajat_id', 'search_data_inceput', 'search_data_sfarsit'));
                 break;
         }
     }

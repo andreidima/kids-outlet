@@ -81,6 +81,11 @@
                             </li>
                         @else
                             <li class="nav-item me-3">
+                                <a class="nav-link active" aria-current="page" href="{{ route('produse-operatii.index') }}">
+                                    <i class="fas fa-tasks me-1"></i>Produse operații
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
                                 <a class="nav-link active" aria-current="page" href="{{ route('norme-lucrate.afisare_lunar') }}">
                                     <i class="fas fa-clipboard-list me-1"></i>Norme lucrate
                                 </a>
