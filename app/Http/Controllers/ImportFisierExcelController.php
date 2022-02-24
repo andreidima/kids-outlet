@@ -15,7 +15,7 @@ class ImportFisierExcelController extends Controller
 
         foreach ($import_produse_operatii as $import_produs_operatie){
             $produs_operatie = new ProdusOperatie;
-            $produs_operatie->produs_id = 0;
+            $produs_operatie->produs_id = 9;
             $produs_operatie->nume = $import_produs_operatie->{'DESCRIEREA OPERATIEI'};
             $produs_operatie->numar_de_faza = $import_produs_operatie->{'nr crt'};
             $produs_operatie->timp = str_replace(',', '.', $import_produs_operatie->{'TIMP'});
@@ -26,7 +26,7 @@ class ImportFisierExcelController extends Controller
             $produs_operatie->pret_100_pe_minut = str_replace(',', '.', $import_produs_operatie->{'PRET 100% pe minut'});
             $produs_operatie->pret_100_pe_faze = str_replace(',', '.', $import_produs_operatie->{'PRET 100% pe faze'});
             $produs_operatie->j = str_replace(',', '.', $import_produs_operatie->{'J'});
-            $produs_operatie->norma_totala = 999999999;
+            $produs_operatie->norma_totala = 992;
 
             // $produs_operatie = ProdusOperatie::
             //     where('produs_id', 2)
@@ -47,16 +47,15 @@ class ImportFisierExcelController extends Controller
         echo 'Au fost importate ' . $import_produse_operatii->count() . ' operatii (faze) ale produsului!';
     }
 
-    public function importProduseOperatiiSetareNormeInfinit()
+    public function importProduseOperatiiSetareNorme()
     {
-        // dd('hi');
-        $produse_operatii = ProdusOperatie::all();
+        $produse_operatii = ProdusOperatie::where('produs_id', 9)->get();
 
         foreach ($produse_operatii as $produs_operatie) {
-            $produs_operatie->norma_totala = 999999;
+            $produs_operatie->norma_totala = 992;
             $produs_operatie->save();
         }
 
-        echo 'Tuturor operatiilor, ' . $produse_operatii->count() . ', le-a fost setata norma de 999999!';
+        echo 'Tuturor operatiilor, ' . $produse_operatii->count() . ', le-a fost setata norma de 992!';
     }
 }

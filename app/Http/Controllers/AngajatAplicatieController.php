@@ -81,7 +81,7 @@ class AngajatAplicatieController extends Controller
         }
 
         $angajat = $request->session()->get('angajat');
-        $produse = Produs::where('activ', 1)->get();
+        $produse = Produs::where('activ', 1)->latest()->get();
         // dd($produse->toArray());
         return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_1', compact('angajat', 'produse'));
     }
