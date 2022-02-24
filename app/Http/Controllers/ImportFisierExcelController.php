@@ -11,7 +11,7 @@ class ImportFisierExcelController extends Controller
 {
     public function importProduseOperatii()
     {
-        $import_produse_operatii = DB::table('sheet1')->get();
+        $import_produse_operatii = DB::table('Sheet1')->get();
 
         foreach ($import_produse_operatii as $import_produs_operatie){
             $produs_operatie = new ProdusOperatie;
