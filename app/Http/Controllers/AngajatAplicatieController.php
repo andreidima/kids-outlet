@@ -507,4 +507,21 @@ class AngajatAplicatieController extends Controller
         return redirect('/aplicatie-angajati/pontaj');
     }
 
+    /**
+     *
+     */
+    public function veziFazeProduse(Request $request, Produs $produs = null)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+
+        $angajat = $request->session()->get('angajat');
+        $produse = Produs::where('activ', 1)->latest()->get();
+
+        isset($produs) ? ($produse_operatii = $produs->produse_operatii) : ($produse_operatii = null);
+
+        return view('aplicatie_angajati/vezi_faze_produse', compact('angajat', 'produse', 'produse_operatii'));
+    }
+
 }
