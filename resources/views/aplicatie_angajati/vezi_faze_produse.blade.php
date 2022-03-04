@@ -37,7 +37,7 @@
                             <thead>
                                 <tr>
                                     <th colspan="3" class="text-center">
-                                        {{ $produse_operatii->first()->produs->nume }}
+                                        {{ $produse_operatii->first()->produs->nume ?? '' }}
                                     </th>
                                 </tr>
                                 <tr>
