@@ -46,7 +46,7 @@
                 <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">REALIZAT</a>
 
                 {{-- Conturile de test Andrei si Mocanu Geanina pot vedea si fazele si ce s-a introdus la fiecare --}}
-                @if ($angajat->id < 4)
+                @if ($angajat->id < 5)
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
                 @endif
 
