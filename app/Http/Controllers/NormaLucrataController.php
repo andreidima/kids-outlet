@@ -211,8 +211,8 @@ class NormaLucrataController extends Controller
         $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
         $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
 
-        if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
-            return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
+        if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 65){
+            return back()->with('error', 'Selectează te rog intervale mai mici de 65 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
         }
 
         switch ($request->input('action')) {

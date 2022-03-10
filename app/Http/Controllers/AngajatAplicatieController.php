@@ -246,8 +246,8 @@ class AngajatAplicatieController extends Controller
         // $search_data_inceput = \Request::get('search_data_inceput');
         // $search_data_sfarsit = \Request::get('search_data_sfarsit');
 
-        if ($search_data_inceput->diffInDays($search_data_sfarsit) > 35){
-            return back()->with('error', 'Vă rog căutați o perioadă de maxim 35 de zile.');
+        if ($search_data_inceput->diffInDays($search_data_sfarsit) > 65){
+            return back()->with('error', 'Vă rog căutați o perioadă de maxim 65 de zile.');
         }
 
         // if ($search_data_inceput && $search_data_sfarsit){
