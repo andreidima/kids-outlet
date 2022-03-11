@@ -46,7 +46,12 @@
                 <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">REALIZAT</a>
 
                 {{-- Conturile de test Andrei si Mocanu Geanina pot vedea si fazele si ce s-a introdus la fiecare --}}
-                @if ($angajat->id < 5)
+                @if (
+                        ($angajat->id === 1) // Andrei Dima Administrator 1
+                        || ($angajat->id === 3) // Andrei Dima Administrator 3
+                        || ($angajat->id === 4) // Mocanu Geanina
+                        || ($angajat->id === 12) // Duna Luminita
+                    )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
                 @endif
 
