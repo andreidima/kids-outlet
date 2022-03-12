@@ -237,11 +237,15 @@ class NormaLucrataController extends Controller
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
+            ->orderBy('prod')
             ->orderBy('nume')
             // ->take(2)
             // ->paginate(10);
             ->get();
-
+// foreach ($angajati as $angajat){
+//     echo $angajat->prod . ' ' . $angajat->nume . ' <br>';
+// }
+// dd('stop');
         // foreach ($angajati as $angajat){
         //     echo $angajat->nume . '<br>';
         //     foreach ($angajat->norme_lucrate as $norma_lucrata){
@@ -293,30 +297,44 @@ class NormaLucrataController extends Controller
                 $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'Realizat');
 
                 $rand = 5;
-                foreach ($angajati as $angajat){
-                    // $timp_total = Carbon::today();
 
-                    $sheet->setCellValue('A' . $rand, $rand-4);
-                    $sheet->setCellValue('B' . $rand, $angajat->nume);
+                $angajati->sortBy('prod');
 
-                    $suma_totala = 0;
-                    foreach ($produse as $index=>$produs){
-                        $suma = 0;
-                        foreach ($produs->produse_operatii as $produs_operatie){
-                            foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
-                                $suma += $norma_lucrata->cantitate * $produs_operatie->pret;
+                foreach ($angajati->groupby('prod') as $angajati_per_prod){
+
+                    if ($angajati_per_prod->first()->prod){
+                        $sheet->setCellValue('A' . $rand, 'Prod ' . $angajati_per_prod->first()->prod);
+                    } else {
+                        $sheet->setCellValue('A' . $rand, 'Prod nesetat');
+                    }
+                    $rand ++;
+
+                    foreach ($angajati_per_prod as $angajat){
+                        // $timp_total = Carbon::today();
+
+                        $sheet->setCellValue('A' . $rand, $rand-4);
+                        $sheet->setCellValue('B' . $rand, $angajat->nume);
+
+                        $suma_totala = 0;
+                        foreach ($produse as $index=>$produs){
+                            $suma = 0;
+                            foreach ($produs->produse_operatii as $produs_operatie){
+                                foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
+                                    $suma += $norma_lucrata->cantitate * $produs_operatie->pret;
+                                }
+                            }
+                            if ($suma > 0){
+                                $sheet->setCellValueByColumnAndRow(($index+3), $rand , $suma);
+                                $suma_totala += $suma;
                             }
                         }
-                        if ($suma > 0){
-                            $sheet->setCellValueByColumnAndRow(($index+3), $rand , $suma);
-                            $suma_totala += $suma;
+
+                        if ($suma_totala > 0){
+                            $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala);
                         }
-                    }
 
-                    if ($suma_totala > 0){
-                        $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala);
+                        $rand ++;
                     }
-
                     $rand ++;
                 }
 

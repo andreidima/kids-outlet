@@ -82,7 +82,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('norme-lucrate/adauga/per-angajat-per-data/{angajat?}/{data?}', [NormaLucrataController::class, 'create']);
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 
-    Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
+    // Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
     // Route::get('/import/import-produse-operatii/setare-norme', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNorme']);
 
     // Route::get('inserare-angajati', [InserareAngajatiController::class, 'inserareAngajati']);
