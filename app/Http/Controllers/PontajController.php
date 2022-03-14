@@ -203,6 +203,8 @@ class PontajController extends Controller
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
+            ->where('activ', 1)
+            ->orderBy('firma')
             ->orderBy('nume')
             // ->groupBy('angajat_id')
             // ->paginate(10);
@@ -225,6 +227,18 @@ class PontajController extends Controller
                     // }
                 break;
             case 'export_excel':
+
+
+                // foreach ($angajati->groupby('firma') as $angajati_per_firma){
+                //     foreach ($angajati_per_firma as $angajat){
+
+                //         echo $angajat->nume . ' - ';
+                //         echo $angajat->pontaj->count();
+                //         echo '<br><br>';
+                //     }
+                // }
+                // dd('stop');
+
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -251,82 +265,95 @@ class PontajController extends Controller
                 // $sheet->setCellValueByColumnAndRow(($ziua+3), 4 , 'Total ore lucrate');
 
                 $rand = 5;
-                foreach ($angajati as $angajat){
-                    // $timp_total = Carbon::today();
 
-                    $sheet->setCellValue('A' . $rand, $rand-4);
-                    $sheet->setCellValue('B' . $rand, $angajat->nume);
+                foreach ($angajati->groupby('firma') as $angajati_per_firma){
 
-                    for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
-                        if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
-                            foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
-                                switch ($pontaj->concediu){
-                                        case '0':
-                                            // if ($pontaj->ora_sosire && $pontaj->ora_plecare){
-                                            //     // se calculaeaza secundele lucrate
-                                            //     $secunde = \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire));
-                                            //     // daca sunt mai mult de 8 ore, se reduce la 8 ore
-                                            //     ($secunde > 28800) ? $secunde = 28800 : '';
-                                            //     // se aduna la timpul total
-                                            //     $timp_total->addSeconds($secunde);
-
-                                            //     $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, \Carbon\Carbon::parse($secunde)->isoFormat('HH:mm'));
-                                            // }
-                                            if ($pontaj->ora_sosire && $pontaj->ora_plecare){
-                                                switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
-                                                    case 0:
-                                                    case 1:
-                                                    case 2: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 2);
-                                                        break;
-                                                    case 3:
-                                                    case 4:
-                                                    case 5: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 4);;
-                                                        break;
-                                                    case 6:
-                                                    case 7:
-                                                    case 8:
-                                                    case 9:
-                                                    case 10:
-                                                    case 11:
-                                                    case 12:
-                                                    case 13:
-                                                    case 14:
-                                                    case 15:
-                                                    case 16:
-                                                    case 17:
-                                                    case 18: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 8);
-                                                        break;
-                                                    default: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)));
-                                                        break;
-                                                }
-                                            }
-                                            break;
-                                        case '1':
-                                            $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'M');
-                                            break;
-                                        case '2':
-                                            $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'O');
-                                            break;
-                                        case '3':
-                                            $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'Î');
-                                            break;
-                                        case '4':
-                                            $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'N');
-                                            break;
-                                }
-                            }
-                        }
-
-                        // $sheet->getCellByColumnAndRow(($ziua+3), $rand)->getStyle()
-                        //     ->getBorders()
-                        //     ->getOutline()
-                        //     ->setBorderStyle(Border::BORDER_THIN);
-                            // ->setColor(new Color('FFFF0000'));;
+                    if ($angajati_per_firma->first()->firma){
+                        $sheet->setCellValue('A' . $rand, 'Firma ' . $angajati_per_firma->first()->firma);
+                    } else {
+                        $sheet->setCellValue('A' . $rand, 'Firma nesetată');
                     }
 
-                    // $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
-
                     $rand ++;
+
+                    foreach ($angajati_per_firma as $angajat){
+                        if ($angajat->pontaj->count() > 0){ // se exporta in excel doar cei care au pontaj
+
+                            $sheet->setCellValue('A' . $rand, $rand-4);
+                            $sheet->setCellValue('B' . $rand, $angajat->nume);
+
+                            for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+                                if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
+                                    foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
+                                        switch ($pontaj->concediu){
+                                                case '0':
+                                                    // if ($pontaj->ora_sosire && $pontaj->ora_plecare){
+                                                    //     // se calculaeaza secundele lucrate
+                                                    //     $secunde = \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire));
+                                                    //     // daca sunt mai mult de 8 ore, se reduce la 8 ore
+                                                    //     ($secunde > 28800) ? $secunde = 28800 : '';
+                                                    //     // se aduna la timpul total
+                                                    //     $timp_total->addSeconds($secunde);
+
+                                                    //     $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, \Carbon\Carbon::parse($secunde)->isoFormat('HH:mm'));
+                                                    // }
+                                                    if ($pontaj->ora_sosire && $pontaj->ora_plecare){
+                                                        switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
+                                                            case 0:
+                                                            case 1:
+                                                            case 2: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 2);
+                                                                break;
+                                                            case 3:
+                                                            case 4:
+                                                            case 5: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 4);;
+                                                                break;
+                                                            case 6:
+                                                            case 7:
+                                                            case 8:
+                                                            case 9:
+                                                            case 10:
+                                                            case 11:
+                                                            case 12:
+                                                            case 13:
+                                                            case 14:
+                                                            case 15:
+                                                            case 16:
+                                                            case 17:
+                                                            case 18: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 8);
+                                                                break;
+                                                            default: $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)));
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+                                                case '1':
+                                                    $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'M');
+                                                    break;
+                                                case '2':
+                                                    $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'O');
+                                                    break;
+                                                case '3':
+                                                    $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'Î');
+                                                    break;
+                                                case '4':
+                                                    $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, 'N');
+                                                    break;
+                                        }
+                                    }
+                                }
+
+                                // $sheet->getCellByColumnAndRow(($ziua+3), $rand)->getStyle()
+                                //     ->getBorders()
+                                //     ->getOutline()
+                                //     ->setBorderStyle(Border::BORDER_THIN);
+                                    // ->setColor(new Color('FFFF0000'));;
+                            }
+
+                            // $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
+
+                            $rand ++;
+                        }
+                    }
                 }
 
                 // Se parcug toate coloanele si se stabileste latimea AUTO
