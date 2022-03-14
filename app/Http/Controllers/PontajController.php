@@ -275,11 +275,12 @@ class PontajController extends Controller
                     }
 
                     $rand ++;
+                    $nr_crt_angajat = 1;
 
                     foreach ($angajati_per_firma as $angajat){
                         if ($angajat->pontaj->count() > 0){ // se exporta in excel doar cei care au pontaj
 
-                            $sheet->setCellValue('A' . $rand, $rand-4);
+                            $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
                             $sheet->setCellValue('B' . $rand, $angajat->nume);
 
                             for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
@@ -352,8 +353,10 @@ class PontajController extends Controller
                             // $sheet->setCellValueByColumnAndRow(($ziua+3), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
 
                             $rand ++;
+                            $nr_crt_angajat ++;
                         }
                     }
+                    $rand ++;
                 }
 
                 // Se parcug toate coloanele si se stabileste latimea AUTO

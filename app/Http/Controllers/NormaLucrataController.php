@@ -298,7 +298,7 @@ class NormaLucrataController extends Controller
 
                 $rand = 5;
 
-                $angajati->sortBy('prod');
+                // $angajati->sortBy('prod');
 
                 foreach ($angajati->groupby('prod') as $angajati_per_prod){
 
@@ -307,12 +307,14 @@ class NormaLucrataController extends Controller
                     } else {
                         $sheet->setCellValue('A' . $rand, 'Prod nesetat');
                     }
+
                     $rand ++;
+                    $nr_crt_angajat = 1;
 
                     foreach ($angajati_per_prod as $angajat){
                         // $timp_total = Carbon::today();
 
-                        $sheet->setCellValue('A' . $rand, $rand-4);
+                        $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
                         $sheet->setCellValue('B' . $rand, $angajat->nume);
 
                         $suma_totala = 0;
@@ -334,6 +336,7 @@ class NormaLucrataController extends Controller
                         }
 
                         $rand ++;
+                        $nr_crt_angajat ++;
                     }
                     $rand ++;
                 }
