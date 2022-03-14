@@ -178,7 +178,7 @@ class PontajController extends Controller
     {
         $search_nume = \Request::get('search_nume');
         $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
-        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(5)->toDateString();
 
         if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
             return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
@@ -283,7 +283,7 @@ class PontajController extends Controller
                             $sheet->setCellValue('B' . $rand, $angajat->nume);
 
                             for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
-                                if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
+                                // if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
                                     foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
                                         switch ($pontaj->concediu){
                                                 case '0':
@@ -340,7 +340,7 @@ class PontajController extends Controller
                                                     break;
                                         }
                                     }
-                                }
+                                // }
 
                                 // $sheet->getCellByColumnAndRow(($ziua+3), $rand)->getStyle()
                                 //     ->getBorders()
