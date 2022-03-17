@@ -65,9 +65,9 @@
                             {{-- <th>Număr de fază</th> --}}
                             {{-- <th>Timp</th>
                             <th>Preț</th> --}}
-                            <th>Preț</th>
-                            <th>Norma efectuată</th>
-                            <th>Norma totală</th>
+                            <th class="text-end">Preț</th>
+                            <th class="text-end">Norma efectuată</th>
+                            <th class="text-end">Norma totală</th>
                             {{-- <th class="text-end">Acțiuni</th> --}}
                         </tr>
                     </thead>
@@ -93,13 +93,23 @@
                                 <td>
                                     {{ $produs_operatie->pret }}
                                 </td> --}}
-                                <td>
+                                <td class="text-end">
                                     {{ $produs_operatie->pret }}
                                 </td>
-                                <td>
-                                    {{ $produs_operatie->norma_totala_efectuata }}
+                                <td class="text-end">
+                                    <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.index') }}" target="_blank">
+                                        @csrf
+                                            <input type="hidden" name="search_produs_id" value="{{ $produs_operatie->produs_id }}">
+                                            <input type="hidden" name="search_numar_de_faza" value="{{ $produs_operatie->numar_de_faza }}">
+                                            {{-- <a class="btn btn-primary" href="#" role="button" type="submit">Link</a> --}}
+                                            <button class="btn btn-sm btn-primary text-white py-0" type="submit">
+                                                {{ $produs_operatie->norma_totala_efectuata }}
+                                            </button>
+
+                                    </form>
+                                    {{-- {{ $produs_operatie->norma_totala_efectuata }} --}}
                                 </td>
-                                <td>
+                                <td class="text-end">
                                     {{ $produs_operatie->norma_totala }}
                                 </td>
                                 {{-- <td class="d-flex justify-content-end">
@@ -127,6 +137,16 @@
                             </tr>
                         @empty
                         @endforelse
+                            <tr>
+                                <td colspan="2" class="text-end">
+                                    <b>Preț total</b>
+                                </td>
+                                <td class="text-end">
+                                    <b>{{ $produse_operatii->sum('pret') }}</b>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                 </table>
             </div>

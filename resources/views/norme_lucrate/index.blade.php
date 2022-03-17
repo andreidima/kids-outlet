@@ -11,11 +11,11 @@
                 <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.index') }}">
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
-                        <div class="col-lg-4">
-                            <input type="text" class="form-control form-control-sm me-1 border rounded-pill" id="search_nume" name="search_nume" placeholder="Angajat" autofocus
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control form-control me-1 border rounded-3" id="search_nume" name="search_nume" placeholder="Angajat" autofocus
                                     value="{{ $search_nume }}">
                         </div>
-                        <div class="col-lg-4 d-flex">
+                        <div class="col-lg-6 d-flex justify-content-center">
                             <label for="search_data" class="mb-0 align-self-center me-1">Data:</label>
                             <vue2-datepicker
                                 data-veche="{{ $search_data }}"
@@ -25,6 +25,21 @@
                                 format="DD-MM-YYYY"
                                 :latime="{ width: '125px' }"
                             ></vue2-datepicker>
+                        </div>
+                        <div class="col-lg-6">
+                            <select name="search_produs_id" class="form-select bg-white rounded-3 {{ $errors->has('search_produs_id') ? 'is-invalid' : '' }}">
+                                    <option value='' selected>Produs</option>
+                                @foreach ($produse as $produs)
+                                    <option value='{{ $produs->id }}'
+                                            {{ ($produs->id == $search_produs_id) ? 'selected' : '' }}>
+                                        {{ $produs->nume }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control form-control me-1 border rounded-3" id="search_numar_de_faza" name="search_numar_de_faza" placeholder="Nr. fază" autofocus
+                                    value="{{ $search_numar_de_faza }}">
                         </div>
                     </div>
                     <div class="row input-group custom-search-form justify-content-center">

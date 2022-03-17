@@ -30,6 +30,8 @@ class NormaLucrataController extends Controller
         // $search_nume = $angajat ? Angajat::find($angajat)->nume : \Request::get('search_nume');
         $search_nume = $angajat->nume ?? \Request::get('search_nume');
         $search_data = $data ?? \Request::get('search_data');
+        $search_produs_id = \Request::get('search_produs_id');
+        $search_numar_de_faza = \Request::get('search_numar_de_faza');
 
         $norme_lucrate = NormaLucrata::with('angajat', 'produs_operatie.produs')
             ->when($search_nume, function (Builder $query, $search_nume) {
@@ -37,21 +39,37 @@ class NormaLucrataController extends Controller
                     $query->where('nume', 'like', '%' . $search_nume . '%');
                 });
             })
-            // ->when($angajat, function (Builder $query, $angajat) {
-            //     $query->whereHas('angajat', function (Builder $query) use ($angajat) {
-            //         $query->where('id', $angajat);
+            // ->when($search_produs_id, function (Builder $query, $search_produs_id) {
+            //     $query->whereHas('produs_operatie', function (Builder $query) use ($search_produs_id) {
+            //         $query->where('produs_id', $search_produs_id);
             //     });
             // })
+            // ->when($search_numar_de_faza, function (Builder $query, $search_numar_de_faza) {
+            //     $query->whereHas('produs_operatie', function (Builder $query) use ($search_numar_de_faza) {
+            //         $query->where('numar_de_faza', $search_numar_de_faza);
+            //     });
+            // })
+            ->whereHas('produs_operatie', function (Builder $query) use ($search_produs_id, $search_numar_de_faza) {
+                $query
+                    ->when($search_produs_id, function ($query, $search_produs_id) {
+                        return $query->where('produs_id', $search_produs_id);
+                    })
+                    ->when($search_numar_de_faza, function ($query, $search_numar_de_faza) {
+                        return $query->where('numar_de_faza', $search_numar_de_faza);
+                    });
+            })
             ->when($search_data, function ($query, $search_data) {
                 return $query->whereDate('data', '=', $search_data);
             })
             ->latest()
             ->simplePaginate(25);
 
+        $produse = Produs::latest()->get();
+
         $request->session()->forget('norme_lucrate_return_url');
         $request->session()->get('norme_lucrate_afisare_tabelara_return_url') ?? $request->session()->put('norme_lucrate_afisare_tabelara_return_url', url()->previous());
 
-        return view('norme_lucrate.index', compact('norme_lucrate', 'search_nume', 'search_data', 'angajat'));
+        return view('norme_lucrate.index', compact('norme_lucrate', 'produse', 'search_nume', 'search_produs_id', 'search_numar_de_faza', 'search_data', 'angajat'));
     }
 
     /**
