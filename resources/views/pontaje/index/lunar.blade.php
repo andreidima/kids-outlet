@@ -130,7 +130,7 @@
 
                             @for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++)
                                 <td class="text-center">
-                                    @if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
+                                    {{-- @if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()) --}}
                                         @forelse ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj)
                                             <a href="/pontaje/{{ $pontaj->id }}/modifica" style="text-decoration: none;">
                                                 @switch($pontaj->concediu)
@@ -144,7 +144,18 @@
                                                                     \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInSeconds(\Carbon\Carbon::parse($pontaj->ora_sosire))
                                                                 )->isoFormat('HH:mm')
                                                             }} --}}
-                                                            @switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)))
+                                                            @php
+                                                                // $numar_de_ore = round(
+                                                                //     \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInMinutes(\Carbon\Carbon::parse($pontaj->ora_sosire))
+                                                                //     / 60 )
+                                                                $numar_de_ore = \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))
+                                                            @endphp
+                                                            @if ($numar_de_ore < 8)
+                                                                {{ $numar_de_ore }}
+                                                            @else
+                                                                8
+                                                            @endif
+                                                            {{-- @switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)))
                                                                 @case(0)
                                                                 @case(1)
                                                                 @case(2)
@@ -167,7 +178,7 @@
                                                                 @default
                                                                         {{ \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)) }}
                                                                     @break
-                                                            @endswitch
+                                                            @endswitch --}}
                                                         @else
                                                             <span class="text-danger">0</span>
                                                         @endif
@@ -191,7 +202,7 @@
                                                 <i class="fas fa-plus-square"></i>
                                             </a>
                                         @endforelse
-                                    @endif
+                                    {{-- @endif --}}
                                 </td>
                             @endfor
                             {{-- <td class="text-center">

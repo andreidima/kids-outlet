@@ -266,6 +266,7 @@ class PontajController extends Controller
                 // // $sheet->setCellValueByColumnAndRow(($ziua+5), 4 , 'Total ore lucrate');
 
                 // $rand = 5;
+\PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder( new \PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder() );
 
                 $foaie_numar = 0;
                 foreach ($angajati->groupby('firma') as $angajati_per_firma){
@@ -310,24 +311,26 @@ class PontajController extends Controller
                     $sheet->mergeCells('C4:C5');
                     $sheet->getStyle('C4')->getAlignment()->setTextRotation(90);
 
-                    $sheet->setCellValue('D4', "Meseria sau functia");
+                    $sheet->setCellValue('D4', "Meseria sau\nfunctia");
                     $sheet->mergeCells('D4:D5');
                     $sheet->getStyle('D4')->getAlignment()->setTextRotation(90);
 
                     // $sheet->getColumnDimension('D')->setWidth(40, 'pt');
                     for ($ziua = 0; $ziua <= Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
-                        $sheet->setCellValueByColumnAndRow(($ziua+5), 5 , Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('DD'));
+                        $sheet->setCellValueByColumnAndRow(($ziua+5), 5 , Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('D'));
                     }
 
-                    $sheet->mergeCells('D5:' . $column->getColumnIndex() . '1');
-
-                    // // Se parcug toate coloanele si se ajunge la ultima coloana
-                    // foreach ($sheet->getColumnIterator() as $column) {
-                    //     // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
-                    // }
+                    $sheet->setCellValue('E4', "ORE ZILNIC");
+                    $sheet->mergeCells('E4:' . $sheet->getCellByColumnAndRow(($ziua+4), 5)->getColumn() . '4');
 
                     // Se continua titlul tabelului de la ultima zi ramasa + primele 4 coloana
                     $sheet->setCellValueByColumnAndRow(($ziua+5), 4, 'Total ore lucrate');
+                    $sheet->mergeCells(
+                        $sheet->getCellByColumnAndRow(($ziua+5), 4)->getColumn() . '4'
+                        . ':' .
+                        $sheet->getCellByColumnAndRow(($ziua+5), 5)->getColumn() . '5'
+                        );
+                    $sheet->getStyleByColumnAndRow(($ziua+5), 4)->getAlignment()->setTextRotation(90);
 
 
                     // $sheet->setCellValueByColumnAndRow(($ziua+5), 4 , 'Total ore lucrate');
@@ -349,6 +352,8 @@ class PontajController extends Controller
                                 $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
                                 $sheet->setCellValue('B' . $rand, $angajat->nume);
 
+                                $numar_total_de_ore = 0;
+
                                 for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
                                     // if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
                                         foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
@@ -365,39 +370,51 @@ class PontajController extends Controller
                                                         //     $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, \Carbon\Carbon::parse($secunde)->isoFormat('HH:mm'));
                                                         // }
                                                         if ($pontaj->ora_sosire && $pontaj->ora_plecare){
-                                                            switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
-                                                                case 0:
-                                                                case 1:
-                                                                case 2: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 2);
-                                                                    break;
-                                                                case 3:
-                                                                case 4:
-                                                                case 5: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 4);;
-                                                                    break;
-                                                                case 6:
-                                                                case 7:
-                                                                case 8:
-                                                                case 9:
-                                                                case 10:
-                                                                case 11:
-                                                                case 12:
-                                                                case 13:
-                                                                case 14:
-                                                                case 15:
-                                                                case 16:
-                                                                case 17:
-                                                                case 18: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 8);
-                                                                    break;
-                                                                default: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)));
-                                                                    break;
+                                                                // $numar_de_ore = round(
+                                                                //     \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInMinutes(\Carbon\Carbon::parse($pontaj->ora_sosire))
+                                                                //     / 60 )
+                                                            $numar_de_ore = Carbon::parse($pontaj->ora_plecare)->diffInHours(Carbon::parse($pontaj->ora_sosire));
+
+                                                            if ($numar_de_ore < 8) {
+                                                                $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, $numar_de_ore);
+                                                                $numar_total_de_ore += $numar_de_ore;
+                                                            }else{
+                                                                $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 8);
+                                                                $numar_total_de_ore += 8;
                                                             }
+                                                            // switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
+                                                            //     case 0:
+                                                            //     case 1:
+                                                            //     case 2: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 2);
+                                                            //         break;
+                                                            //     case 3:
+                                                            //     case 4:
+                                                            //     case 5: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 4);;
+                                                            //         break;
+                                                            //     case 6:
+                                                            //     case 7:
+                                                            //     case 8:
+                                                            //     case 9:
+                                                            //     case 10:
+                                                            //     case 11:
+                                                            //     case 12:
+                                                            //     case 13:
+                                                            //     case 14:
+                                                            //     case 15:
+                                                            //     case 16:
+                                                            //     case 17:
+                                                            //     case 18: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 8);
+                                                            //         break;
+                                                            //     default: $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, \Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire)));
+                                                            //         break;
+                                                            // }
                                                         }
                                                         break;
                                                     case '1':
-                                                        $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'M');
+                                                        $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'CM');
                                                         break;
                                                     case '2':
-                                                        $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'O');
+                                                        $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'CO');
                                                         break;
                                                     case '3':
                                                         $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'Î');
@@ -418,6 +435,9 @@ class PontajController extends Controller
 
                                 // $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
 
+                                // Afisarea totalului de ore
+                                $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, $numar_total_de_ore);
+
                                 $rand ++;
                                 $nr_crt_angajat ++;
                             }
@@ -426,14 +446,18 @@ class PontajController extends Controller
 
                     // Se parcug toate coloanele si se stabileste latimea AUTO
                     foreach ($sheet->getColumnIterator() as $column) {
-                        $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                        // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                        $sheet->getColumnDimension($column->getColumnIndex())->setWidth(3);
+                        $sheet->getColumnDimension('B')->setAutoSize(true);
                     }
                     // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
                     $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
                     $sheet->mergeCells('A2:' . $column->getColumnIndex() . '2');
                     $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
-                    $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                    // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                    $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getFont()->setSize(8);
                     $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
                 }
 
                 // // Se parcug toate coloanele si se stabileste latimea AUTO
