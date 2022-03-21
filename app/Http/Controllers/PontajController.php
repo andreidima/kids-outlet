@@ -294,24 +294,30 @@ class PontajController extends Controller
                     $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 
                     $sheet->setCellValue('A2', Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
-                    $sheet->getStyle('A2')->getFont()->setSize(14);
+                    $sheet->getStyle('A2')->getFont()->setSize(12);
                     $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
 
                     // $sheet->setCellValue('A2', Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
                     // $sheet->getStyle('A2')->getFont()->setSize(14);
 
                     $sheet->setCellValue('A4', 'Nr. Crt.');
+                    $sheet->getStyle('A4')->getFont()->setSize(8);
                     $sheet->mergeCells('A4:A5');
                     $sheet->getStyle('A4')->getAlignment()->setTextRotation(90);
 
-                    $sheet->setCellValue('B4', "Nume Prenume");
+                    $sheet->setCellValue('B4', "Numele și Prenumele");
+                    $sheet->getStyle('B4')->getFont()->setSize(10);
+                    $sheet->getStyle('B4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
                     $sheet->mergeCells('B4:B5');
 
-                    $sheet->setCellValue('C4', "Numar de marca");
+                    $sheet->setCellValue('C4', "Numar de\nmarca");
+                    $sheet->getStyle('C4')->getFont()->setSize(8);
                     $sheet->mergeCells('C4:C5');
                     $sheet->getStyle('C4')->getAlignment()->setTextRotation(90);
 
                     $sheet->setCellValue('D4', "Meseria sau\nfunctia");
+                    $sheet->getStyle('D4')->getFont()->setSize(8);
                     $sheet->mergeCells('D4:D5');
                     $sheet->getStyle('D4')->getAlignment()->setTextRotation(90);
 
@@ -319,9 +325,12 @@ class PontajController extends Controller
                     for ($ziua = 0; $ziua <= Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
                         $sheet->setCellValueByColumnAndRow(($ziua+5), 5 , Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('D'));
                     }
+                    $sheet->getStyle('E5:' . $sheet->getCellByColumnAndRow(($ziua+4), 5)->getColumn() . '5')->getFont()->setSize(10);
+                    $sheet->getStyle('E5:' . $sheet->getCellByColumnAndRow(($ziua+4), 5)->getColumn() . '5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                     $sheet->setCellValue('E4', "ORE ZILNIC");
                     $sheet->mergeCells('E4:' . $sheet->getCellByColumnAndRow(($ziua+4), 5)->getColumn() . '4');
+                    $sheet->getStyle('E4:' . $sheet->getCellByColumnAndRow(($ziua+4), 5)->getColumn() . '4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                     // Se continua titlul tabelului de la ultima zi ramasa + primele 4 coloana
                     $sheet->setCellValueByColumnAndRow(($ziua+5), 4, 'Total ore lucrate');
@@ -453,11 +462,11 @@ class PontajController extends Controller
                     // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
                     $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
                     $sheet->mergeCells('A2:' . $column->getColumnIndex() . '2');
-                    $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
-                    // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
-                    $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getFont()->setSize(8);
-                    $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                    $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+                    $sheet->getStyle('A6:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                    // $sheet->getStyle('A6:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                    $sheet->getStyle('A6:' . $column->getColumnIndex() . $rand)->getFont()->setSize(10);
+                    $sheet->getStyle('A6:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    $sheet->getStyle('A6:' . $column->getColumnIndex() . $rand)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
                 }
 
                 // // Se parcug toate coloanele si se stabileste latimea AUTO
