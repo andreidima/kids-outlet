@@ -60,6 +60,7 @@ Route::get('/aplicatie-angajati/realizat', [AngajatAplicatieController::class, '
 Route::get('/aplicatie-angajati/norma-lucrata/{norma_lucrata}/sterge', [AngajatAplicatieController::class, 'stergeNormaLucrata']);
 
 Route::get('/aplicatie-angajati/vezi-faze-produse/{produs?}', [AngajatAplicatieController::class, 'veziFazeProduse']);
+Route::get('/aplicatie-angajati/vezi-norme/{produs_operatie}', [AngajatAplicatieController::class, 'veziNormeProdusOperatie']);
 
 
 Route::group(['middleware' => 'auth'], function () {

@@ -26,45 +26,42 @@
 
                 @include('errors')
 
-                <h4 class="text-center">ALEGE PRODUSUL</h4>
-
-                @foreach ($produse as $produs)
-                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse/{{ $produs->id }}" role="button" style="background-color: #FC4A1A; border:2px solid white;">{{ $produs->nume }}</a>
-                @endforeach
-
-                @isset($produse_operatii)
+                @isset($norme_lucrate)
                     <table class="table table-bordered table-dark table-striped">
                             <thead>
                                 <tr>
                                     <th colspan="3" class="text-center">
-                                        {{ $produse_operatii->first()->produs->nume ?? '' }}
+                                        {{ $norme_lucrate->first()->produs_operatie->produs->nume ?? '' }}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" class="text-center">
+                                        {{ $norme_lucrate->first()->produs_operatie->numar_de_faza ?? '' }} - {{ $norme_lucrate->first()->produs_operatie->nume ?? '' }}
                                     </th>
                                 </tr>
                                 <tr>
                                     <th>
-                                        Faza
+                                        #
                                     </th>
                                     <th>
-                                        Nume operație
+                                        Persoana
                                     </th>
                                     <th>
-                                        Introdus
+                                        Cantitate
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($produse_operatii as $operatie)
+                                @forelse($norme_lucrate as $norma_lucrata)
                                     <tr>
                                         <td>
-                                            {{ $operatie->numar_de_faza }}
+                                            {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $operatie->nume }}
+                                            {{ $norma_lucrata->angajat->nume ?? '' }}
                                         </td>
                                         <td class="text-end">
-                                            <a href="/aplicatie-angajati/vezi-norme/{{ $operatie->id }}">
-                                                {{ $operatie->norma_totala_efectuata }}
-                                            </a>
+                                            {{ $norma_lucrata->cantitate }}
                                         </td>
                                     </tr>
                                 @empty
@@ -73,7 +70,7 @@
                     </table>
                 @endisset
 
-                <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">ÎNAPOI</a>
+                <a class="btn btn-lg btn-secondary w-100" href="{{ $return_url }}" style="border:2px solid white;">ÎNAPOI</a>
             </div>
         </div>
     </div>

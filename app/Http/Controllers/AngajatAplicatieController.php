@@ -524,4 +524,21 @@ class AngajatAplicatieController extends Controller
         return view('aplicatie_angajati/vezi_faze_produse', compact('angajat', 'produse', 'produse_operatii'));
     }
 
+    /**
+     *
+     */
+    public function veziNormeProdusOperatie(Request $request, ProdusOperatie $produs_operatie = null)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+
+        $angajat = $request->session()->get('angajat');
+        $norme_lucrate = $produs_operatie->norme_lucrate;
+
+        $return_url = url()->previous();
+
+        return view('aplicatie_angajati/vezi_norme', compact('angajat', 'norme_lucrate', 'return_url'));
+    }
+
 }
