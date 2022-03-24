@@ -316,13 +316,13 @@ class PontajController extends Controller
                     $sheet->setCellValue('C4', "Numar de\nmarca");
                     $sheet->getStyle('C4')->getFont()->setSize(8);
                     $sheet->mergeCells('C4:C5');
-                    $sheet->getColumnDimension('C')->setWidth(5);
+                    $sheet->getColumnDimension('C')->setWidth(4);
                     $sheet->getStyle('C4')->getAlignment()->setTextRotation(90);
 
                     $sheet->setCellValue('D4', "Meseria sau\nfunctia");
                     $sheet->getStyle('D4')->getFont()->setSize(8);
                     $sheet->mergeCells('D4:D5');
-                    $sheet->getColumnDimension('D')->setWidth(5);
+                    $sheet->getColumnDimension('D')->setWidth(4);
                     $sheet->getStyle('D4')->getAlignment()->setTextRotation(90);
 
                     // $sheet->getColumnDimension('D')->setWidth(40, 'pt');
@@ -337,15 +337,113 @@ class PontajController extends Controller
                     $sheet->mergeCells('E4:' . $sheet->getCellByColumnAndRow(($ziua+4), 5)->getColumn() . '4');
                     $sheet->getStyle('E4:' . $sheet->getCellByColumnAndRow(($ziua+4), 5)->getColumn() . '4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-                    // Se continua titlul tabelului de la ultima zi ramasa + primele 4 coloana
-                    $sheet->setCellValueByColumnAndRow(($ziua+5), 4, "Total ore\nlucrate");
-                    $sheet->getStyle('A6:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+
+                    // Ultima coloana scrisa este:
+                    $coloana = $ziua + 4;
+
+
+                    // Total ore lucrate
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 4, "Total ore\nlucrate");
+                    $sheet->getStyleByColumnAndRow(($coloana), 4)->getFont()->setSize(8);
                     $sheet->mergeCells(
-                        $sheet->getCellByColumnAndRow(($ziua+5), 4)->getColumn() . '4'
+                        $sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '4'
                         . ':' .
-                        $sheet->getCellByColumnAndRow(($ziua+5), 5)->getColumn() . '5'
+                        $sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '5'
                         );
-                    $sheet->getStyleByColumnAndRow(($ziua+5), 4)->getAlignment()->setTextRotation(90);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 4)->getAlignment()->setTextRotation(90);
+
+
+                    // din care:
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 4, "din care:");
+                    $sheet->getStyleByColumnAndRow(($coloana), 4)->getFont()->setSize(10);
+                    $sheet->mergeCells(
+                        $sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '4'
+                        . ':' .
+                        $sheet->getCellByColumnAndRow(($coloana+2), 4)->getColumn() . '4'
+                        );
+                    $sheet->getStyle($sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValueByColumnAndRow(($coloana), 5, "ore supl\n80%");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "ore supl\n100%");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "ore de\nnoapte");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+
+
+                    // Total ore lucrate
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 4, "Total ore\nlucrate");
+                    $sheet->getStyleByColumnAndRow(($coloana), 4)->getFont()->setSize(8);
+                    $sheet->mergeCells(
+                        $sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '4'
+                        . ':' .
+                        $sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '5'
+                        );
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 4)->getAlignment()->setTextRotation(90);
+
+
+                    // din care:
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 4, "din care:");
+                    $sheet->getStyleByColumnAndRow(($coloana), 4)->getFont()->setSize(10);
+                    $sheet->mergeCells(
+                        $sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '4'
+                        . ':' .
+                        $sheet->getCellByColumnAndRow(($coloana+10), 4)->getColumn() . '4'
+                        );
+                    $sheet->getStyle($sheet->getCellByColumnAndRow(($coloana), 4)->getColumn() . '4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValueByColumnAndRow(($coloana), 5, "ore de");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "Co");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "Bo");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "Bp");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "Am");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "M");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "I");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "O");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "N");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "Pm");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
+                    $sheet->setCellValueByColumnAndRow((++$coloana), 5, "Prb");
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getFont()->setSize(8);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($coloana), 5)->getColumn())->setWidth(4);
+                    $sheet->getStyleByColumnAndRow(($coloana), 5)->getAlignment()->setTextRotation(90);
 
 
                     $sheet->getRowDimension('5')->setRowHeight(35);
@@ -360,16 +458,19 @@ class PontajController extends Controller
                         //     $sheet->setCellValue('A' . $rand, 'Firma nesetată');
                         // }
 
-                        $rand ++;
                         $nr_crt_angajat = 1;
 
                         foreach ($angajati_per_firma as $angajat){
+                            $rand ++;
+
                             if ($angajat->pontaj->count() > 0){ // se exporta in excel doar cei care au pontaj
 
                                 $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
                                 $sheet->setCellValue('B' . $rand, $angajat->nume);
 
-                                $numar_total_de_ore = 0;
+                                $numar_total_de_ore_lucrate = 0;
+                                $numar_total_de_ore_concediu_de_odihna = 0;
+                                $numar_total_de_ore_concediu_medical = 0;
 
                                 for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
                                     // if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
@@ -394,10 +495,10 @@ class PontajController extends Controller
 
                                                             if ($numar_de_ore < 8) {
                                                                 $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, $numar_de_ore);
-                                                                $numar_total_de_ore += $numar_de_ore;
+                                                                $numar_total_de_ore_lucrate += $numar_de_ore;
                                                             }else{
                                                                 $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 8);
-                                                                $numar_total_de_ore += 8;
+                                                                $numar_total_de_ore_lucrate += 8;
                                                             }
                                                             // switch (\Carbon\Carbon::parse($pontaj->ora_plecare)->diffInHours(\Carbon\Carbon::parse($pontaj->ora_sosire))){
                                                             //     case 0:
@@ -429,9 +530,11 @@ class PontajController extends Controller
                                                         break;
                                                     case '1':
                                                         $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'CM');
+                                                        $numar_total_de_ore_concediu_medical += $angajat->ore_angajare;
                                                         break;
                                                     case '2':
                                                         $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'CO');
+                                                        $numar_total_de_ore_concediu_de_odihna += $angajat->ore_angajare;
                                                         break;
                                                     case '3':
                                                         $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'Î');
@@ -452,20 +555,34 @@ class PontajController extends Controller
 
                                 // $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, number_format(\Carbon\Carbon::parse($timp_total)->floatDiffInHours(\Carbon\Carbon::today()), 4));
 
-                                // Afisarea totalului de ore
-                                $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, $numar_total_de_ore);
 
-                                $rand ++;
+                                // Ultima coloana scrisa este:
+                                $coloana = $ziua + 4;
+
+                                // Introducerea totalului de ore lucrate
+                                $sheet->setCellValueByColumnAndRow((++$coloana), $rand, $numar_total_de_ore_lucrate);
+
+                                // Introducerea totalului de ore concediu medical + odihna
+                                $sheet->setCellValueByColumnAndRow(($coloana += 4), $rand, $numar_total_de_ore_concediu_medical + $numar_total_de_ore_concediu_de_odihna);
+
+                                // Introducerea totalului de ore concediu de odihna
+                                $sheet->setCellValueByColumnAndRow(($coloana += 2), $rand, $numar_total_de_ore_concediu_de_odihna);
+
+                                // Introducerea totalului de ore concediu medical
+                                if ($numar_total_de_ore_concediu_medical > 0){
+                                    $sheet->setCellValueByColumnAndRow(($coloana += 4), $rand, $numar_total_de_ore_concediu_medical);
+                                }
+
+
                                 $nr_crt_angajat ++;
                             }
                         }
-                        $rand ++;
 
                     // Se parcug toate coloanele si se stabileste latimea AUTO
                     foreach ($sheet->getColumnIterator() as $column) {
-                    //     // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
-                    //     $sheet->getColumnDimension($column->getColumnIndex())->setWidth(3);
-                    //     $sheet->getColumnDimension('B')->setAutoSize(true);
+                        // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                        // $sheet->getColumnDimension($column->getColumnIndex())->setWidth(3);
+                        // $sheet->getColumnDimension('B')->setAutoSize(true);
                     }
                     // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
                     $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
@@ -475,17 +592,19 @@ class PontajController extends Controller
                     $sheet->getStyle('A6:' . $column->getColumnIndex() . $rand)->getFont()->setSize(10);
                     $sheet->getStyle('A6:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                     $sheet->getStyle('A6:' . $column->getColumnIndex() . $rand)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-                }
 
-                // // Se parcug toate coloanele si se stabileste latimea AUTO
-                // foreach ($sheet->getColumnIterator() as $column) {
-                //     $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
-                // }
-                // // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
-                // $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
-                // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
-                // $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
-                // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    // Setare bordura
+                    $styleArray1 = [
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' =>  \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN //细边框
+                            ]
+                        ]
+                    ];
+                    $sheet ->getStyle('A4:' . $column->getColumnIndex() . $rand)->applyFromArray($styleArray1);
+
+                    // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+                }
 
 
 
