@@ -530,7 +530,7 @@ class PontajController extends Controller
                                                         break;
                                                     case '1':
                                                         $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'CM');
-                                                        $numar_total_de_ore_concediu_medical += $angajat->ore_angajare;
+                                                        // $numar_total_de_ore_concediu_medical += $angajat->ore_angajare;
                                                         break;
                                                     case '2':
                                                         $sheet->setCellValueByColumnAndRow(($ziua+5), $rand, 'CO');
