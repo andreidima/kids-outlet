@@ -35,7 +35,7 @@ class AngajatAplicatieController extends Controller
                 ]
             );
 
-        $angajat = Angajat::with('roluri')->select('id', 'nume')->where('cod_de_acces', $request->cod_de_acces)->first();
+        $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia')->where('cod_de_acces', $request->cod_de_acces)->first();
 
         $request->session()->put('angajat', $angajat);
 
@@ -62,7 +62,7 @@ class AngajatAplicatieController extends Controller
         }
 
         // Sterge atribute legate de comenzi sau pontaj, pastrare doar atributele angajatului
-        $angajat = new Angajat( $request->session()->get('angajat')->only('id', 'nume') );
+        $angajat = new Angajat( $request->session()->get('angajat')->only('id', 'nume', 'sectia') );
         $request->session()->put('angajat', $angajat);
 
         // Sterge data_pontaj
@@ -81,7 +81,8 @@ class AngajatAplicatieController extends Controller
         }
 
         $angajat = $request->session()->get('angajat');
-        $produse = Produs::where('activ', 1)->latest()->get();
+
+        $produse = Produs::where('activ', 1)->where('sectia', $angajat->sectia)->latest()->get();
         // dd($produse->toArray());
         return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_1', compact('angajat', 'produse'));
     }
@@ -197,7 +198,7 @@ class AngajatAplicatieController extends Controller
             // Se verifica sa nu se depaseasca norma
             // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
             if (($produs_operatie->norma_totala_efectuata + $request->numar_de_bucati) > $produs_operatie->norma_totala){
-                return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $norma_lucrata->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata) . '"!');
+                return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $produs_operatie->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata) . '"!');
             } else {
                 $produs_operatie->norma_totala_efectuata += $request->numar_de_bucati;
                 $produs_operatie->save();
