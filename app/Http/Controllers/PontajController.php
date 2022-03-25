@@ -199,6 +199,10 @@ class PontajController extends Controller
                 $query->whereDate('data', '>=', $search_data_inceput)
                     ->whereDate('data', '<=', $search_data_sfarsit);
             }])
+            ->whereHas('pontaj', function($query) use ($search_data_inceput, $search_data_sfarsit){
+                $query->whereDate('data', '>=', $search_data_inceput)
+                    ->whereDate('data', '<=', $search_data_sfarsit);
+            })
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
