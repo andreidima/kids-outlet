@@ -319,7 +319,8 @@ class NormaLucrataController extends Controller
                 $sheet->setCellValue('B4', 'Nume Prenume');
                 $sheet->getColumnDimension('B')->setAutoSize(true);
                 foreach ($produse as $index=>$produs){
-                    $sheet->setCellValueByColumnAndRow(($index+3), 4 , $produs->nume);
+                    $sheet->setCellValueByColumnAndRow(($index+3), 4 , str_replace(" ","\n",$produs->nume));
+                    $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . '4')->getAlignment()->setWrapText(true);
                     $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+3), 4)->getColumn())->setWidth(10);
                 }
                 $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'REALIZAT');
