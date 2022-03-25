@@ -250,16 +250,21 @@ class NormaLucrataController extends Controller
                 $query->whereDate('data', '>=', $search_data_inceput)
                     ->whereDate('data', '<=', $search_data_sfarsit);
             }])
+            ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+                $query->whereDate('data', '>=', $search_data_inceput)
+                    ->whereDate('data', '<=', $search_data_sfarsit);
+                }])
             ->with('norme_lucrate.produs_operatie.produs')
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
-            })
+                })
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('prod')
             ->orderBy('nume')
             // ->take(2)
             // ->paginate(10);
             ->get();
+
 // foreach ($angajati as $angajat){
 //     echo $angajat->prod . ' ' . $angajat->nume . ' <br>';
 // }
@@ -292,6 +297,8 @@ class NormaLucrataController extends Controller
 
         switch ($request->input('action')) {
             case 'export_excel':
+                $salariul_minim_pe_economie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
+
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -312,7 +319,14 @@ class NormaLucrataController extends Controller
                 foreach ($produse as $index=>$produs){
                     $sheet->setCellValueByColumnAndRow(($index+3), 4 , $produs->nume);
                 }
-                $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'Realizat');
+                $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'REALIZAT');
+                $sheet->setCellValueByColumnAndRow(($index+5), 4 , 'AVANS');
+                $sheet->setCellValueByColumnAndRow(($index+6), 4 , 'CO');
+                $sheet->setCellValueByColumnAndRow(($index+7), 4 , 'MEDICALE');
+                $sheet->setCellValueByColumnAndRow(($index+8), 4 , 'SALARIU DE BAZA');
+                $sheet->setCellValueByColumnAndRow(($index+9), 4 , 'PUS');
+                $sheet->setCellValueByColumnAndRow(($index+10), 4 , 'REALIZAT TOTAL');
+                $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE');
 
                 $rand = 5;
 
@@ -327,6 +341,8 @@ class NormaLucrataController extends Controller
                     }
 
                     $rand ++;
+                    $rand_initial = $rand;
+
                     $nr_crt_angajat = 1;
 
                     foreach ($angajati_per_prod as $angajat){
@@ -335,7 +351,7 @@ class NormaLucrataController extends Controller
                         $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
                         $sheet->setCellValue('B' . $rand, $angajat->nume);
 
-                        $suma_totala = 0;
+                        $suma_totala_formula = '=';
                         foreach ($produse as $index=>$produs){
                             $suma = 0;
                             foreach ($produs->produse_operatii as $produs_operatie){
@@ -345,18 +361,114 @@ class NormaLucrataController extends Controller
                             }
                             if ($suma > 0){
                                 $sheet->setCellValueByColumnAndRow(($index+3), $rand , $suma);
-                                $suma_totala += $suma;
                             }
+                            $suma_totala_formula .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . $rand . '+';
                         }
 
-                        if ($suma_totala > 0){
-                            $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala);
+                        // Stergerea ultimului „+” din formula
+                        $suma_totala_formula = substr($suma_totala_formula, 0, -1);
+
+                        // REALIZAT
+                        $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala_formula);
+
+                        // AVANS
+                        if (isset($angajat->avans)){
+                            $sheet->setCellValueByColumnAndRow(($index+5), $rand , $angajat->avans);
                         }
+
+                        // CO
+                        // MEDICALE
+                        $zile_concediu_medical = 0;
+                        $zile_concediu_de_odihna = 0;
+                        foreach($angajat->pontaj as $pontaj){
+                            if ($pontaj->concediu === 1){
+                                $zile_concediu_medical ++;
+                            }else if ($pontaj->concediu === 2){
+                                $zile_concediu_de_odihna ++;
+                            }
+                        }
+                        if ($zile_concediu_de_odihna > 0){
+                            $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=' . $salariul_minim_pe_economie . '/20*' . $zile_concediu_de_odihna);
+                        }
+                        if ($zile_concediu_medical > 0){
+                            $sheet->setCellValueByColumnAndRow(($index+7), $rand , '=' . $salariul_minim_pe_economie . '/20*' . $zile_concediu_medical . '*0.75');
+                        }
+
+                        // SALARIU DE BAZA
+                        $sheet->setCellValueByColumnAndRow(($index+8), $rand , '=' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand);
+
+                        // PUS
+                        $sheet->setCellValueByColumnAndRow(($index+9), $rand , '=' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand . '-' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand);
+
+                        // REALIZAT TOTAL
+                        $sheet->setCellValueByColumnAndRow(($index+10), $rand , '=' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . '+' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . $rand . '+' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand);
+
+                        // LICHIDARE
+                        $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
+
 
                         $rand ++;
                         $nr_crt_angajat ++;
                     }
-                    $rand ++;
+
+
+                    // CALCUL TOTALURI
+                    // REALIZAT
+                    $sheet->setCellValueByColumnAndRow(($index+4), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . ($rand-1) . ')');
+                    // AVANS
+                    $sheet->setCellValueByColumnAndRow(($index+5), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . ($rand-1) . ')');
+                    // CO
+                    $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . ($rand-1) . ')');
+                    // MEDICALE
+                    $sheet->setCellValueByColumnAndRow(($index+7), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . ($rand-1) . ')');
+                    // SALARIU DE BAZA
+                    $sheet->setCellValueByColumnAndRow(($index+8), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . ($rand-1) . ')');
+                    $sheet->getStyle(
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . ($rand-1)
+                        )->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFfe5858');
+                    // PUS
+                    $sheet->setCellValueByColumnAndRow(($index+9), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+9) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+9) . ($rand-1) . ')');
+                    // REALIZAT TOTAL
+                    $sheet->setCellValueByColumnAndRow(($index+10), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . ($rand-1) . ')');
+                    $sheet->getStyle(
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . ($rand-1)
+                        )->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('CC8ccd8c');
+                    // LICHIDARE
+                    $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . ($rand-1) . ')');
+                    // Schimbare culoare la totaluri in rosu
+                    $sheet->getStyle(
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand
+                        )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+
+
+                    $rand += 2;
                 }
 
                 // Se parcug toate coloanele si se stabileste latimea AUTO
@@ -369,6 +481,8 @@ class NormaLucrataController extends Controller
                 $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
                 $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
+                // Aliniere numere la dreapta
+                $sheet->getStyle('C6:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal('right');
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
