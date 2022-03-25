@@ -315,9 +315,12 @@ class NormaLucrataController extends Controller
                 // $sheet->getStyle('A2')->getFont()->setSize(14);
 
                 $sheet->setCellValue('A4', 'Nr.');
+                $sheet->getColumnDimension('A')->setAutoSize(true);
                 $sheet->setCellValue('B4', 'Nume Prenume');
+                $sheet->getColumnDimension('B')->setAutoSize(true);
                 foreach ($produse as $index=>$produs){
                     $sheet->setCellValueByColumnAndRow(($index+3), 4 , $produs->nume);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+3), 4)->getColumn())->setWidth(10);
                 }
                 $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'REALIZAT');
                 $sheet->setCellValueByColumnAndRow(($index+5), 4 , 'AVANS');
@@ -337,7 +340,7 @@ class NormaLucrataController extends Controller
                     if ($angajati_per_prod->first()->prod){
                         $sheet->setCellValue('A' . $rand, 'Prod ' . $angajati_per_prod->first()->prod);
                     } else {
-                        $sheet->setCellValue('A' . $rand, 'Prod nesetat');
+                        $sheet->setCellValue('A' . $rand, 'Prod ?');
                     }
 
                     $rand ++;
@@ -370,11 +373,13 @@ class NormaLucrataController extends Controller
 
                         // REALIZAT
                         $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala_formula);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+4), $rand)->getColumn())->setAutoSize(true);
 
                         // AVANS
                         if (isset($angajat->avans)){
                             $sheet->setCellValueByColumnAndRow(($index+5), $rand , $angajat->avans);
                         }
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+5), $rand)->getColumn())->setAutoSize(true);
 
                         // CO
                         // MEDICALE
@@ -390,29 +395,35 @@ class NormaLucrataController extends Controller
                         if ($zile_concediu_de_odihna > 0){
                             $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=' . $salariul_minim_pe_economie . '/20*' . $zile_concediu_de_odihna);
                         }
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+6), $rand)->getColumn())->setAutoSize(true);
                         if ($zile_concediu_medical > 0){
                             $sheet->setCellValueByColumnAndRow(($index+7), $rand , '=' . $salariul_minim_pe_economie . '/20*' . $zile_concediu_medical . '*0.75');
                         }
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+7), $rand)->getColumn())->setAutoSize(true);
 
                         // SALARIU DE BAZA
                         $sheet->setCellValueByColumnAndRow(($index+8), $rand , '=' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+8), $rand)->getColumn())->setAutoSize(true);
 
                         // PUS
                         $sheet->setCellValueByColumnAndRow(($index+9), $rand , '=' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand . '-' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+9), $rand)->getColumn())->setAutoSize(true);
 
                         // REALIZAT TOTAL
                         $sheet->setCellValueByColumnAndRow(($index+10), $rand , '=' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . '+' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . $rand . '+' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+10), $rand)->getColumn())->setAutoSize(true);
 
                         // LICHIDARE
                         $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
 
 
                         $rand ++;
@@ -473,16 +484,16 @@ class NormaLucrataController extends Controller
 
                 // Se parcug toate coloanele si se stabileste latimea AUTO
                 foreach ($sheet->getColumnIterator() as $column) {
-                    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                    // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
                 }
                 // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
                 $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
                 $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
                 $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
-                $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
 
                 // Aliniere numere la dreapta
-                $sheet->getStyle('C6:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal('right');
+                // $sheet->getStyle('C6:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal('right');
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
