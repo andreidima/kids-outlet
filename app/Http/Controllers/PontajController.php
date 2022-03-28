@@ -232,6 +232,7 @@ class PontajController extends Controller
                 break;
             case 'export_excel':
 
+                // $zile_nelucratoare = DB::table('zile_nelucratoare')->where('data', '>', \Carbon\Carbon::today())->pluck('data')->all();
 
                 // foreach ($angajati->groupby('firma') as $angajati_per_firma){
                 //     foreach ($angajati_per_firma as $angajat){
@@ -407,7 +408,7 @@ class PontajController extends Controller
                     $rand = 12;
 
                     // Total ore lucrate
-                    $sheet->setCellValueByColumnAndRow((++$coloana), $rand, "Total ore\nlucrate");
+                    $sheet->setCellValueByColumnAndRow((++$coloana), $rand, "Total ore\nnelucrate");
                     $sheet->getStyleByColumnAndRow(($coloana), $rand)->getFont()->setSize(8);
                     $sheet->mergeCells(
                         $sheet->getCellByColumnAndRow(($coloana), $rand)->getColumn() . $rand
@@ -603,23 +604,18 @@ class PontajController extends Controller
                                 );
 
                                 // Introducerea totalului de ore concediu de odihna
-                                if ($numar_total_de_ore_concediu_medical > 0){
-                                    $sheet->setCellValueByColumnAndRow(($coloana += 2), $rand, $numar_total_de_ore_concediu_de_odihna);
+                                if ($numar_total_de_ore_concediu_de_odihna > 0){
+                                    $sheet->setCellValueByColumnAndRow(($coloana + 2), $rand, $numar_total_de_ore_concediu_de_odihna);
                                 }
 
                                 // Introducerea totalului de ore concediu medical
                                 if ($numar_total_de_ore_concediu_medical > 0){
-                                    $sheet->setCellValueByColumnAndRow(($coloana += 1), $rand, $numar_total_de_ore_concediu_medical);
+                                    $sheet->setCellValueByColumnAndRow(($coloana + 3), $rand, $numar_total_de_ore_concediu_medical);
                                 }
 
-                                // Introducerea totalului de ore concediu medical
-                                if ($numar_total_de_ore_invoiri > 0){
-                                    $sheet->setCellValueByColumnAndRow(($coloana += 4), $rand, $numar_total_de_ore_invoiri);
-                                }
-
-                                // Introducerea totalului de ore concediu medical
-                                if ($numar_total_de_ore_absente_nemotivate > 0){
-                                    $sheet->setCellValueByColumnAndRow(($coloana += 2), $rand, $numar_total_de_ore_absente_nemotivate);
+                                // Introducerea totalului de ore invoiri + absente nemotivate
+                                if ($numar_total_de_ore_invoiri + $numar_total_de_ore_absente_nemotivate > 0){
+                                    $sheet->setCellValueByColumnAndRow(($coloana + 9), $rand, $numar_total_de_ore_invoiri + $numar_total_de_ore_absente_nemotivate);
                                 }
 
 

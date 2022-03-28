@@ -35,9 +35,13 @@ class AngajatAplicatieController extends Controller
                 ]
             );
 
-        $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia')->where('cod_de_acces', $request->cod_de_acces)->first();
+        $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia')->where('activ', 1)->where('cod_de_acces', $request->cod_de_acces)->first();
 
-        $request->session()->put('angajat', $angajat);
+        if ($angajat){
+            $request->session()->put('angajat', $angajat);
+        } else {
+            return back ()->with('error', 'Acest cont este dezactivat!');
+        }
 
         return redirect('aplicatie-angajati/meniul-principal');
     }
@@ -82,7 +86,11 @@ class AngajatAplicatieController extends Controller
 
         $angajat = $request->session()->get('angajat');
 
-        $produse = Produs::where('activ', 1)->where('sectia', $angajat->sectia)->latest()->get();
+        if ($angajat->sectia === "Moda"){
+            $produse = Produs::where('activ', 1)->where('sectia', 'Sectie')->latest()->get();
+        } else{
+            $produse = Produs::where('activ', 1)->where('sectia', $angajat->sectia)->latest()->get();
+        }
         // dd($produse->toArray());
         return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_1', compact('angajat', 'produse'));
     }
