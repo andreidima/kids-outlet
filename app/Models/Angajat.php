@@ -51,4 +51,14 @@ class Angajat extends Model
         // return $this->HasMany('App\Models\Angajat', 'angajat_id');
         return $this->belongsToMany(Angajat::class, 'angajati_pontatori', 'pontator_angajat_id', 'angajat_id');
     }
+
+    /**
+     * Get the angajati_pontatori associated with the Angajat
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function angajati_pontatori()
+    {
+        return $this->belongsToMany(Angajat::class, 'angajati_pontatori', 'angajat_id', 'pontator_angajat_id');
+    }
 }

@@ -517,6 +517,49 @@ class AngajatAplicatieController extends Controller
     }
 
     /**
+     * Verificare Pontaj de catre pontator
+     */
+    public function pontajVerificaPontator(Request $request)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+        $angajat = $request->session()->get('angajat');
+
+        $search_data_inceput = \Request::get('search_data_inceput') ?? \Carbon\Carbon::now()->startOfWeek()->toDateString();
+        $search_data_sfarsit = \Request::get('search_data_sfarsit') ?? \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+
+        if (\Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput) > 35){
+            return back()->with('error', 'Selectează te rog intervale mai mici de 35 de zile, pentru ca extragerea datelor din baza de date să fie eficientă!');
+        }
+
+        switch ($request->input('action')) {
+            case 'saptamana_anterioara':
+                    $search_data_inceput = \Carbon\Carbon::parse($search_data_inceput)->subDays(7)->startOfWeek()->toDateString();
+                    $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+                break;
+            case 'saptamana_urmatoare':
+                    $search_data_inceput = \Carbon\Carbon::parse($search_data_sfarsit)->addDays(7)->startOfWeek()->toDateString();
+                    $search_data_sfarsit = \Carbon\Carbon::parse($search_data_inceput)->addDays(4)->toDateString();
+                break;
+        }
+
+        $angajati = $angajat->angajati_de_pontat()
+            ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+                $query->whereDate('data', '>=', $search_data_inceput)
+                    ->whereDate('data', '<=', $search_data_sfarsit);
+            }])
+            ->where('activ', 1)
+            ->orderBy('nume')
+            // ->groupBy('angajat_id')
+            // ->paginate(10);
+            ->get();
+
+        return view('aplicatie_angajati/pontaj/pontaj_verifica', compact('angajat', 'angajati', 'search_data_inceput', 'search_data_sfarsit'));
+    }
+
+
+    /**
      *
      */
     public function veziFazeProduse(Request $request, Produs $produs = null)

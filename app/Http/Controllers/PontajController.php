@@ -232,7 +232,7 @@ class PontajController extends Controller
                 break;
             case 'export_excel':
 
-                // $zile_nelucratoare = DB::table('zile_nelucratoare')->where('data', '>', \Carbon\Carbon::today())->pluck('data')->all();
+                $zile_nelucratoare = DB::table('zile_nelucratoare')->whereDate('data', '>=', $search_data_inceput)->whereDate('data', '<=', $search_data_sfarsit)->pluck('data')->all();
 
                 // foreach ($angajati->groupby('firma') as $angajati_per_firma){
                 //     foreach ($angajati_per_firma as $angajat){
@@ -504,8 +504,13 @@ class PontajController extends Controller
                                 $numar_total_de_ore_absente_nemotivate = 0;
 
                                 for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
-                                    // if (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday()){
-                                        foreach ($angajat->pontaj->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString()) as $pontaj){
+                                    $data_calendaristica = \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua);
+                                    if (
+                                            $data_calendaristica->isWeekday()
+                                            &&
+                                            (!in_array($data_calendaristica->toDateString(), $zile_nelucratoare))
+                                        ) {
+                                        foreach ($angajat->pontaj->where('data', $data_calendaristica->toDateString()) as $pontaj){
                                             switch ($pontaj->concediu){
                                                     case '0':
                                                         // if ($pontaj->ora_sosire && $pontaj->ora_plecare){
@@ -577,7 +582,7 @@ class PontajController extends Controller
                                                         break;
                                             }
                                         }
-                                    // }
+                                    }
 
                                     // $sheet->getCellByColumnAndRow(($ziua+5), $rand)->getStyle()
                                     //     ->getBorders()

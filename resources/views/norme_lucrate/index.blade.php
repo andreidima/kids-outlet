@@ -166,6 +166,7 @@
                                     </div>
                                 </td>
                             </tr>
+
                             @if ($loop->last)
                                 @if ($angajat)
                                 <tr>
