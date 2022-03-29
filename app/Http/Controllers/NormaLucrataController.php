@@ -8,6 +8,7 @@ use App\Models\Produs;
 use App\Models\ProdusOperatie;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -303,6 +304,18 @@ class NormaLucrataController extends Controller
             case 'export_excel':
                 $salariul_minim_pe_economie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
 
+                $zile_nelucratoare = DB::table('zile_nelucratoare')->whereDate('data', '>=', $search_data_inceput)->whereDate('data', '<=', $search_data_sfarsit)->pluck('data')->all();
+                $numar_de_zile_lucratoare = 0;
+                for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+                    if(
+                            (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
+                            &&
+                            !in_array(\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString(), $zile_nelucratoare)
+                        ){
+                        $numar_de_zile_lucratoare ++;
+                    }
+                }
+
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -327,6 +340,8 @@ class NormaLucrataController extends Controller
                     $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . '4')->getAlignment()->setWrapText(true);
                     $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+3), 4)->getColumn())->setWidth(10);
                 }
+                isset($index) ? '' : ($index = 0); // Daca nu exista nici un produs de afisat, se da automat o valoare indexului, pentru a nu genera eroare
+
                 $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'REALIZAT');
                 $sheet->setCellValueByColumnAndRow(($index+5), 4 , 'AVANS');
                 $sheet->setCellValueByColumnAndRow(($index+6), 4 , 'CO');
@@ -398,11 +413,11 @@ class NormaLucrataController extends Controller
                             }
                         }
                         if ($zile_concediu_de_odihna > 0){
-                            $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=' . $salariul_minim_pe_economie . '/20*' . $zile_concediu_de_odihna);
+                            $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=' . $salariul_minim_pe_economie . '/' . $numar_de_zile_lucratoare . '*' . $zile_concediu_de_odihna);
                         }
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+6), $rand)->getColumn())->setAutoSize(true);
                         if ($zile_concediu_medical > 0){
-                            $sheet->setCellValueByColumnAndRow(($index+7), $rand , '=' . $salariul_minim_pe_economie . '/20*' . $zile_concediu_medical . '*0.75');
+                            $sheet->setCellValueByColumnAndRow(($index+7), $rand , '=' . $salariul_minim_pe_economie . '/' . $numar_de_zile_lucratoare . '*' . $zile_concediu_medical . '*0.75');
                         }
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+7), $rand)->getColumn())->setAutoSize(true);
 
