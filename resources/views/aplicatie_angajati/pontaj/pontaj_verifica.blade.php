@@ -71,13 +71,13 @@
                     </div>
                     <div class="row input-group custom-search-form justify-content-center">
                         <div class="col-lg-12 text-center">
-                            <button class="btn btn-primary text-white col-md-4 mx-auto mb-2 border border-dark rounded-3 shadow" type="submit"
+                            <button class="btn btn-primary text-white mb-2 border border-dark rounded-3 shadow" type="submit"
                                 name="action" value="saptamana_anterioara">
                                 << Săptămâna anterioară
                             </button>
                         </div>
                         <div class="col-lg-12 text-center">
-                            <button class="btn btn-primary text-white col-md-4 mx-auto mb-2 border border-dark rounded-3 shadow" type="submit"
+                            <button class="btn btn-primary text-white mb-2 border border-dark rounded-3 shadow" type="submit"
                                 name="action" value="saptamana_urmatoare">
                                 Săptămâna următoare >>
                             </button>
