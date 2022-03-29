@@ -100,6 +100,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @if ($angajat)
+                            @php
+                                $suma_totala = 0;
+                            @endphp
+                        @endif
                         @forelse ($norme_lucrate as $norma_lucrata)
                             <tr>
                                 <td align="">
@@ -127,6 +132,9 @@
                                 </td>
                                 <td class="text-center">
                                     {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }}
+                                    @php
+                                        $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;
+                                    @endphp
                                 </td>
                                 @if (!$angajat)
                                     <td class="text-center">
@@ -158,6 +166,19 @@
                                     </div>
                                 </td>
                             </tr>
+                            @if ($loop->last)
+                                @if ($angajat)
+                                <tr>
+                                    <td colspan="6" class="text-end">
+                                        Total
+                                    </td>
+                                    <td class="text-center">
+                                        {{ $suma_totala }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                @endif
+                            @endif
                         @empty
                             {{-- <div>Nu s-au gasit rezervări în baza de date. Încearcă alte date de căutare</div> --}}
                         @endforelse

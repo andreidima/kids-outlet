@@ -247,14 +247,16 @@ class NormaLucrataController extends Controller
         $angajati_in_search = Angajat::select('id', 'nume')->where('id', '>', 3)->orderBy('nume')->get();
 
         $angajati = Angajat::with(['norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
-                $query->whereDate('data', '>=', $search_data_inceput)
+                $query
+                    ->with('produs_operatie.produs')
+                    ->whereDate('data', '>=', $search_data_inceput)
                     ->whereDate('data', '<=', $search_data_sfarsit);
             }])
             ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
                 $query->whereDate('data', '>=', $search_data_inceput)
                     ->whereDate('data', '<=', $search_data_sfarsit);
                 }])
-            ->with('norme_lucrate.produs_operatie.produs')
+            // ->with('norme_lucrate.produs_operatie.produs')
             ->when($search_nume, function ($query, $search_nume) {
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
                 })
@@ -264,6 +266,8 @@ class NormaLucrataController extends Controller
             // ->take(2)
             // ->paginate(10);
             ->get();
+
+// dd($angajati);
 
 // foreach ($angajati as $angajat){
 //     echo $angajat->prod . ' ' . $angajat->nume . ' <br>';
