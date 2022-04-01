@@ -26,10 +26,10 @@
                 <h4 class="mb-4">
                     Pontaj: {{ $pontaj->angajat->nume  }}
                     {{-- Doar angajatii Mocanu Geanina si Duna Luminita pot vedea codurile de acces --}}
-                        @if (($angajat->id === 4) || ($angajat->id === 12))
-                            <br>
+                        {{-- @if (($angajat->id === 4) || ($angajat->id === 12))
+                            <br> --}}
                             Cod de acces: {{ $pontaj->angajat->cod_de_acces }}
-                        @endif
+                        {{-- @endif --}}
                     <br>
                     Data: {{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->data)->isoFormat('DD.MM.YYYY') : ''}}
                 </h4>
