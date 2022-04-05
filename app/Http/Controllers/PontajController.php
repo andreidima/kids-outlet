@@ -274,10 +274,10 @@ class PontajController extends Controller
 \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder( new \PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder() );
 
                 $foaie_numar = 0;
-                foreach ($angajati->groupby('firma') as $angajati_per_firma){
+                foreach ($angajati->groupby('foaie_pontaj') as $angajati_per_foaie_pontaj){
 
                     // Create a new worksheet called "My Data"
-                    $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, substr(($angajati_per_firma->first()->firma ?? 'Ne catalogați'), 0, 30));
+                    $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, substr(($angajati_per_foaie_pontaj->first()->foaie_pontaj ?? 'Ne catalogați'), 0, 15));
 
                     // Attach the "My Data" worksheet as the first worksheet in the Spreadsheet object
                     $spreadsheet->addSheet($myWorkSheet, $foaie_numar);
@@ -301,7 +301,7 @@ class PontajController extends Controller
                     $sheet->getPageSetup()->setHorizontalCentered(true);
                     $sheet->getPageSetup()->setVerticalCentered(false);
 
-                    $sheet->setCellValue('A2', 'Unitatea  SC DARIMODE STYLE SRL');
+                    $sheet->setCellValue('A2', 'Unitatea ' . ($angajati_per_foaie_pontaj->first()->firma ?? 'Ne catalogați') );
                     $sheet->setCellValue('A3', 'Departamentul/Serviciul_________________________');
 
                     $sheet->setCellValue('Z2', 'Co- concedii de odihna');
@@ -317,7 +317,7 @@ class PontajController extends Controller
                     $sheet->setCellValue('AI6', 'Prb - program redus boala');
 
 
-                    $sheet->setCellValue('A9', 'FOAIE COLECTIVA DE PREZENTA (PONTAJ) - ' . $angajati_per_firma->first()->firma);
+                    $sheet->setCellValue('A9', 'FOAIE COLECTIVA DE PREZENTA (PONTAJ) - ' . $angajati_per_foaie_pontaj->first()->foaie_pontaj);
                     $sheet->getStyle('A9')->getFont()->setSize(14);
                     $sheet->getStyle('A9')->getAlignment()->setHorizontal('center');
 
@@ -481,15 +481,15 @@ class PontajController extends Controller
 
                     $rand += 1;
 
-                        // if ($angajati_per_firma->first()->firma){
-                        //     $sheet->setCellValue('A' . $rand, 'Firma ' . $angajati_per_firma->first()->firma);
+                        // if ($angajati_per_foaie_pontaj->first()->foaie_pontaj){
+                        //     $sheet->setCellValue('A' . $rand, 'Firma ' . $angajati_per_foaie_pontaj->first()->foaie_pontaj);
                         // } else {
                         //     $sheet->setCellValue('A' . $rand, 'Firma nesetată');
                         // }
 
                         $nr_crt_angajat = 1;
 
-                        foreach ($angajati_per_firma as $angajat){
+                        foreach ($angajati_per_foaie_pontaj as $angajat){
                             $rand ++;
 
                             if ($angajat->pontaj->count() > 0){ // se exporta in excel doar cei care au pontaj
@@ -652,6 +652,9 @@ class PontajController extends Controller
                         ]
                     ];
                     $sheet ->getStyle('A12:' . $column->getColumnIndex() . $rand)->applyFromArray($styleArray1);
+
+                    $rand += 2;
+                    $sheet->setCellValue('C' . $rand, 'Întocmit');
 
                     // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
                 }
