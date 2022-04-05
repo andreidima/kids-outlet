@@ -274,10 +274,10 @@ class PontajController extends Controller
 \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder( new \PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder() );
 
                 $foaie_numar = 0;
-                foreach ($angajati->groupby('firma') as $angajati_per_firma){
+                foreach ($angajati->groupby('foaie_pontaj') as $angajati_per_firma){
 
                     // Create a new worksheet called "My Data"
-                    $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $angajati_per_firma->first()->firma ?? 'fara_firma');
+                    $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, substr(($angajati_per_firma->first()->foaie_pontaj ?? 'Ne catalogați'), 0, 30));
 
                     // Attach the "My Data" worksheet as the first worksheet in the Spreadsheet object
                     $spreadsheet->addSheet($myWorkSheet, $foaie_numar);
@@ -317,7 +317,7 @@ class PontajController extends Controller
                     $sheet->setCellValue('AI6', 'Prb - program redus boala');
 
 
-                    $sheet->setCellValue('A9', 'FOAIE COLECTIVA DE PREZENTA (PONTAJ) - ' . $angajati_per_firma->first()->firma);
+                    $sheet->setCellValue('A9', 'FOAIE COLECTIVA DE PREZENTA (PONTAJ) - ' . $angajati_per_firma->first()->foaie_pontaj);
                     $sheet->getStyle('A9')->getFont()->setSize(14);
                     $sheet->getStyle('A9')->getAlignment()->setHorizontal('center');
 
