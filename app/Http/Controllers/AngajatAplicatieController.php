@@ -31,6 +31,7 @@ class AngajatAplicatieController extends Controller
      */
     public function postAutentificare(Request $request)
     {
+        // Salvare date despre incercarea de logare
         $logare = new LogareAplicatieAngajat;
         $logare->cod_de_acces = $request->cod_de_acces;
         $logare->ip_address = $request->ip();
@@ -44,6 +45,7 @@ class AngajatAplicatieController extends Controller
                 ]
             );
 
+        // Daca s-a ajuns in acest punct, inseamna ca logarea este reusita, si se salveaza acest lucru in baza de date
         $logare->status = "reusita";
         $logare->update();
 
