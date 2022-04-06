@@ -9,6 +9,8 @@ use App\Models\Pontaj;
 use App\Models\Produs;
 use App\Models\ProdusOperatie;
 use App\Models\NormaLucrata;
+use App\Models\LogareAplicatieAngajat;
+use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 
@@ -29,11 +31,21 @@ class AngajatAplicatieController extends Controller
      */
     public function postAutentificare(Request $request)
     {
+        $logare = new LogareAplicatieAngajat;
+        $logare->cod_de_acces = $request->cod_de_acces;
+        $logare->ip_address = $request->ip();
+        $logare->user_agent = $request->header('User-Agent');
+        $logare->status = "esuata";
+        $logare->save();
+
         $request->validate(
                 [
                     'cod_de_acces' => 'required|exists:angajati,cod_de_acces',
                 ]
             );
+
+        $logare->status = "reusita";
+        $logare->update();
 
         $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia')->where('activ', 1)->where('cod_de_acces', $request->cod_de_acces)->first();
 
