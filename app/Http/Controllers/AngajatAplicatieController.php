@@ -45,13 +45,15 @@ class AngajatAplicatieController extends Controller
                 ]
             );
 
+        $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia', 'activ')->where('cod_de_acces', $request->cod_de_acces)->first();
+
         // Daca s-a ajuns in acest punct, inseamna ca logarea este reusita, si se salveaza acest lucru in baza de date
         $logare->status = "reusita";
+        $logare->angajat = $angajat->nume;
+        $logare->activ = $angajat->activ;
         $logare->update();
 
-        $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia')->where('activ', 1)->where('cod_de_acces', $request->cod_de_acces)->first();
-
-        if ($angajat){
+        if ($angajat->activ === 1){
             $request->session()->put('angajat', $angajat);
         } else {
             return back ()->with('error', 'Acest cont este dezactivat!');
