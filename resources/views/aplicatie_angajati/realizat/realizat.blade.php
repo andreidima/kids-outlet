@@ -111,15 +111,15 @@
                             <small>Număr de bucăți:</small> {{ $norma_lucrata->cantitate }}
                             @if (
                                     (
-                                        (\Carbon\Carbon::now()->day < 15)
-                                        // (\Carbon\Carbon::parse('2022-02-04')->day < )
+                                        (\Carbon\Carbon::now()->day < 4)
+                                        // (\Carbon\Carbon::parse('2022-02-04')->day < 4)
                                         &&
                                         ($norma_lucrata->data >= \Carbon\Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
                                     )
                                     ||
                                     (
-                                        (\Carbon\Carbon::now()->day >= 15)
-                                        // (\Carbon\Carbon::parse('2022-02-04')->day >= )
+                                        (\Carbon\Carbon::now()->day >= 4)
+                                        // (\Carbon\Carbon::parse('2022-02-04')->day >= 4)
                                         &&
                                         ($norma_lucrata->data >= \Carbon\Carbon::now()->startOfMonth()->toDateString())
                                     )
