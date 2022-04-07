@@ -29,7 +29,7 @@
                             value-type="YYYY-MM-DD"
                             format="DD-MM-YYYY"
                             :latime="{ width: '125px' }"
-                            disabled
+                            {{-- disabled --}}
                         ></vue2-datepicker>
                 </div>
             @else
