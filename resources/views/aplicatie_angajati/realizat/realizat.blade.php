@@ -147,7 +147,7 @@
                 @endforelse
 
                 <div class="mb-4 px-1 text-dark rounded-3" style="background-color:#d5ff88;">
-                    Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 14 (inclusiv) a lunii următoare.
+                    Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 3 (inclusiv) a lunii următoare.
                 </div>
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
@@ -160,13 +160,13 @@
     @foreach ($norme_lucrate as $norma_lucrata)
         @if (
                 (
-                    (\Carbon\Carbon::now()->day < 15)
+                    (\Carbon\Carbon::now()->day < 4)
                     &&
                     ($norma_lucrata->data >= \Carbon\Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
                 )
                 ||
                 (
-                    (\Carbon\Carbon::now()->day >= 15)
+                    (\Carbon\Carbon::now()->day >= 4)
                     &&
                     ($norma_lucrata->data >= \Carbon\Carbon::now()->startOfMonth()->toDateString())
                 )
