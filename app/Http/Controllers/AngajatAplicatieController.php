@@ -304,13 +304,13 @@ class AngajatAplicatieController extends Controller
                 &&
                 (
                     (
-                        (Carbon::now()->day < 4)
+                        (Carbon::now()->day < 15)
                         &&
                         ($norma_lucrata->data >= Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
                     )
                     ||
                     (
-                        (Carbon::now()->day >= 4)
+                        (Carbon::now()->day >= 15)
                         &&
                         ($norma_lucrata->data >= Carbon::now()->startOfMonth()->toDateString())
                     )
