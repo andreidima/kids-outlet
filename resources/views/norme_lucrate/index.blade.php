@@ -132,9 +132,11 @@
                                 </td>
                                 <td class="text-center">
                                     {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }}
-                                    @php
-                                        $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;
-                                    @endphp
+                                    @if ($angajat)
+                                        @php
+                                            $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;
+                                        @endphp
+                                    @endif
                                 </td>
                                 @if (!$angajat)
                                     <td class="text-center">
