@@ -15,7 +15,7 @@ class ImportFisierExcelController extends Controller
 
         foreach ($import_produse_operatii as $import_produs_operatie){
             $produs_operatie = new ProdusOperatie;
-            $produs_operatie->produs_id = 33;
+            $produs_operatie->produs_id = 34;
             $produs_operatie->nume = $import_produs_operatie->{'DESCRIEREA OPERATIEI'};
             $produs_operatie->numar_de_faza = $import_produs_operatie->{'nr crt'};
             $produs_operatie->timp = str_replace(',', '.', $import_produs_operatie->{'TIMP'});
@@ -26,7 +26,7 @@ class ImportFisierExcelController extends Controller
             $produs_operatie->pret_100_pe_minut = str_replace(',', '.', $import_produs_operatie->{'PRET 100% pe minut'});
             $produs_operatie->pret_100_pe_faze = str_replace(',', '.', $import_produs_operatie->{'PRET 100% pe faze'});
             $produs_operatie->j = str_replace(',', '.', $import_produs_operatie->{'J'});
-            $produs_operatie->norma_totala = 306;
+            $produs_operatie->norma_totala = 1500;
 
             // $produs_operatie = ProdusOperatie::
             //     where('produs_id', 2)
