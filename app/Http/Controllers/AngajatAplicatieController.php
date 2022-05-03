@@ -218,7 +218,6 @@ class AngajatAplicatieController extends Controller
             $norma_lucrata->angajat_id = $angajat->id;
             $norma_lucrata->data = Carbon::now();
             $norma_lucrata->produs_operatie_id = $produs_operatie->id;
-
             // Se verifica sa nu se depaseasca norma
             // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
             if (($produs_operatie->norma_totala_efectuata + $request->numar_de_bucati) > $produs_operatie->norma_totala){
@@ -299,22 +298,32 @@ class AngajatAplicatieController extends Controller
         }
         $angajat = $request->session()->get('angajat');
 
-        if (
+
+        // if (
+        //         ($norma_lucrata->angajat_id === $angajat->id)
+        //         &&
+        //         (
+        //             (
+        //                 (Carbon::now()->day < 6)
+        //                 &&
+        //                 ($norma_lucrata->data >= Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
+        //             )
+        //             ||
+        //             (
+        //                 (Carbon::now()->day >= 6)
+        //                 &&
+        //                 ($norma_lucrata->data >= Carbon::now()->startOfMonth()->toDateString())
+        //             )
+        //         )
+        //     )
+
+        // $data_stergere_lucru_pana_la = \Carbon\Carbon::parse(\App\Models\Variabila::where('variabila', 'data_stergere_lucru_pana_la')->value('valoare'));
+        // if ($data_stergere_lucru_pana_la->lessThan(\Carbon\Carbon::parse($norma_lucrata->data)))
+
+        if  (
                 ($norma_lucrata->angajat_id === $angajat->id)
                 &&
-                (
-                    (
-                        (Carbon::now()->day < 6)
-                        &&
-                        ($norma_lucrata->data >= Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
-                    )
-                    ||
-                    (
-                        (Carbon::now()->day >= 6)
-                        &&
-                        ($norma_lucrata->data >= Carbon::now()->startOfMonth()->toDateString())
-                    )
-                )
+                \Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
             )
         {
             $norma_lucrata->produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
