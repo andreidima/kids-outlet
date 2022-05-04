@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AngajatAplicatieController;
+use App\Http\Controllers\AngajatAplicatieAngajatController;
+
 use App\Http\Controllers\AngajatController;
 use App\Http\Controllers\PontajController;
 use App\Http\Controllers\ProdusController;
@@ -62,6 +64,8 @@ Route::get('/aplicatie-angajati/norma-lucrata/{norma_lucrata}/sterge', [AngajatA
 
 Route::get('/aplicatie-angajati/vezi-faze-produse/{produs?}', [AngajatAplicatieController::class, 'veziFazeProduse']);
 Route::get('/aplicatie-angajati/vezi-norme/{produs_operatie}', [AngajatAplicatieController::class, 'veziNormeProdusOperatie']);
+
+Route::resource('/aplicatie-angajati/angajati', AngajatAplicatieAngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
 
 
 Route::group(['middleware' => 'auth'], function () {

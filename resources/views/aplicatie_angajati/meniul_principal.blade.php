@@ -56,6 +56,13 @@
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
                 @endif
 
+                {{-- Contul Mocanu Geanina poate vedea angajatii --}}
+                @if (
+                        ($angajat->id === 4) // Mocanu Geanina
+                    )
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">ANGAJAȚI</a>
+                @endif
+
 
             </div>
         </div>

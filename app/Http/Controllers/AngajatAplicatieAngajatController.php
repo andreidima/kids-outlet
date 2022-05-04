@@ -6,7 +6,7 @@ use App\Models\Angajat;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class AngajatController extends Controller
+class AngajatAplicatieAngajatController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,21 +15,10 @@ class AngajatController extends Controller
      */
     public function index()
     {
-        $search_nume = \Request::get('search_nume');
-        $search_telefon = \Request::get('search_telefon');
+        $angajati = Angajat::where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
+            ->orderBy('nume')->get();
 
-        $angajati = Angajat::
-            where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
-            ->when($search_nume, function ($query, $search_nume) {
-                return $query->where('nume', 'like', '%' . $search_nume . '%');
-            })
-            ->when($search_telefon, function ($query, $search_telefon) {
-                return $query->where('telefon', 'like', '%' . $search_telefon . '%');
-            })
-            ->latest()
-            ->simplePaginate(25);
-
-        return view('angajati.index', compact('angajati', 'search_nume', 'search_telefon'));
+        return view('angajati.aplicatieAngajati.index', compact('angajati'));
     }
 
     /**
@@ -119,5 +108,19 @@ class AngajatController extends Controller
                 Rule::unique('App\Models\Angajat')->ignore($angajat),
             ]
         ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexAplicatieAngajat()
+    {
+        $angajati = Angajat::
+            orderBy('nume')
+            ->get();
+
+        return view('angajati.aplicatieAngajat.index', compact('angajati'));
     }
 }
