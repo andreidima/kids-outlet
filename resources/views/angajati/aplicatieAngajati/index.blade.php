@@ -37,6 +37,10 @@
                                 <tr>
                                     <td>
                                         {{ $angajat->nume }}
+                                        @if ($angajat->activ === 0)
+                                            <br>
+                                            <small>Cont închis</small>
+                                        @endif
                                     </td>
                                     <td>
                                         {{ $angajat->cod_de_acces }}
