@@ -206,7 +206,7 @@ class AngajatAplicatieController extends Controller
         if(!empty($request->session()->get('submitForm'))){
             $angajat = $request->session()->get('angajat');
 
-            $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
+            $produs_operatie = ProdusOperatie::with('produs')->where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
 
             // In prima faza norma daca era pentru acelasi numar de faza se aduna la aceasi inregistrare
             // Pentru un control maxim, acum norma se adauga individual de fiecare data
@@ -219,9 +219,8 @@ class AngajatAplicatieController extends Controller
             $norma_lucrata->data = Carbon::now();
             $norma_lucrata->produs_operatie_id = $produs_operatie->id;
             // Se verifica sa nu se depaseasca norma
-            // din norma efectuata pentru produs_operatie, se scade toata norma lucrata veche, se adauga cantitatea noua din request, si se verifica cu norma stabilita pentru produs_operatie
-            if (($produs_operatie->norma_totala_efectuata + $request->numar_de_bucati) > $produs_operatie->norma_totala){
-                return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $produs_operatie->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . ($produs_operatie->norma_totala - $produs_operatie->norma_totala_efectuata) . '"!');
+            if (($produs_operatie->norma_totala_efectuata + $request->numar_de_bucati) > ($produs_operatie->produs->cantitate ?? 0)){
+                return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $produs_operatie->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!');
             } else {
                 $produs_operatie->norma_totala_efectuata += $request->numar_de_bucati;
                 $produs_operatie->save();

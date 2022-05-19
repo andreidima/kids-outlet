@@ -77,6 +77,17 @@
                                     </a>
                                     <div style="flex" class="">
                                         <a
+                                            class="flex me-1"
+                                            href="#"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#duplicaProdus{{ $produs->id }}"
+                                            title="Duplică Produs"
+                                            >
+                                            <span class="badge bg-warning">Duplică</span>
+                                        </a>
+                                    </div>
+                                    <div style="flex" class="">
+                                        <a
                                             href="#"
                                             data-bs-toggle="modal"
                                             data-bs-target="#stergeProdus{{ $produs->id }}"
@@ -102,6 +113,38 @@
 
         </div>
     </div>
+
+    {{-- Modalele pentru duplicare produs --}}
+    @foreach ($produse as $produs)
+        <div class="modal fade text-dark" id="duplicaProdus{{ $produs->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title text-white" id="exampleModalLabel">Produs: <b>{{ $produs->nume }}</b></h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="text-align:left;">
+                    Ești sigur ca vrei să duplici Produsul?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+
+                    <form method="POST" action="{{ $produs->path() }}/duplica">
+                        {{-- @method('DELETE') --}}
+                        @csrf
+                        <button
+                            type="submit"
+                            class="btn btn-warning text-white"
+                            >
+                            Duplică Produs
+                        </button>
+                    </form>
+
+                </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
     {{-- Modalele pentru stergere produs --}}
     @foreach ($produse as $produs)

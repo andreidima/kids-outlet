@@ -13,6 +13,28 @@
                     value="{{ old('nume', $produs->nume) }}"
                     required>
             </div>
+            <div class="col-lg-12 mb-4">
+                <label for="cantitate" class="mb-0 ps-3">Cantitate:*</label>
+                <input
+                    type="text"
+                    class="form-control form-control-sm rounded-pill {{ $errors->has('cantitate') ? 'is-invalid' : '' }}"
+                    name="cantitate"
+                    placeholder=""
+                    value="{{ old('cantitate', $produs->cantitate) }}"
+                    required>
+            </div>
+            <div class="col-lg-12 mb-4">
+                <label for="sectia" class="mb-0 ps-3">Sectia:*</label>
+                <select name="sectia" class="form-select" aria-label="Sectia">
+                    <option selected></option>
+                    <option value="Sectie" {{ (old('sectia', $produs->sectia) == 'Sectie') ? 'selected' : '' }}>
+                        Sectie
+                    </option>
+                    <option value="Mostre" {{ (old('sectia', $produs->sectia) == 'Mostre') ? 'selected' : '' }}>
+                        Mostre
+                    </option>
+                </select>
+            </div>
             {{-- <div class="col-lg-12 mb-2">
                 <label for="client_pret" class="mb-0 ps-3">Client preț:</label>
                 <input

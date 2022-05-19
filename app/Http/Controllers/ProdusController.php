@@ -111,11 +111,28 @@ class ProdusController extends Controller
     {
         return request()->validate([
             'nume' => 'required|max:100',
-            'activ' => ''
+            'cantitate' => 'required|integer|min:0|max:9999',
+            'sectia' => 'required|max:100',
+            'activ' => '',
             // 'client_pret' => 'nullable|numeric|between:0.00,99999.99',
             // 'cost_produs' => 'nullable|numeric|between:0.00,99999.99',
             // 'cantitate' => 'nullable|numeric|between:0,99999',
             // 'observatii' => 'nullable|max:1000',
         ]);
+    }
+
+    public function duplica(Produs $produs)
+    {
+        $clone_produs = $produs->replicate();
+        $clone_produs->save();
+
+        foreach ($produs->produse_operatii as $produs_operatie) {
+            $clone_produs_operatie = $produs_operatie->replicate();
+            $clone_produs_operatie->norma_totala_efectuata = 0;
+            $clone_produs->produse_operatii()->save($clone_produs_operatie);
+            // $clone_produs_operatie->save();
+        }
+
+        return back()->with('status', 'Produsul ' . $produs->nume . ' a fost duplicat cu success');
     }
 }

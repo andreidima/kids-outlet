@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('pontaje/{angajat}/{data}/adauga', [PontajController::class, 'create']);
     Route::resource('pontaje', PontajController::class,  ['parameters' => ['pontaje' => 'pontaj']]);
 
+    Route::post('produse/{produs}/duplica', [ProdusController::class, 'duplica']);
     Route::resource('produse', ProdusController::class,  ['parameters' => ['produse' => 'produs']]);
 
     Route::resource('produse-operatii', ProdusOperatieController::class,  ['parameters' => ['produse-operatii' => 'produs_operatie']]);

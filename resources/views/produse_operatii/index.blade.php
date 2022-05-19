@@ -110,7 +110,7 @@
                                     {{-- {{ $produs_operatie->norma_totala_efectuata }} --}}
                                 </td>
                                 <td class="text-end">
-                                    {{ $produs_operatie->norma_totala }}
+                                    {{ $produs_operatie->produs->cantitate ?? 0 }}
                                 </td>
                                 {{-- <td class="d-flex justify-content-end">
                                     <a href="{{ $produs_operatie->path() }}"
