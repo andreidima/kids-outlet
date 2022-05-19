@@ -298,32 +298,32 @@ class AngajatAplicatieController extends Controller
         $angajat = $request->session()->get('angajat');
 
 
-        if (
-                ($norma_lucrata->angajat_id === $angajat->id)
-                &&
-                (
-                    (
-                        (Carbon::now()->day < 6)
-                        &&
-                        ($norma_lucrata->data >= Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
-                    )
-                    ||
-                    (
-                        (Carbon::now()->day >= 6)
-                        &&
-                        ($norma_lucrata->data >= Carbon::now()->startOfMonth()->toDateString())
-                    )
-                )
-            )
+        // if (
+        //         ($norma_lucrata->angajat_id === $angajat->id)
+        //         &&
+        //         (
+        //             (
+        //                 (Carbon::now()->day < 6)
+        //                 &&
+        //                 ($norma_lucrata->data >= Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
+        //             )
+        //             ||
+        //             (
+        //                 (Carbon::now()->day >= 6)
+        //                 &&
+        //                 ($norma_lucrata->data >= Carbon::now()->startOfMonth()->toDateString())
+        //             )
+        //         )
+        //     )
 
         // $data_stergere_lucru_pana_la = \Carbon\Carbon::parse(\App\Models\Variabila::where('variabila', 'data_stergere_lucru_pana_la')->value('valoare'));
         // if ($data_stergere_lucru_pana_la->lessThan(\Carbon\Carbon::parse($norma_lucrata->data)))
 
-        // if  (
-        //         ($norma_lucrata->angajat_id === $angajat->id)
-        //         &&
-        //         \Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
-        //     )
+        if  (
+                ($norma_lucrata->angajat_id === $angajat->id)
+                &&
+                \Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
+            )
         {
             $norma_lucrata->produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
             $norma_lucrata->produs_operatie->save();

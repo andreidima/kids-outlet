@@ -153,9 +153,9 @@
                 @endforelse
 
                 <div class="mb-4 px-1 text-dark rounded-3" style="background-color:#d5ff88;">
-                    Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 5 (inclusiv) a lunii următoare.
+                    {{-- Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 5 (inclusiv) a lunii următoare. --}}
                     {{-- Nu puteți șterge comenzi mai vechi de {{ $data_stergere_lucru_pana_la->isoFormat("DD.MM.YYYY") }} inclusiv. --}}
-                    {{-- Puteți șterge comenzi doar din luna curentă. --}}
+                    Puteți șterge comenzi doar din luna curentă.
                 </div>
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
@@ -166,7 +166,7 @@
 
     {{-- Modalele pentru stergere --}}
     @foreach ($norme_lucrate as $norma_lucrata)
-        @if (
+        {{-- @if (
                 (
                     (\Carbon\Carbon::now()->day < 6)
                     &&
@@ -178,8 +178,8 @@
                     &&
                     ($norma_lucrata->data >= \Carbon\Carbon::now()->startOfMonth()->toDateString())
                 )
-            )
-        {{-- @if (\Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()) --}}
+            ) --}}
+        @if (\Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth())
                 <div class="modal fade text-dark" id="stergeComanda{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
