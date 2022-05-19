@@ -128,6 +128,7 @@ class ProdusController extends Controller
 
         foreach ($produs->produse_operatii as $produs_operatie) {
             $clone_produs_operatie = $produs_operatie->replicate();
+            $clone_produs_operatie->norma_totala = 0;
             $clone_produs_operatie->norma_totala_efectuata = 0;
             $clone_produs->produse_operatii()->save($clone_produs_operatie);
             // $clone_produs_operatie->save();
