@@ -28,21 +28,27 @@
 
                 <h4 class="text-center">ALEGE PRODUSUL</h4>
 
-                @foreach ($produse as $produs)
-                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-1"
-                        autocomplete="off"
-                    >
-                            @csrf
+                @if ((\App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->value('valoare') === 'nu') && ($angajat->id != 4))
+                    <br>
+                    <h5>Administratorul aplicației, „<b>Mocanu Geanina</b>”, a blocat introducerea de noi comenzi în aplicație.</h5>
+                    <br>
+                @else
+                    @foreach ($produse as $produs)
+                        <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-1"
+                            autocomplete="off"
+                        >
+                                @csrf
 
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <input class="form-control form-control-lg mb-3" type="hidden" name="id" value="{{ $produs->id }}">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <input class="form-control form-control-lg mb-3" type="hidden" name="id" value="{{ $produs->id }}">
 
-                                <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">{{ $produs->nume }}</button>
+                                    <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">{{ $produs->nume }}</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                @endforeach
+                        </form>
+                    @endforeach
+                @endif
 
                 <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">RENUNȚĂ</a>
             </div>

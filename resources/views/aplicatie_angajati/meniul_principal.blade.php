@@ -63,6 +63,66 @@
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">ANGAJAȚI</a>
                 @endif
 
+                {{-- Contul Mocanu Geanina poate bloca introducerea comenzilor --}}
+                @if (
+                        ($angajat->id === 4) // Mocanu Geanina
+                    )
+                    @php
+                        $acces_introducere_comenzi = \App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->value('valoare');
+                    @endphp
+                    <a class="mb-3 btn btn-lg w-100 text-white"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#blocheazaDeblocheazaIntroducereComenzi"
+                        role="button" style="background-color: #FC4A1A; border:2px solid white;">
+
+                        @if ($acces_introducere_comenzi === 'da')
+                            BLOCHEAZĂ INTRODUCERE COMENZI
+                        @else
+                            ACTIVEAZĂ INTRODUCERE COMENZI
+                        @endif
+                    </a>
+
+                        <div class="modal fade text-dark" id="blocheazaDeblocheazaIntroducereComenzi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header bg-danger">
+                                    <h5 class="modal-title text-white" id="exampleModalLabel">
+                                        @if (\App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->value('valoare') === 'da')
+                                            Blochează introducere comenzi
+                                        @else
+                                            Activează introducere comenzi
+                                        @endif
+                                    </h5>
+                                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="text-align:left;">
+                                        @if (\App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->value('valoare') === 'da')
+                                            Ești sigur ca vrei să blochezi introducerea de comenzi?
+                                            <br>
+                                            Angajații nu vor mai putea introduce lucrul în aplicație
+                                        @else
+                                            Ești sigur ca vrei să activezi introducerea de comenzi?
+                                            <br>
+                                            Angajații vor putea introduce lucrul în aplicație
+                                        @endif
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                                    <a class="btn btn-danger text-white" href="/aplicatie-angajati/blocheaza-deblocheaza-introducere-comenzi" role="button">
+                                        @if (\App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->value('valoare') === 'da')
+                                            Blochează
+                                        @else
+                                            Activează
+                                        @endif
+                                    </a>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                @endif
+
 
             </div>
         </div>

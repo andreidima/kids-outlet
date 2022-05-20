@@ -67,6 +67,8 @@ Route::get('/aplicatie-angajati/vezi-norme/{produs_operatie}', [AngajatAplicatie
 
 Route::resource('/aplicatie-angajati/angajati', AngajatAplicatieAngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
 
+Route::get('/aplicatie-angajati/blocheaza-deblocheaza-introducere-comenzi', [AngajatAplicatieController::class, 'blocheazaDeblocheazaIntroducereComenzi']);
+
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/acasa', function () {
