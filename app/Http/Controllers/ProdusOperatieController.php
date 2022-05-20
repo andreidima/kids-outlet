@@ -15,7 +15,7 @@ class ProdusOperatieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $search_produs_id = \Request::get('search_produs_id');
         $search_nume = \Request::get('search_nume');
@@ -41,6 +41,8 @@ class ProdusOperatieController extends Controller
             // ->simplePaginate(25);
             ->get();
 
+        $request->session()->forget('produs_operatie_return_url');
+
         return view('produse_operatii.index', compact('produse_operatii', 'produse', 'search_produs_id', 'search_nume'));
     }
 
@@ -53,9 +55,9 @@ class ProdusOperatieController extends Controller
     {
         $produse = Produs::orderBy('nume')->get();
 
-        $last_url = $request->last_url;
+        $request->session()->get('produs_operatie_return_url') ?? $request->session()->put('produs_operatie_return_url', url()->previous());
 
-        return view('produse_operatii.create', compact('produse', 'last_url'));
+        return view('produse_operatii.create', compact('produse'));
     }
 
     /**
@@ -68,7 +70,8 @@ class ProdusOperatieController extends Controller
     {
         $produs_operatie = ProdusOperatie::create($this->validateRequest($request));
 
-        return redirect($request->last_url)->with('status', 'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') . '” a fost adăugată cu succes!');
+        return redirect($request->session()->get('produs_operatie_return_url') ?? ('/produse-operatii'))
+            ->with('status', 'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') . '” a fost adăugată cu succes!');
     }
 
     /**
@@ -77,8 +80,10 @@ class ProdusOperatieController extends Controller
      * @param  \App\Models\ProdusOperatie  $produs_operatie
      * @return \Illuminate\Http\Response
      */
-    public function show(ProdusOperatie $produs_operatie)
+    public function show(Request $request, ProdusOperatie $produs_operatie)
     {
+        $request->session()->get('produs_operatie_return_url') ?? $request->session()->put('produs_operatie_return_url', url()->previous());
+
         return view('produse_operatii.show', compact('produs_operatie'));
     }
 
@@ -92,9 +97,9 @@ class ProdusOperatieController extends Controller
     {
         $produse = Produs::orderBy('nume')->get();
 
-        $last_url = $request->last_url;
+        $request->session()->get('produs_operatie_return_url') ?? $request->session()->put('produs_operatie_return_url', url()->previous());
 
-        return view('produse_operatii.edit', compact('produse', 'produs_operatie', 'last_url'));
+        return view('produse_operatii.edit', compact('produse', 'produs_operatie'));
     }
 
     /**
@@ -108,7 +113,8 @@ class ProdusOperatieController extends Controller
     {
         $produs_operatie->update($this->validateRequest($request, $produs_operatie));
 
-        return redirect($request->last_url)->with('status', 'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') . '” a fost modificată cu succes!');
+        return redirect($request->session()->get('produs_operatie_return_url') ?? ('/produse-operatii'))->
+            with('status', 'Operația „' . $produs_operatie->nume . '” pentru  produsul „' . ($produs_operatie->produs->nume ?? '') . '” a fost modificată cu succes!');
     }
 
     /**
@@ -156,8 +162,8 @@ class ProdusOperatieController extends Controller
                 'pret_100_pe_minut' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'pret_100_pe_faze' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
                 'J' => 'nullable|numeric|between:0,9999|regex:/^\d*(\.\d{1,5})?$/',
-                'norma_totala' => 'nullable|numeric|between:0,99999',
-                'norma_totala_efectuata' => 'nullable|numeric|between:0,99999',
+                // 'norma_totala' => 'nullable|numeric|between:0,99999',
+                // 'norma_totala_efectuata' => 'nullable|numeric|between:0,99999',
                 'observatii' => 'nullable|max:1000',
             ],
             [

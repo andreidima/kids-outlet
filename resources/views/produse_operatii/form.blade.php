@@ -1,7 +1,5 @@
 @csrf
 
-<input type="hidden" id="last_url" name="last_url" value="{{ $last_url }}">
-
 <div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px" id="app1">
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
@@ -119,7 +117,7 @@
                     value="{{ old('J', $produs_operatie->J) }}">
                 <small class="ps-3">Punct(.) pentru zecimalele</small>
             </div>
-            <div class="col-lg-4 mb-4">
+            {{-- <div class="col-lg-4 mb-4">
                 <label for="norma_totala" class="mb-0 ps-3">Norma totală:</label>
                 <input
                     type="text"
@@ -127,7 +125,7 @@
                     name="norma_totala"
                     placeholder=""
                     value="{{ old('norma_totala', $produs_operatie->norma_totala) }}">
-            </div>
+            </div> --}}
             <div class="col-lg-12 mb-4">
                 <label for="observatii" class="mb-0 ps-3">Observații:</label>
                 <textarea class="form-control form-control-sm {{ $errors->has('observatii') ? 'is-invalid' : '' }}"
@@ -139,7 +137,7 @@
             <div class="col-lg-8 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary text-white btn-sm me-2 rounded-pill">{{ $buttonText }}</button>
                 {{-- <a class="btn btn-secondary btn-sm mr-4 rounded-pill" href="{{ $client_neserios->path() }}">Renunță</a>  --}}
-                <a class="btn btn-secondary btn-sm rounded-pill" href="/produse-operatii">Renunță</a>
+                <a class="btn btn-secondary btn-sm rounded-pill" href="{{ Session::get('produs_operatie_return_url') }}">Renunță</a>
             </div>
         </div>
     </div>

@@ -44,12 +44,12 @@
                                     {{ $produs_operatie->numar_de_faza }}
                                 </td>
                             </tr>
-                            {{-- <tr>
+                            <tr>
                                 <td>
                                     Timp
                                 </td>
                                 <td>
-                                    {{ $produs_operatie->timp ? \Carbon\Carbon::parse($produs_operatie->timp)->isoFormat('HH:mm') : '' }}
+                                    {{ $produs_operatie->timp }}
                                 </td>
                             </tr>
                             <tr>
@@ -60,7 +60,7 @@
                                     {{ $produs_operatie->pret }}
                                 </td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td>
                                     Norma
                                 </td>
@@ -73,7 +73,7 @@
 
                     <div class="form-row mb-2 px-2">
                         <div class="col-lg-12 d-flex justify-content-center">
-                            <a class="btn btn-primary text-white btn-sm rounded-pill" href="/produse-operatii">Pagină produse operații</a>
+                            <a class="btn btn-primary text-white rounded-3" href="{{ Session::get('produs_operatie_return_url') }}">Înapoi</a>
                         </div>
                     </div>
 

@@ -45,9 +45,9 @@
                 </form>
             </div>
             <div class="col-lg-3 text-end">
-                {{-- <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('produse-operatii.create', ['last_url' => '/produse-operatii']) }}" role="button">
+                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8" href="{{ route('produse-operatii.create') }}" role="button">
                     <i class="fas fa-plus-square text-white me-1"></i>Adaugă operație
-                </a> --}}
+                </a>
             </div>
         </div>
 
@@ -68,7 +68,7 @@
                             <th class="text-end">Preț</th>
                             <th class="text-end">Norma efectuată</th>
                             <th class="text-end">Norma totală</th>
-                            {{-- <th class="text-end">Acțiuni</th> --}}
+                            <th class="text-end">Acțiuni</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,7 +112,7 @@
                                 <td class="text-end">
                                     {{ $produs_operatie->produs->cantitate ?? 0 }}
                                 </td>
-                                {{-- <td class="d-flex justify-content-end">
+                                <td class="d-flex justify-content-end">
                                     <a href="{{ $produs_operatie->path() }}"
                                         class="flex me-1"
                                     >
@@ -133,7 +133,7 @@
                                             <span class="badge bg-danger">Șterge</span>
                                         </a>
                                     </div>
-                                </td> --}}
+                                </td>
                             </tr>
                         @empty
                         @endforelse
