@@ -46,7 +46,7 @@
                 {{-- <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A; border:2px solid white;">PONTAJ</a> --}}
                 <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">REALIZAT</a>
 
-                {{-- Conturile de test Andrei si Mocanu Geanina pot vedea si fazele si ce s-a introdus la fiecare --}}
+                {{-- Conturile de test Andrei, Mocanu Geanina si Duna Luminita pot vedea si fazele si ce s-a introdus la fiecare --}}
                 @if (
                         ($angajat->id === 1) // Andrei Dima Administrator 1
                         || ($angajat->id === 3) // Andrei Dima Administrator 3
@@ -64,7 +64,7 @@
                 @endif
 
                 {{-- Contul Mocanu Geanina poate bloca introducerea comenzilor --}}
-                @if (
+                {{-- @if (
                         ($angajat->id === 4) // Mocanu Geanina
                     )
                     @php
@@ -121,7 +121,7 @@
                             </div>
                         </div>
 
-                @endif
+                @endif --}}
 
 
             </div>

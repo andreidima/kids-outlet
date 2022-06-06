@@ -43,7 +43,14 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $angajat->cod_de_acces }}
+                                        {{-- Conturilor Mocanu Geanina si Duna Luminita nu li se afiseaza codurile de acces --}}
+                                        @if (
+                                                ($angajat->id === 4) // Mocanu Geanina
+                                                || ($angajat->id === 12) // Duna Luminita
+                                            )
+                                        @else
+                                            {{ $angajat->cod_de_acces }}
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
