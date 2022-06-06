@@ -27,14 +27,14 @@
                     Pontaj: {{ $pontaj->angajat->nume  }}
 
                     {{-- Conturilor Mocanu Geanina si Duna Luminita nu li se afiseaza codurile de acces --}}
-                    @if (
+                    {{-- @if (
                             ($angajat->id === 4) // Mocanu Geanina
                             || ($angajat->id === 12) // Duna Luminita
                         )
                     @else
                         <br>
                         Cod de acces: {{ $pontaj->angajat->cod_de_acces }}
-                    @endif
+                    @endif --}}
 
                     <br>
                     Data: {{ $pontaj->data ? \Carbon\Carbon::parse($pontaj->data)->isoFormat('DD.MM.YYYY') : ''}}
