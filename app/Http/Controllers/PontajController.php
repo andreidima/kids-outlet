@@ -207,7 +207,7 @@ class PontajController extends Controller
                 return $query->where('nume', 'like', '%' . $search_nume . '%');
             })
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
-            ->where('activ', 1)
+            // ->where('activ', 1)
             ->orderBy('firma')
             ->orderBy('nume')
             // ->groupBy('angajat_id')
