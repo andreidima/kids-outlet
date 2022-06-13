@@ -160,8 +160,8 @@
         </div>
     </div>
 
-    {{-- Modalele pentru stergere produs_operatie --}}
-    {{-- @foreach ($produse_operatii as $produs_operatie)
+    Modalele pentru stergere produs_operatie
+    @foreach ($produse_operatii as $produs_operatie)
         <div class="modal fade text-dark" id="stergeOperatie{{ $produs_operatie->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -190,6 +190,6 @@
                 </div>
             </div>
         </div>
-    @endforeach --}}
+    @endforeach
 
 @endsection
