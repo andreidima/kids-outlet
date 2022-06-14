@@ -117,7 +117,14 @@ class AngajatController extends Controller
                 'nullable',
                 'max:50',
                 Rule::unique('App\Models\Angajat')->ignore($angajat),
-            ]
+            ],
+            'sectia' => 'nullable|max:500',
+            'firma' => 'nullable|max:500',
+            'prod' => 'nullable|max:200',
+            'ore_angajare' => 'nullable|numeric|between:1,12',
+            'avans' => 'nullable',
+            'foaie_pontaj' => 'nullable|max:200',
+            'activ' => 'nullable|integer|between:0,1'
         ]);
     }
 }

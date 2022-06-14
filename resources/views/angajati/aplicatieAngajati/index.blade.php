@@ -20,43 +20,79 @@
 
                 @include('errors')
 
-                <div class="table-responsive">
-                    <table class="table table-light table-striped align-middle">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center">
-                                    ANGAJAT
-                                </th>
-                                <th scope="col" class="text-center">
-                                    Cod de acces
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($angajati as $angajat)
+                @foreach ($angajati->sortBy('prod')->groupBy('prod') as $angajati_per_prod)
+                    <h3 class="text-center">
+                        Prod {{ $angajati_per_prod->first()->prod ?? 'ne setat' }}
+                    </h3>
+
+                    <div class="table-responsive">
+                        <table class="table table-light table-striped align-middle">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        {{ $angajat->nume }}
-                                        @if ($angajat->activ === 0)
-                                            <br>
-                                            <small>Cont închis</small>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        {{-- Conturilor Mocanu Geanina si Duna Luminita nu li se afiseaza codurile de acces --}}
-                                        @if (
-                                                ($angajat->id === 4) // Mocanu Geanina
-                                                || ($angajat->id === 12) // Duna Luminita
-                                            )
-                                        @else
-                                            {{ $angajat->cod_de_acces }}
-                                        @endif
-                                    </td>
+                                    <th scope="col">
+                                        ANGAJAT
+                                    </th>
+                                    <th scope="col">
+                                        Cod de acces
+                                    </th>
+                                    <th>
+                                        Sectia
+                                    </th>
+                                    <th>
+                                        firma
+                                    </th>
+                                    <th>
+                                        Foaie pontaj
+                                    </th>
+                                    <th>
+                                        Ore angajare
+                                    </th>
+                                    <th>
+                                        Stare cont
+                                    </th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                @foreach ($angajati_per_prod->sortBy('nume') as $angajat)
+                                    <tr>
+                                        <td>
+                                            {{ $angajat->nume }}
+                                        </td>
+                                        <td>
+                                            {{-- Conturilor Mocanu Geanina si Duna Luminita nu li se afiseaza codurile de acces --}}
+                                            @if (
+                                                    ($angajat->id === 4) // Mocanu Geanina
+                                                    || ($angajat->id === 12) // Duna Luminita
+                                                )
+                                            @else
+                                                {{ $angajat->cod_de_acces }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ $angajat->sectia }}
+                                        </td>
+                                        <td>
+                                            {{ $angajat->firma }}
+                                        </td>
+                                        <td>
+                                            {{ $angajat->foaie_pontaj }}
+                                        </td>
+                                        <td>
+                                            {{ $angajat->ore_angajare }}
+                                        </td>
+                                        <td>
+                                            @if ($angajat->activ === 1)
+                                                <small class="text-success">Deschis</small>
+                                            @else
+                                                <small class="text-danger">Închis</small>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endforeach
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
 
