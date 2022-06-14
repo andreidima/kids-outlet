@@ -4,7 +4,7 @@
 <div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px" id="app1">
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
-            @if (!$norma_lucrata->angajat)
+            {{-- @if (!$norma_lucrata->angajat) --}}
                 <div class="col-lg-8 mb-4">
                     <label for="angajat_id" class="mb-0 ps-3">Angajat:</label>
                     <select name="angajat_id"
@@ -29,10 +29,9 @@
                             value-type="YYYY-MM-DD"
                             format="DD-MM-YYYY"
                             :latime="{ width: '125px' }"
-                            {{-- disabled --}}
                         ></vue2-datepicker>
                 </div>
-            @else
+            {{-- @else
                 <div class="col-lg-12 px-4 mb-4 ">
                     Angajat: <b>{{ $norma_lucrata->angajat->nume }}</b>
                     <input class="" type="hidden" name="angajat_id" value="{{ $norma_lucrata->angajat_id }}" />
@@ -41,7 +40,7 @@
                     Data: <b>{{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}</b>
                     <input class="" type="hidden" name="data" value="{{ $norma_lucrata->data }}" />
                 </div>
-            @endif
+            @endif --}}
             <div class="col-lg-12 mb-4">
                 <label for="produs_id" class="mb-0 ps-3">Produs:</label>
                 <select name="produs_id"
