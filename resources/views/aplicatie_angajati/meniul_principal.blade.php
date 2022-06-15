@@ -46,19 +46,21 @@
                 {{-- <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A; border:2px solid white;">PONTAJ</a> --}}
                 <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">REALIZAT</a>
 
-                {{-- Conturile de test Andrei, Mocanu Geanina si Duna Luminita pot vedea si fazele si ce s-a introdus la fiecare --}}
+                {{-- Conturile ce pot vedea si fazele si ce s-a introdus la fiecare --}}
                 @if (
                         ($angajat->id === 1) // Andrei Dima Administrator 1
                         || ($angajat->id === 3) // Andrei Dima Administrator 3
                         || ($angajat->id === 4) // Mocanu Geanina
                         || ($angajat->id === 12) // Duna Luminita
+                        // || ($angajat->id === 91) // Porchina Luminita
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
                 @endif
 
-                {{-- Contul Mocanu Geanina poate vedea angajatii --}}
+                {{-- Conturile ce poate vedea angajatii --}}
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
+                        // || ($angajat->id === 91) // Porchina Luminita
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">ANGAJAȚI</a>
                 @endif
