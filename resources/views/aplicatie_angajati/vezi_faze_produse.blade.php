@@ -26,11 +26,11 @@
 
                 @include('errors')
 
-                <h4 class="text-center">ALEGE PRODUSUL</h4>
-
-                <small class="mb-3 text-center">
-                    *Fazele se vor încărca dedesubt
-                </small>
+                <h4 class="text-center">ALEGE PRODUSUL
+                    <small class="mb-3 text-center">
+                        *Fazele se vor încărca dedesubt
+                    </small>
+                </h4>
 
                 @foreach ($produse as $produs)
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse/{{ $produs->id }}" role="button" style="background-color: #FC4A1A; border:2px solid white;">{{ $produs->nume }}</a>
