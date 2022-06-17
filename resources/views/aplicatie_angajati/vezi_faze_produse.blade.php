@@ -28,7 +28,7 @@
 
                 <h4 class="text-center">ALEGE PRODUSUL</h4>
 
-                <small>
+                <small class="mb-3 text-center">
                     *Fazele se vor încărca dedesubt
                 </small>
 
