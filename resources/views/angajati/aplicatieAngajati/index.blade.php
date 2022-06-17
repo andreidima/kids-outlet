@@ -65,7 +65,7 @@
                                                     || ($angajat->id === 3) // Andrei Dima Administrator 3
                                                     || ($angajat->id === 4) // Mocanu Geanina
                                                     || ($angajat->id === 12) // Duna Luminita
-                                                    // || ($angajat->id === 91) // Porchina Luminita
+                                                    || ($angajat->id === 91) // Porchina Luminita
                                                 )
                                             @else
                                                 {{ $angajat->cod_de_acces }}
