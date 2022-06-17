@@ -42,9 +42,14 @@
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj-verifica" role="button" style="background-color: #FC4A1A; border:2px solid white;">VERIFICĂ PONTAJ</a>
                 @endif
 
-                <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/adauga-comanda-pasul-1" role="button" style="background-color: #FC4A1A; border:2px solid white;">COMANDĂ</a>
-                {{-- <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/pontaj" role="button" style="background-color: #FC4A1A; border:2px solid white;">PONTAJ</a> --}}
-                <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">REALIZAT</a>
+
+                {{-- Borchina Liliana nu poate introduce comenzi --}}
+                @if (
+                    !($angajat->id === 91) // Borchina Liliana
+                )
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/adauga-comanda-pasul-1" role="button" style="background-color: #FC4A1A; border:2px solid white;">COMANDĂ</a>
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">REALIZAT</a>
+                @endif
 
                 {{-- Conturile ce pot vedea si fazele si ce s-a introdus la fiecare --}}
                 @if (
@@ -52,7 +57,7 @@
                         || ($angajat->id === 3) // Andrei Dima Administrator 3
                         || ($angajat->id === 4) // Mocanu Geanina
                         || ($angajat->id === 12) // Duna Luminita
-                        || ($angajat->id === 91) // Porchina Luminita
+                        || ($angajat->id === 91) // Borchina Liliana
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
                 @endif
@@ -60,7 +65,7 @@
                 {{-- Conturile ce poate vedea angajatii --}}
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
-                        || ($angajat->id === 91) // Porchina Luminita
+                        || ($angajat->id === 91) // Borchina Liliana
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">ANGAJAȚI</a>
                 @endif
