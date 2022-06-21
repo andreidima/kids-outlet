@@ -11,7 +11,6 @@
 
     {{-- The „version” method will automatically append a unique hash to the filenames of all compiled files, allowing for more convenient cache busting --}}
     <script src="{{ mix('/js/app.js') }}" defer></script>
-
     <!-- Scripts -->
     {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
 
