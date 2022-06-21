@@ -30,7 +30,7 @@ class NormaLucrataController extends Controller
     {
         // $search_nume = $angajat ? Angajat::find($angajat)->nume : \Request::get('search_nume');
         $search_nume = $angajat->nume ?? \Request::get('search_nume');
-        $search_data = $data ?? \Request::get('search_data');
+        $search_data = $data ? ($data . ',' . $data) : \Request::get('search_data');
         $search_produs_id = \Request::get('search_produs_id');
         $search_numar_de_faza = \Request::get('search_numar_de_faza');
 
@@ -60,7 +60,11 @@ class NormaLucrataController extends Controller
                     });
             })
             ->when($search_data, function ($query, $search_data) {
-                return $query->whereDate('data', '=', $search_data);
+                $search_data = explode(',', $search_data);
+                $search_data[0] = date($search_data[0]);
+                // $search_data[1] = date($search_data[1]);
+                // dd(gettype($search_data[0]));
+                return $query->whereBetween('data', $search_data);
             })
             ->latest()
             ->simplePaginate(25);
@@ -253,13 +257,19 @@ class NormaLucrataController extends Controller
                     ->whereDate('data', '>=', $search_data_inceput)
                     ->whereDate('data', '<=', $search_data_sfarsit);
             }])
-            ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
-                $query->whereDate('data', '>=', $search_data_inceput)
-                    ->whereDate('data', '<=', $search_data_sfarsit);
-                }])
+            // ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+            //     $query->whereDate('data', '>=', $search_data_inceput)
+            //         ->whereDate('data', '<=', $search_data_sfarsit);
+            //     }])
             // ->with('norme_lucrate.produs_operatie.produs')
             ->when($search_nume, function ($query, $search_nume) {
-                return $query->where('nume', 'like', '%' . $search_nume . '%');
+                $cuvinte_in_nume = explode(' ', $search_nume);
+                foreach($cuvinte_in_nume as $cuvant){
+                    // echo($cuvant);
+                    $query->where('nume', 'like', '%' . $cuvant . '%');
+                }
+                return $query;
+// dd($cuvinte_in_nume, 'stop');
                 })
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('prod')
@@ -267,6 +277,8 @@ class NormaLucrataController extends Controller
             // ->take(2)
             // ->paginate(10);
             ->get();
+// $cuvinte_in_nume = explode(' ', $search_nume);
+// dd($cuvinte_in_nume, 'stop');
 
 // dd($angajati);
 

@@ -28,24 +28,33 @@
             <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.afisare_lunar') }}">
                 @csrf
                 <div class="row mb-1 input-group custom-search-form justify-content-center">
-                    <div class="col-lg-3">
-                        <select name="search_angajat_id"
-                            class="form-select bg-white rounded-3 {{ $errors->has('search_angajat_id') ? 'is-invalid' : '' }}"
-                        >
-                                <option value='' selected>Alege angajat</option>
-                            @foreach ($angajati_in_search as $angajat)
-                                <option
-                                    value='{{ $angajat->id }}'
-                                    {{ ($angajat->id == $search_angajat_id) ? 'selected' : '' }}
-                                >{{ $angajat->nume }} </option>
-                            @endforeach
-                        </select>
+                    <div class="col-lg-7 d-flex">
+                        <div>
+                            <input type="text" class="form-control form-control me-1 border rounded-3" id="search_nume" name="search_nume" placeholder="Scrie Angajat" autofocus
+                                    value="{{ $search_nume }}">
+                        </div>
+                        <div class="mx-2 d-flex justify-content-center align-items-end">
+                            sau
+                        </div>
+                        <div class="">
+                            <select name="search_angajat_id"
+                                class="form-select bg-white rounded-3 {{ $errors->has('search_angajat_id') ? 'is-invalid' : '' }}"
+                            >
+                                    <option value='' selected>Alege angajat</option>
+                                @foreach ($angajati_in_search as $angajat)
+                                    <option
+                                        value='{{ $angajat->id }}'
+                                        {{ ($angajat->id == $search_angajat_id) ? 'selected' : '' }}
+                                    >{{ $angajat->nume }} </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     {{-- <div class="col-lg-3">
                         <input type="text" class="form-control me-1 border rounded-3" id="search_nume" name="search_nume" placeholder="Nume" autofocus
                                 value="{{ $search_nume }}">
                     </div> --}}
-                    <div class="col-lg-6 d-flex">
+                    <div class="col-lg-5 d-flex">
                         <label for="search_data" class="mb-0 align-self-center me-1">Interval:</label>
                         <vue2-datepicker
                             data-veche="{{ $search_data_inceput }}"
