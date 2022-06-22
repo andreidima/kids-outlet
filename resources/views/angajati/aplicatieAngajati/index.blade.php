@@ -39,7 +39,7 @@
                                         Sectia
                                     </th>
                                     <th>
-                                        firma
+                                        Firma
                                     </th>
                                     <th>
                                         Foaie pontaj
