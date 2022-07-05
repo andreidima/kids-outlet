@@ -271,6 +271,7 @@ class NormaLucrataController extends Controller
                 return $query;
 // dd($cuvinte_in_nume, 'stop');
                 })
+            ->where('activ', 1) // Contul este activ
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('prod')
             ->orderBy('nume')
