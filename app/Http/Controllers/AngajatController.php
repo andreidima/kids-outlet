@@ -121,7 +121,7 @@ class AngajatController extends Controller
             'sectia' => 'nullable|max:500',
             'firma' => 'nullable|max:500',
             'prod' => 'nullable|max:200',
-            'ore_angajare' => 'nullable|numeric|between:1,12',
+            'ore_angajare' => 'required|numeric|between:1,12',
             'avans' => 'nullable',
             'foaie_pontaj' => 'nullable|max:200',
             'activ' => 'nullable|integer|between:0,1'
