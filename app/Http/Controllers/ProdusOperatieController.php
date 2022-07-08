@@ -53,7 +53,7 @@ class ProdusOperatieController extends Controller
      */
     public function create(Request $request)
     {
-        $produse = Produs::orderBy('nume')->get();
+        $produse = Produs::latest()->get();
 
         $request->session()->get('produs_operatie_return_url') ?? $request->session()->put('produs_operatie_return_url', url()->previous());
 
@@ -95,7 +95,7 @@ class ProdusOperatieController extends Controller
      */
     public function edit(Request $request, ProdusOperatie $produs_operatie)
     {
-        $produse = Produs::orderBy('nume')->get();
+        $produse = Produs::latest()->get();
 
         $request->session()->get('produs_operatie_return_url') ?? $request->session()->put('produs_operatie_return_url', url()->previous());
 
