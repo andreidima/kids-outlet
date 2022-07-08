@@ -3,7 +3,7 @@
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
         <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-            @if (!$angajat)
+            {{-- @if (!$angajat) --}}
             <div class="col-lg-3">
                 <h4 class="mb-0"><a href="{{ route('norme-lucrate.index') }}"><i class="fas fa-clipboard-list me-1"></i>Norme lucrate</a></h4>
             </div>
@@ -16,6 +16,18 @@
                                     value="{{ $search_nume }}">
                         </div>
                         <div class="col-lg-6 d-flex justify-content-center">
+                            <label for="search_data" class="mb-0 align-self-center me-1">Interval:</label>
+                            <vue2-datepicker
+                                data-veche="{{ $search_data }}"
+                                nume-camp-db="search_data"
+                                tip="date"
+                                range="range"
+                                value-type="YYYY-MM-DD"
+                                format="DD-MM-YYYY"
+                                :latime="{ width: '225px' }"
+                            ></vue2-datepicker>
+                        </div>
+                        {{-- <div class="col-lg-6 d-flex justify-content-center">
                             <label for="search_data" class="mb-0 align-self-center me-1">Data:</label>
                             <vue2-datepicker
                                 data-veche="{{ $search_data }}"
@@ -25,7 +37,7 @@
                                 format="DD-MM-YYYY"
                                 :latime="{ width: '125px' }"
                             ></vue2-datepicker>
-                        </div>
+                        </div> --}}
                         <div class="col-lg-6">
                             <select name="search_produs_id" class="form-select bg-white rounded-3 {{ $errors->has('search_produs_id') ? 'is-invalid' : '' }}">
                                     <option value='' selected>Produs</option>
@@ -58,7 +70,7 @@
                     <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă lucrată
                 </a>
             </div>
-            @else
+            {{-- @else
                 <div class="col-lg-9">
                     <h4 class="mb-0">
                         <i class="fas fs-4 fa-clipboard-list me-1"></i>
@@ -72,7 +84,7 @@
                         <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă lucrată
                     </a>
                 </div>
-            @endif
+            @endif --}}
         </div>
 
         <div class="card-body px-0 py-3">

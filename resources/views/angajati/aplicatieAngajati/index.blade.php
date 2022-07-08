@@ -39,7 +39,7 @@
                                         Sectia
                                     </th>
                                     <th>
-                                        firma
+                                        Firma
                                     </th>
                                     <th>
                                         Foaie pontaj
@@ -59,10 +59,13 @@
                                             {{ $angajat->nume }}
                                         </td>
                                         <td>
-                                            {{-- Conturilor Mocanu Geanina si Duna Luminita nu li se afiseaza codurile de acces --}}
+                                            {{-- Conturilor pentru care se afiseaza codurile de acces --}}
                                             @if (
-                                                    ($angajat->id === 4) // Mocanu Geanina
+                                                    ($angajat->id === 1) // Andrei Dima Administrator 1
+                                                    || ($angajat->id === 3) // Andrei Dima Administrator 3
+                                                    || ($angajat->id === 4) // Mocanu Geanina
                                                     || ($angajat->id === 12) // Duna Luminita
+                                                    || ($angajat->id === 91) // Porchina Luminita
                                                 )
                                             @else
                                                 {{ $angajat->cod_de_acces }}

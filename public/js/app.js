@@ -5257,7 +5257,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['dataVeche', 'numeCampDb', 'tip', 'valueType', 'format', 'latime', 'notBeforeDate', 'notAfterDate', 'doarZiuaA', 'doarZiuaB', 'minuteStep', 'hours', 'disabled'],
+  props: ['dataVeche', 'numeCampDb', 'tip', 'range', 'valueType', 'format', 'latime', 'notBeforeDate', 'notAfterDate', 'doarZiuaA', 'doarZiuaB', 'minuteStep', 'hours', 'disabled'],
   computed: {
     latimePrelucrata: function latimePrelucrata() {
       if (this.tip === "time") {
@@ -5325,7 +5325,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    if (this.dataVeche == "") {} else {
+    if (this.dataVeche == "") {} else if (this.range == "range") {
+      // in cazul in care este un interval
+      this.time = this.dataVeche.split(","); // se creaza un array din cele 2 date
+    } else {
       this.time = this.dataVeche;
     }
   },
@@ -64185,6 +64188,7 @@ var render = function () {
         style: _vm.latime,
         attrs: {
           type: _vm.tip,
+          range: _vm.range,
           "value-type": _vm.valueType,
           format: _vm.format,
           "minute-step": _vm.minuteStep,

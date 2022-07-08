@@ -10,6 +10,7 @@ export default {
     'dataVeche',
     'numeCampDb',
     'tip',
+    'range',
     'valueType',
     'format',
     'latime',
@@ -79,6 +80,9 @@ export default {
     created() {
         if (this.dataVeche == "") {
         }
+        else if (this.range == "range") { // in cazul in care este un interval
+            this.time = this.dataVeche.split(","); // se creaza un array din cele 2 date
+        }
         else {
           this.time = this.dataVeche
         }
@@ -96,6 +100,7 @@ export default {
     <date-picker
       v-model="time"
       :type=tip
+      :range=range
       :value-type=valueType
       :format=format
       :minute-step=minuteStep

@@ -102,11 +102,12 @@ class AngajatAplicatieController extends Controller
 
         $angajat = $request->session()->get('angajat');
 
-        if ($angajat->sectia === "Moda"){
+        if (($angajat->sectia === "Moda") || ($angajat->sectia === "Sectie") ){
             $produse = Produs::where('activ', 1)->where('sectia', 'Sectie')->latest()->get();
-        } else{
-            $produse = Produs::where('activ', 1)->where('sectia', $angajat->sectia)->latest()->get();
+        } elseif ($angajat->sectia === "Mostre"){
+            $produse = Produs::where('activ', 1)->latest()->get(); // se afiseaza toate
         }
+
         // dd($produse->toArray());
         return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_1', compact('angajat', 'produse'));
     }

@@ -26,10 +26,13 @@
                 <h4 class="mb-4">
                     Pontaj: {{ $pontaj->angajat->nume  }}
 
-                    {{-- Conturilor Mocanu Geanina si Duna Luminita nu li se afiseaza codurile de acces --}}
+                    {{-- Conturilor pentru care nu se afiseaza codurile de acces --}}
                     @if (
-                            ($pontaj->angajat->id === 4) // Mocanu Geanina
-                            || ($pontaj->angajat->id === 12) // Duna Luminita
+                        ($angajat->id === 1) // Andrei Dima Administrator 1
+                        || ($angajat->id === 3) // Andrei Dima Administrator 3
+                        || ($angajat->id === 4) // Mocanu Geanina
+                        || ($angajat->id === 12) // Duna Luminita
+                        || ($angajat->id === 91) // Borchina Liliana
                         )
                     @else
                         <br>
