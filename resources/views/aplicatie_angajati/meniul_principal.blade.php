@@ -65,6 +65,7 @@
                 {{-- Conturile ce poate vedea angajatii --}}
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
+                        || ($angajat->id === 12) // Duna Luminita
                         || ($angajat->id === 91) // Borchina Liliana
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">ANGAJAȚI</a>
