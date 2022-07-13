@@ -257,10 +257,10 @@ class NormaLucrataController extends Controller
                     ->whereDate('data', '>=', $search_data_inceput)
                     ->whereDate('data', '<=', $search_data_sfarsit);
             }])
-            // ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
-            //     $query->whereDate('data', '>=', $search_data_inceput)
-            //         ->whereDate('data', '<=', $search_data_sfarsit);
-            //     }])
+            ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+                $query->whereDate('data', '>=', $search_data_inceput)
+                    ->whereDate('data', '<=', $search_data_sfarsit);
+                }])
             // ->with('norme_lucrate.produs_operatie.produs')
             ->when($search_nume, function ($query, $search_nume) {
                 $cuvinte_in_nume = explode(' ', $search_nume);
@@ -425,6 +425,7 @@ class NormaLucrataController extends Controller
                                 $zile_concediu_de_odihna ++;
                             }
                         }
+
                         if ($zile_concediu_de_odihna > 0){
                             $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=' . $salariul_minim_pe_economie . '/' . $numar_de_zile_lucratoare . '*' . $zile_concediu_de_odihna);
                         }
