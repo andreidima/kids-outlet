@@ -259,7 +259,8 @@ class NormaLucrataController extends Controller
             }])
             ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
                 $query->whereDate('data', '>=', $search_data_inceput)
-                    ->whereDate('data', '<=', $search_data_sfarsit);
+                    ->whereDate('data', '<=', $search_data_sfarsit)
+                    ->where('concediu', '>', 0); // daca este 0, inseamna ca nu a fost in concediu
                 }])
             // ->with('norme_lucrate.produs_operatie.produs')
             ->when($search_nume, function ($query, $search_nume) {
@@ -280,8 +281,7 @@ class NormaLucrataController extends Controller
             ->get();
 // $cuvinte_in_nume = explode(' ', $search_nume);
 // dd($cuvinte_in_nume, 'stop');
-
-// dd($angajati);
+// exit();
 
 // foreach ($angajati as $angajat){
 //     echo $angajat->prod . ' ' . $angajat->nume . ' <br>';
