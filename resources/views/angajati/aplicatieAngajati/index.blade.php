@@ -20,81 +20,162 @@
 
                 @include('errors')
 
-                @foreach ($angajati->sortBy('prod')->groupBy('prod') as $angajati_per_prod)
-                    <h3 class="text-center">
-                        Prod {{ $angajati_per_prod->first()->prod ?? 'ne setat' }}
-                    </h3>
+                @foreach ($angajati->sortByDesc('activ')->groupBy('activ') as $angajati_per_activ)
 
-                    <div class="table-responsive">
-                        <table class="table table-light table-striped align-middle">
-                            <thead>
-                                <tr>
-                                    <th scope="col">
-                                        ANGAJAT
-                                    </th>
-                                    <th scope="col">
-                                        Cod de acces
-                                    </th>
-                                    <th>
-                                        Sectia
-                                    </th>
-                                    <th>
-                                        Firma
-                                    </th>
-                                    <th>
-                                        Foaie pontaj
-                                    </th>
-                                    <th>
-                                        Ore angajare
-                                    </th>
-                                    <th>
-                                        Stare cont
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($angajati_per_prod->sortBy('nume') as $angajat)
-                                    <tr>
-                                        <td>
-                                            {{ $angajat->nume }}
-                                        </td>
-                                        <td>
-                                            {{-- Conturilor pentru care se afiseaza codurile de acces --}}
-                                            @if (
-                                                    ($angajat->id === 1) // Andrei Dima Administrator 1
-                                                    || ($angajat->id === 3) // Andrei Dima Administrator 3
-                                                    || ($angajat->id === 4) // Mocanu Geanina
-                                                    || ($angajat->id === 12) // Duna Luminita
-                                                    || ($angajat->id === 91) // Porchina Luminita
-                                                )
-                                            @else
-                                                {{ $angajat->cod_de_acces }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{ $angajat->sectia }}
-                                        </td>
-                                        <td>
-                                            {{ $angajat->firma }}
-                                        </td>
-                                        <td>
-                                            {{ $angajat->foaie_pontaj }}
-                                        </td>
-                                        <td>
-                                            {{ $angajat->ore_angajare }}
-                                        </td>
-                                        <td>
-                                            @if ($angajat->activ === 1)
-                                                <small class="text-success">Deschis</small>
-                                            @else
-                                                <small class="text-danger">Închis</small>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                    {{-- Daca sunt activi, se afiseaza pe fiecare prod in parte --}}
+                    @if($angajati_per_activ->first()->activ == 1)
+                        @foreach ($angajati_per_activ->sortBy('prod')->groupBy('prod') as $angajati_per_prod)
+                            <h3 class="text-center">
+                                Prod {{ $angajati_per_prod->first()->prod ?? 'ne setat' }}
+                            </h3>
+
+                            <div class="table-responsive">
+                                <table class="table table-light table-striped align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                ANGAJAT
+                                            </th>
+                                            <th scope="col">
+                                                Cod de acces
+                                            </th>
+                                            <th>
+                                                Sectia
+                                            </th>
+                                            <th>
+                                                Firma
+                                            </th>
+                                            <th>
+                                                Foaie pontaj
+                                            </th>
+                                            <th>
+                                                Ore angajare
+                                            </th>
+                                            <th>
+                                                Stare cont
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($angajati_per_prod->sortBy('nume') as $angajat)
+                                            <tr>
+                                                <td>
+                                                    {{ $angajat->nume }}
+                                                </td>
+                                                <td>
+                                                    {{-- Conturilor pentru care se afiseaza codurile de acces --}}
+                                                    @if (
+                                                            ($angajat->id === 1) // Andrei Dima Administrator 1
+                                                            || ($angajat->id === 3) // Andrei Dima Administrator 3
+                                                            || ($angajat->id === 4) // Mocanu Geanina
+                                                            || ($angajat->id === 12) // Duna Luminita
+                                                            || ($angajat->id === 91) // Porchina Luminita
+                                                        )
+                                                    @else
+                                                        {{ $angajat->cod_de_acces }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->sectia }}
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->firma }}
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->foaie_pontaj }}
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->ore_angajare }}
+                                                </td>
+                                                <td>
+                                                    @if ($angajat->activ === 1)
+                                                        <small class="text-success">Deschis</small>
+                                                    @else
+                                                        <small class="text-danger">Închis</small>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                    @endforeach
+
+                    {{-- Daca NU sunt activi, se afiseaza pe fiecare la gramada --}}
+                    @else
+                        Conturi închise
+
+                            <div class="table-responsive">
+                                <table class="table table-light table-striped align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                ANGAJAT
+                                            </th>
+                                            <th scope="col">
+                                                Cod de acces
+                                            </th>
+                                            <th>
+                                                Sectia
+                                            </th>
+                                            <th>
+                                                Firma
+                                            </th>
+                                            <th>
+                                                Foaie pontaj
+                                            </th>
+                                            <th>
+                                                Ore angajare
+                                            </th>
+                                            <th>
+                                                Stare cont
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($angajati_per_activ->sortBy('nume') as $angajat)
+                                            <tr>
+                                                <td>
+                                                    {{ $angajat->nume }}
+                                                </td>
+                                                <td>
+                                                    {{-- Conturilor pentru care se afiseaza codurile de acces --}}
+                                                    @if (
+                                                            ($angajat->id === 1) // Andrei Dima Administrator 1
+                                                            || ($angajat->id === 3) // Andrei Dima Administrator 3
+                                                            || ($angajat->id === 4) // Mocanu Geanina
+                                                            || ($angajat->id === 12) // Duna Luminita
+                                                            || ($angajat->id === 91) // Porchina Luminita
+                                                        )
+                                                    @else
+                                                        {{ $angajat->cod_de_acces }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->sectia }}
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->firma }}
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->foaie_pontaj }}
+                                                </td>
+                                                <td>
+                                                    {{ $angajat->ore_angajare }}
+                                                </td>
+                                                <td>
+                                                    @if ($angajat->activ === 1)
+                                                        <small class="text-success">Deschis</small>
+                                                    @else
+                                                        <small class="text-danger">Închis</small>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                    @endif
                 @endforeach
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>

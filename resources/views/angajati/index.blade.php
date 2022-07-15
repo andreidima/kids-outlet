@@ -40,10 +40,15 @@
                 <table class="table table-striped table-hover table-sm rounded">
                     <thead class="text-white rounded" style="background-color:#e66800;">
                         <tr class="" style="padding:2rem">
-                            <th>Nr. Crt.</th>
+                            <th>#</th>
                             <th>Nume</th>
-                            <th>Telefon</th>
-                            <th>Cod de acces</th>
+                            <th>Prod</th>
+                            {{-- <th>Cod de acces</th> --}}
+                            <th>Sectia</th>
+                            <th>Firma</th>
+                            <th>Foaie pontaj</th>
+                            <th>Ore angajare</th>
+                            <th>Stare cont</th>
                             <th class="text-end">Acțiuni</th>
                         </tr>
                     </thead>
@@ -57,10 +62,29 @@
                                     <b>{{ $angajat->nume }}</b>
                                 </td>
                                 <td>
-                                    {{ $angajat->telefon }}
+                                    <b>{{ $angajat->prod }}</b>
+                                </td>
+                                {{-- <td>
+                                    {{ $angajat->cod_de_acces }}
+                                </td> --}}
+                                <td>
+                                    {{ $angajat->sectia }}
                                 </td>
                                 <td>
-                                    {{ $angajat->cod_de_acces }}
+                                    {{ $angajat->firma }}
+                                </td>
+                                <td>
+                                    {{ $angajat->foaie_pontaj }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $angajat->ore_angajare }}
+                                </td>
+                                <td>
+                                    @if ($angajat->activ === 1)
+                                        <small class="text-success">Deschis</small>
+                                    @else
+                                        <small class="text-danger">Închis</small>
+                                    @endif
                                 </td>
                                 <td class="d-flex justify-content-end">
                                     <a href="{{ $angajat->path() }}"

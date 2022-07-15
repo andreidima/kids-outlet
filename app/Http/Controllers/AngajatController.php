@@ -26,8 +26,9 @@ class AngajatController extends Controller
             ->when($search_telefon, function ($query, $search_telefon) {
                 return $query->where('telefon', 'like', '%' . $search_telefon . '%');
             })
-            ->latest()
-            ->simplePaginate(25);
+            ->orderBy('activ', 'desc')
+            ->orderBy('prod', 'asc')
+            ->simplePaginate(100);
 
         return view('angajati.index', compact('angajati', 'search_nume', 'search_telefon'));
     }

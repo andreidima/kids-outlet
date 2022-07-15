@@ -518,7 +518,7 @@ class AngajatAplicatieController extends Controller
                     ]);
                     empty($pontaj->concediu) ? ($pontaj->concediu = 0) : '';
                     if (empty($pontaj->ora_sosire) && ($pontaj->concediu === 0)){
-                        $pontaj->ora_sosire = Carbon::now()->toTimeString();
+                        $pontaj->ora_sosire = $request->ora_sosire;
                         $pontaj->save();
                     }
                 }
@@ -531,7 +531,7 @@ class AngajatAplicatieController extends Controller
                     ]);
                     empty($pontaj->concediu) ? ($pontaj->concediu = 0) : '';
                     if (empty($pontaj->ora_plecare) && ($pontaj->concediu === 0)){
-                        $pontaj->ora_plecare = Carbon::now()->toTimeString();
+                        $pontaj->ora_plecare = $request->ora_plecare;
                         $pontaj->save();
                     }
                 }

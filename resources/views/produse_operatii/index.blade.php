@@ -102,7 +102,11 @@
                                             <input type="hidden" name="search_produs_id" value="{{ $produs_operatie->produs_id }}">
                                             <input type="hidden" name="search_numar_de_faza" value="{{ $produs_operatie->numar_de_faza }}">
                                             {{-- <a class="btn btn-primary" href="#" role="button" type="submit">Link</a> --}}
-                                            <button class="btn btn-sm btn-primary text-white py-0" type="submit">
+                                            @if ((($produs_operatie->produs->cantitate ?? 0) > 0) && ($produs_operatie->norma_totala_efectuata == $produs_operatie->produs->cantitate))
+                                                <button class="btn btn-sm btn-primary text-white py-0" type="submit">
+                                            @else
+                                                <button class="btn btn-sm btn-danger text-white py-0" type="submit">
+                                            @endif
                                                 {{ $produs_operatie->norma_totala_efectuata }}
                                             </button>
 

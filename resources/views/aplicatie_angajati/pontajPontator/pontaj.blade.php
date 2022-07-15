@@ -217,16 +217,44 @@
                                     Toți Angajații
                                 </td>
                                 <td class="text-center bg-warning py-5">
-                                    <a class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;"
-                                        href="/aplicatie-angajati/pontaj/sosire/ponteaza-toti" role="button">
-                                        SETEAZĂ
-                                    </a>
+                                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj/sosire/ponteaza-toti" autocomplete="off">
+                                        @csrf
+                                        <div class="mb-1">
+                                            <label for="ora_sosire" class="mb-0 ps-1">Sosire:</label>
+                                            <vue2-datepicker
+                                                data-veche="{{ old('ora_sosire', \Carbon\Carbon::now()->toTimeString()) }}"
+                                                nume-camp-db="ora_sosire"
+                                                tip="time"
+                                                value-type="HH:mm"
+                                                format="HH:mm"
+                                                :latime="{ width: '90px' }"
+                                            ></vue2-datepicker>
+                                        </div>
+                                        <button class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;"
+                                            type="submit" role="button">
+                                            SETEAZĂ
+                                        </button>
+                                    </form>
                                 </td>
                                 <td class="text-center bg-warning py-5">
-                                    <a class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;"
-                                        href="/aplicatie-angajati/pontaj/plecare/ponteaza-toti" role="button">
-                                        SETEAZĂ
-                                    </a>
+                                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj/plecare/ponteaza-toti" autocomplete="off">
+                                        @csrf
+                                        <div class="mb-1">
+                                            <label for="ora_plecare" class="mb-0 ps-1">Plecare:</label>
+                                            <vue2-datepicker
+                                                data-veche="{{ old('ora_plecare', \Carbon\Carbon::now()->toTimeString()) }}"
+                                                nume-camp-db="ora_plecare"
+                                                tip="time"
+                                                value-type="HH:mm"
+                                                format="HH:mm"
+                                                :latime="{ width: '90px' }"
+                                            ></vue2-datepicker>
+                                        </div>
+                                        <button class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;"
+                                            type="submit" role="button">
+                                            SETEAZĂ
+                                        </button>
+                                    </form>
                                 </td>
                                 <td class="text-center bg-warning">
                                 </td>

@@ -55,7 +55,7 @@ Route::get('/aplicatie-angajati/adauga-comanda-pasul-4', [AngajatAplicatieContro
 // Route::get('/aplicatie-angajati/pontaj/{moment?}', [AngajatAplicatieController::class, 'pontaj']);
 Route::get('/aplicatie-angajati/pontaj', [AngajatAplicatieController::class, 'pontajPontator']);
 Route::post('/aplicatie-angajati/pontaj', [AngajatAplicatieController::class, 'postPontajPontator']);
-Route::get('/aplicatie-angajati/pontaj/{moment}/ponteaza-toti', [AngajatAplicatieController::class, 'pontajPonteazaToti']);
+Route::any('/aplicatie-angajati/pontaj/{moment}/ponteaza-toti', [AngajatAplicatieController::class, 'pontajPonteazaToti']);
 Route::get('/aplicatie-angajati/pontaj/{angajat_de_pontat}/modifica', [AngajatAplicatieController::class, 'pontajModificaPontator']);
 Route::get('/aplicatie-angajati/pontaj-verifica', [AngajatAplicatieController::class, 'pontajVerificaPontator']);
 
