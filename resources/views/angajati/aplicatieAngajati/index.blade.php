@@ -51,9 +51,9 @@
                                             <th>
                                                 Ore angajare
                                             </th>
-                                            <th>
+                                            {{-- <th>
                                                 Stare cont
-                                            </th>
+                                            </th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -87,13 +87,13 @@
                                                 <td>
                                                     {{ $angajat->ore_angajare }}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if ($angajat->activ === 1)
                                                         <small class="text-success">Deschis</small>
                                                     @else
                                                         <small class="text-danger">Închis</small>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -103,7 +103,10 @@
 
                     {{-- Daca NU sunt activi, se afiseaza pe fiecare la gramada --}}
                     @else
-                        Conturi închise
+                            <h3 class="text-center">
+                                Conturi închise
+                            </h3>
+                        {{-- Conturi închise --}}
 
                             <div class="table-responsive">
                                 <table class="table table-light table-striped align-middle">
@@ -127,9 +130,9 @@
                                             <th>
                                                 Ore angajare
                                             </th>
-                                            <th>
+                                            {{-- <th>
                                                 Stare cont
-                                            </th>
+                                            </th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -163,13 +166,13 @@
                                                 <td>
                                                     {{ $angajat->ore_angajare }}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if ($angajat->activ === 1)
                                                         <small class="text-success">Deschis</small>
                                                     @else
                                                         <small class="text-danger">Închis</small>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
