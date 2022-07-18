@@ -28,6 +28,7 @@ class AngajatController extends Controller
             })
             ->orderBy('activ', 'desc')
             ->orderBy('prod', 'asc')
+            ->orderBy('nume', 'asc')
             ->simplePaginate(100);
 
         return view('angajati.index', compact('angajati', 'search_nume', 'search_telefon'));
