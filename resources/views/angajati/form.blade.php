@@ -37,17 +37,17 @@
                 <label for="sectia" class="mb-0 ps-3">Secția:</label>
                 <select name="sectia" class="form-select form-select-sm rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
                     <option selected>Selectează</option>
-                    <option value="Moda">Moda</option>
-                    <option value="Mostre">Mostre</option>
-                    <option value="Sectie">Sectie</option>
+                    <option value="Moda" {{ old('sectia', $angajat->sectia) === "Moda" ? 'selected' : '' }}>Moda</option>
+                    <option value="Sectie" {{ old('sectia', $angajat->sectia) === "Sectie" ? 'selected' : '' }}>Sectie</option>
+                    <option value="Mostre" {{ old('sectia', $angajat->sectia) === "Mostre" ? 'selected' : '' }}>Mostre</option>
                 </select>
             </div>
             <div class="col-lg-6 mb-4">
-                <label for="sectia" class="mb-0 ps-3">Firma:</label>
-                <select name="sectia" class="form-select form-select-sm rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
+                <label for="firma" class="mb-0 ps-3">Firma:</label>
+                <select name="firma" class="form-select form-select-sm rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
                     <option selected>Selectează</option>
-                    <option value="Darimode Style S.R.L.">Darimode Style S.R.L.</option>
-                    <option value="Petit Atelier S.R.L.">Petit Atelier S.R.L.</option>
+                    <option value="Darimode Style S.R.L." {{ old('firma', $angajat->firma) === "Darimode Style S.R.L." ? 'selected' : '' }}>Darimode Style S.R.L.</option>
+                    <option value="Petit Atelier S.R.L." {{ old('firma', $angajat->firma) === "Petit Atelier S.R.L." ? 'selected' : '' }}>Petit Atelier S.R.L.</option>
                 </select>
             </div>
             <div class="col-lg-6 mb-4">
@@ -81,15 +81,15 @@
                     required>
             </div>
             <div class="col-lg-6 mb-4">
-                <label for="sectia" class="mb-0 ps-3">Foaie pontaj:</label>
-                <select name="sectia" class="form-select form-select-sm rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
+                <label for="foaie_pontaj" class="mb-0 ps-3">Foaie pontaj:</label>
+                <select name="foaie_pontaj" class="form-select form-select-sm rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
                     <option selected>Selectează</option>
-                    <option value="Darimode Style S.R.L.">Darimode Style S.R.L.</option>
-                    <option value="Petit Atelier S.R.L.">Petit Atelier S.R.L.</option>
-                    <option value="Darimode Magazin Depozit - DO">Darimode Magazin Depozit - DO</option>
-                    <option value="Kids Ooutlet Depozit Darimode">Kids Ooutlet Depozit Darimode</option>
-                    <option value="Kids Outlet Depozit Petit">Kids Outlet Depozit Petit</option>
-                    <option value="Petit Magazin depozit - DO">Petit Magazin depozit - DO</option>
+                    <option value="Darimode Style S.R.L." {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Darimode Style S.R.L." ? 'selected' : '' }}>Darimode Style S.R.L.</option>
+                    <option value="Petit Atelier S.R.L." {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Petit Atelier S.R.L." ? 'selected' : '' }}>Petit Atelier S.R.L.</option>
+                    <option value="Darimode Magazin Depozit - DO" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Darimode Magazin Depozit - DO" ? 'selected' : '' }}>Darimode Magazin Depozit - DO</option>
+                    <option value="Kids Ooutlet Depozit Darimode" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Kids Ooutlet Depozit Darimode" ? 'selected' : '' }}>Kids Ooutlet Depozit Darimode</option>
+                    <option value="Kids Outlet Depozit Petit" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Kids Outlet Depozit Petit" ? 'selected' : '' }}>Kids Outlet Depozit Petit</option>
+                    <option value="Petit Magazin depozit - DO" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Petit Magazin depozit - DO" ? 'selected' : '' }}>Petit Magazin depozit - DO</option>
                 </select>
             </div>
             <div class="col-lg-6 mb-4 mx-auto d-flex align-items-center justify-content-center">
@@ -102,11 +102,11 @@
                             Cont activ
                         </label>
                     </div>
-                    <div style="line-height: 100%">
+                    {{-- <div style="line-height: 100%">
                         <small>
                             * Această bifă nu are efect asupra pontajului sau a normelor lucrate, ci doar stabilește dacă angajatul se poate conecta in aplicație!
                         </small>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
