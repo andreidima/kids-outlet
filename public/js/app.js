@@ -5410,6 +5410,15 @@ if (document.querySelector('#app1')) {
   });
 }
 
+if (document.querySelector('#angajati')) {
+  var app = new Vue({
+    el: '#angajati',
+    data: {
+      angajat_pontatori: typeof angajatPontatori !== 'undefined' ? angajatPontatori : ''
+    }
+  });
+}
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

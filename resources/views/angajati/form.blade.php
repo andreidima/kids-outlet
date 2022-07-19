@@ -1,6 +1,6 @@
 @csrf
 
-<div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px" id="app1">
+<div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px">
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
             <div class="col-lg-6 mb-4">
@@ -110,6 +110,53 @@
                 </div>
             </div>
         </div>
+
+{{-- @php
+    dd($angajat->angajati_pontatori);
+@endphp --}}
+        {{-- Gestionarea pontatorilor angajatului --}}
+        <div class="row" id="angajati">
+            <script type="application/javascript">
+                // adultiNumeVechi={!! json_encode(\Illuminate\Support\Arr::flatten(old('adulti.nume', ($rezervare->adulti['nume'] ?? [])))) !!}
+                angajatPontatori={!! json_encode(old('angajat_pontatori', $angajat->angajati_pontatori->pluck('nume', 'id')->toArray() ?? [] )) !!}
+            </script>
+
+
+            <div v-for="pontator in angajat_pontatori" :key="pontator" class="col-lg-12">
+                <div class="form-row align-items-start mb-2" style="background-color:#005757; border-radius: 10px 10px 10px 10px;">
+                    <div class="col-lg-2">
+                        <div class="row">
+                            <div class="form-group col-lg-12 mb-0 pb-0">
+                                Pontator @{{ pontator }}:
+                                <br>
+                                <button  type="button" class="btn m-0 p-0 mb-1" @click="stergeAngajat(pontator-1)">
+                                    <span class="px-1" style="background-color:red; color:white; border-radius:20px">
+                                        Șterge pontatorul
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="col-lg-10">
+                        <div class="row">
+                            <div class="form-group col-lg-3">
+                                <label for="adulti_nume" class="col-form-label col-form-label-sm mb-0 py-0 mr-2">Nume și prenume:</label>
+                                <input type="text"
+                                    class="form-control form-control-sm"
+                                    :name="'adulti[nume][' + adult + ']'"
+                                    v-model="adulti_nume[adult-1]">
+                            </div>
+                            <div class="col-lg-3">
+                            </div>
+                        </div>
+                    </div> --}}
+                </div>
+            </div>
+
+
+            @foreach ( $angajat->angajati_pontatori as $angajat)
+                {{ $angajat->nume }}
+            @endforeach
 
         <div class="row py-2 justify-content-center">
             <div class="col-lg-8 d-flex justify-content-center">
