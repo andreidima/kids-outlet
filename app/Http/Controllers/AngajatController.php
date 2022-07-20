@@ -79,8 +79,8 @@ class AngajatController extends Controller
         $angajati = Angajat::select('id', 'nume')
             ->where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
             ->where('activ', 1)
-            ->orderBy('nume', 'asc');
-            // ->get();
+            ->orderBy('nume', 'asc')
+            ->get();
 
 
         // $angajat = $angajat->with('angajati_pontatori')
@@ -110,6 +110,7 @@ class AngajatController extends Controller
      */
     public function update(Request $request, Angajat $angajat)
     {
+        dd($request);
         $angajat->update($this->validateRequest($request, $angajat));
 
         return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost modificat cu succes!');

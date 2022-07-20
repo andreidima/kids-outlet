@@ -5414,6 +5414,7 @@ if (document.querySelector('#angajati')) {
   var app = new Vue({
     el: '#angajati',
     data: {
+      angajati: typeof angajati !== 'undefined' ? angajati : '',
       angajat_pontatori: typeof angajatPontatori !== 'undefined' ? angajatPontatori : ''
     }
   });

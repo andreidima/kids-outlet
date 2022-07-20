@@ -112,22 +112,41 @@
         </div>
 
 {{-- @php
-    dd($angajat->angajati_pontatori);
+    dd($angajati);
 @endphp --}}
         {{-- Gestionarea pontatorilor angajatului --}}
         <div class="row" id="angajati">
             <script type="application/javascript">
-                // adultiNumeVechi={!! json_encode(\Illuminate\Support\Arr::flatten(old('adulti.nume', ($rezervare->adulti['nume'] ?? [])))) !!}
-                angajatPontatori={!! json_encode(old('angajat_pontatori', $angajat->angajati_pontatori->pluck('nume', 'id')->toArray() ?? [] )) !!}
-            </script>
+                angajati = {!! json_encode($angajati) !!}
+                // angajatPontatori={!! json_encode(\Illuminate\Support\Arr::flatten(old('angajat_pontatori', $angajat->angajati_pontatori->pluck('nume', 'id')->toArray() ?? [] ))) !!}
+                angajatPontatori={!! json_encode(old('angajat_pontatori', $angajat->angajati_pontatori->pluck('id')->toArray() ?? [] )) !!}
+                // angajatPontatori={!! json_encode(old('angajat_pontatori', $angajat->angajati_pontatori->toArray() ?? [] )) !!}
+                </script>
 
 
-            <div v-for="pontator in angajat_pontatori" :key="pontator" class="col-lg-12">
+            <div v-for="pontator in angajat_pontatori.length" :key="pontator" class="col-lg-12">
                 <div class="form-row align-items-start mb-2" style="background-color:#005757; border-radius: 10px 10px 10px 10px;">
-                    <div class="col-lg-2">
-                        <div class="row">
-                            <div class="form-group col-lg-12 mb-0 pb-0">
+                    <div class="col-lg-6">
+                        <label for="pontator_nume" class="col-form-label col-form-label-sm mb-0 py-0 mr-2">Nume și prenume:</label>
+                        {{-- <input type="text"
+                            class="form-control form-control-sm"
+                            :name="'angajat_pontatori[' + pontator + ']'"
+                            v-model="angajat_pontatori[pontator-1].nume"> --}}
                                 Pontator @{{ pontator }}:
+                                <br>
+
+                                                        <select class="custom-select-sm custom-select {{ $errors->has('angajat_pontatori') ? 'is-invalid' : '' }}"
+                                                            name="'angajat_pontatori[' + pontator + ']'"
+                                                            v-model="angajat_pontatori[pontator-1]"
+                                                            >
+                                                            <option disabled value="">Selectează un pontator</option>
+                                                            <option
+                                                                v-for='angajat in angajati'
+                                                                :value='angajat.id'
+                                                                >
+                                                                    @{{angajat.nume}}
+                                                            </option>
+                                                        </select>
                                 <br>
                                 <button  type="button" class="btn m-0 p-0 mb-1" @click="stergeAngajat(pontator-1)">
                                     <span class="px-1" style="background-color:red; color:white; border-radius:20px">
@@ -137,8 +156,8 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="col-lg-10">
-                        <div class="row">
+                    <div class="col-lg-10">
+                        {{-- <div class="row">
                             <div class="form-group col-lg-3">
                                 <label for="adulti_nume" class="col-form-label col-form-label-sm mb-0 py-0 mr-2">Nume și prenume:</label>
                                 <input type="text"
@@ -148,8 +167,8 @@
                             </div>
                             <div class="col-lg-3">
                             </div>
-                        </div>
-                    </div> --}}
+                        </div> --}}
+                    </div>
                 </div>
             </div>
 
