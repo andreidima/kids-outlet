@@ -136,7 +136,7 @@
                                 <br>
 
                                                         <select class="custom-select-sm custom-select {{ $errors->has('angajat_pontatori') ? 'is-invalid' : '' }}"
-                                                            name="'angajat_pontatori[' + pontator + ']'"
+                                                            :name="'angajat_pontatori[' + pontator + ']'"
                                                             v-model="angajat_pontatori[pontator-1]"
                                                             >
                                                             <option disabled value="">Selectează un pontator</option>
@@ -148,7 +148,7 @@
                                                             </option>
                                                         </select>
                                 <br>
-                                <button  type="button" class="btn m-0 p-0 mb-1" @click="stergeAngajat(pontator-1)">
+                                <button  type="button" class="btn m-0 p-0 mb-1" @click="delete(angajat_pontatori, pontator)">
                                     <span class="px-1" style="background-color:red; color:white; border-radius:20px">
                                         Șterge pontatorul
                                     </span>
