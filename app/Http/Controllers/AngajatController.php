@@ -41,7 +41,13 @@ class AngajatController extends Controller
      */
     public function create()
     {
-        return view('angajati.create');
+        $angajati = Angajat::select('id', 'nume')
+            ->where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
+            ->where('activ', 1)
+            ->orderBy('nume', 'asc')
+            ->get();
+
+        return view('angajati.create', compact('angajati'));
     }
 
     /**
@@ -82,22 +88,6 @@ class AngajatController extends Controller
             ->orderBy('nume', 'asc')
             ->get();
 
-
-        // $angajat = $angajat->with('angajati_pontatori')
-        //     ->get();
-
-        // $angajat_pontatori = $angajat->angajati_pontatori()->get();
-// dd($angajat_pontatori);
-
-        // $angajat2 = Angajat::find($angajat->id)
-        //     ->with(['angajati_pontatori' => function ($query) {
-        //         $query->select('id', 'nume');
-        //     }])
-        //     ->get();
-        $angajat2 = Angajat::with('angajati_pontatori')->find($angajat->id);
-            // ->with('angajati_pontatori')
-            // ->get();
-// dd($angajat, $angajat2);
         return view('angajati.edit', compact('angajat', 'angajati'));
     }
 
@@ -110,8 +100,8 @@ class AngajatController extends Controller
      */
     public function update(Request $request, Angajat $angajat)
     {
-        dd($request);
         $angajat->update($this->validateRequest($request, $angajat));
+        $angajat->angajati_pontatori()->sync($request->angajat_pontatori);
 
         return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost modificat cu succes!');
     }
