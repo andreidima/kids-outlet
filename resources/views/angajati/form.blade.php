@@ -111,9 +111,6 @@
             </div>
         </div>
 
-{{-- @php
-    dd($angajati);
-@endphp --}}
         {{-- Gestionarea pontatorilor angajatului --}}
         <div class="row" id="angajati">
             <script type="application/javascript">
@@ -159,6 +156,7 @@
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="row py-2 justify-content-center">
             <div class="col-lg-8 d-flex justify-content-center">
