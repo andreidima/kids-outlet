@@ -59,6 +59,7 @@ class AngajatController extends Controller
     public function store(Request $request)
     {
         $angajat = Angajat::create($this->validateRequest($request));
+        $angajat->angajati_pontatori()->sync($request->angajat_pontatori);
 
         return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost adăugat cu succes!');
     }
