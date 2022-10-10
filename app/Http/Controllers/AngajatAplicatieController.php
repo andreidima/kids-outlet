@@ -45,7 +45,7 @@ class AngajatAplicatieController extends Controller
                 ]
             );
 
-        $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia', 'activ')->where('cod_de_acces', $request->cod_de_acces)->first();
+        $angajat = Angajat::with('roluri')->select('id', 'nume', 'sectia', 'activ', 'limba_aplicatie')->where('cod_de_acces', $request->cod_de_acces)->first();
 
         // Daca s-a ajuns in acest punct, inseamna ca logarea este reusita, si se salveaza acest lucru in baza de date
         $logare->status = "reusita";
@@ -82,7 +82,7 @@ class AngajatAplicatieController extends Controller
         }
 
         // Sterge atribute legate de comenzi sau pontaj, pastrare doar atributele angajatului
-        $angajat = new Angajat( $request->session()->get('angajat')->only('id', 'nume', 'sectia') );
+        $angajat = new Angajat( $request->session()->get('angajat')->only('id', 'nume', 'sectia', 'limba_aplicatie') );
         $request->session()->put('angajat', $angajat);
 
         // Sterge data_pontaj
@@ -117,13 +117,17 @@ class AngajatAplicatieController extends Controller
      */
     public function postAdaugaComandaPasul1(Request $request)
     {
+        $angajat = $request->session()->get('angajat');
+
         $request->validate(
-                [
-                    'id' => 'required|exists:produse'
-                ]
+            [
+                'id' => 'required|exists:produse'
+            ],
+            // [
+            //     'id.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de faza este obligatoriu.' : 'Câmpul numar de faza este obligatoriu. <br> අදියර අංක ක්ෂේත්රය අනිවාර්ය වේ. <br> The phase number field is mandatory.')
+            // ]
             );
 
-        $angajat = $request->session()->get('angajat');
         $produs = Produs::find($request->id);
 
         $angajat->produs_id = $produs->id;
@@ -162,10 +166,18 @@ class AngajatAplicatieController extends Controller
                         function ($attribute, $value, $fail) use ($angajat, $produs_operatie) {
                             if($produs_operatie === null){
                                 $produs = Produs::find($angajat->produs_id);
-                                $fail ('Produsul ' . $produs->nume . ' nu are faza ' . $value);
+                                $fail (
+                                    ($angajat->limba_aplicatie === 1) ?
+                                    ('Produsul ' . $produs->nume . ' nu are faza ' . $value)
+                                    :
+                                    ('Produsul ' . $produs->nume . ' nu are faza ' . $value . '. ' . 'නිපැයුම ' . $produs->nume . ' එයට අදියරක් නොමැත ' . $value . '. ' . 'The product ' . $produs->nume . ' it has no phase ' . $value . '.')
+                                );
                             }
                         },
                     ],
+                ],
+                [
+                    'numar_de_faza.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de faza este obligatoriu.' : 'Câmpul numar de faza este obligatoriu. <br> අදියර අංක ක්ෂේත්රය අනිවාර්ය වේ. <br> The phase number field is mandatory.')
                 ]
             );
 
@@ -198,14 +210,22 @@ class AngajatAplicatieController extends Controller
      */
     public function postAdaugaComandaPasul3(Request $request)
     {
-        $request->validate(
-                [
-                    'numar_de_bucati' => 'required|numeric|between:1,9999',
-                ]
-            );
-
         if(!empty($request->session()->get('submitForm'))){
             $angajat = $request->session()->get('angajat');
+
+            $request->validate(
+                    [
+                        'numar_de_bucati' => 'required|numeric|between:1,9999',
+                    ],
+                    [
+                        'numar_de_bucati.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de bucati este obligatoriu.' :
+                                                            'Câmpul numar de bucati este obligatoriu. <br> කෑලි ක්ෂේත්රයේ සංඛ්යාව අනිවාර්ය වේ. <br> The number of pieces field is mandatory.'),
+                        'numar_de_bucati.numeric' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de bucati trebuie să fie un număr.' :
+                                                            'Câmpul numar de bucati trebuie să fie un număr. <br> කෑලි ක්ෂේත්රයේ සංඛ්යාව අංකයක් විය යුතුය. <br> The number of pieces field must be a number.'),
+                        'numar_de_bucati.between' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de bucati trebuie să fie între 1 și 9999.' :
+                                                            'Câmpul numar de bucati trebuie să fie între 1 și 9999. <br> කෑලි ක්ෂේත්‍ර ගණන 1 සහ 9999 අතර විය යුතුය. <br> The number of pieces field must be between 1 and 9999.'),
+                    ]
+                );
 
             $produs_operatie = ProdusOperatie::with('produs')->where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
 
@@ -221,7 +241,25 @@ class AngajatAplicatieController extends Controller
             $norma_lucrata->produs_operatie_id = $produs_operatie->id;
             // Se verifica sa nu se depaseasca norma
             if (($produs_operatie->norma_totala_efectuata + $request->numar_de_bucati) > ($produs_operatie->produs->cantitate ?? 0)){
-                return back()->with('error', 'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $produs_operatie->numar_de_faza . '". Cantitatea maximă pe care o mai puteți adăuga este "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!');
+                return back()->with('error',
+                    (
+                        ($angajat->limba_aplicatie === 1) ?
+                            (
+                                'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $produs_operatie->numar_de_faza .
+                                '". Cantitatea maximă pe care o mai puteți adăuga este "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!'
+                            )
+                            :
+                            (
+                                'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $produs_operatie->numar_de_faza .
+                                '". Cantitatea maximă pe care o mai puteți adăuga este "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!'
+                                . ' <br> ' .
+                                ' ඔබට ඇතුළත් කිරීමට අවශ්‍ය මුදල අදියර සඳහා වන මුළු අනුපාතය ඉක්මවයි "' . $produs_operatie->numar_de_faza .
+                                '". ඔබට එකතු කළ හැකි උපරිම මුදල වේ "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!'
+                                . ' <br> ' .
+                                ' The amount you want to enter exceeds the total rate for the Phase "' . $produs_operatie->numar_de_faza .
+                                '". The maximum amount you can add is "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!'
+                            )
+                    ));
             } else {
                 $produs_operatie->norma_totala_efectuata += $request->numar_de_bucati;
                 $produs_operatie->save();
@@ -271,7 +309,21 @@ class AngajatAplicatieController extends Controller
         // $search_data_sfarsit = \Request::get('search_data_sfarsit');
 
         if ($search_data_inceput->diffInDays($search_data_sfarsit) > 65){
-            return back()->with('error', 'Vă rog căutați o perioadă de maxim 65 de zile.');
+            return back()->with('error',
+                    (
+                        ($angajat->limba_aplicatie === 1) ?
+                            (
+                                'Vă rog căutați o perioadă de maxim 65 de zile.'
+                            )
+                            :
+                            (
+                                'Vă rog căutați o perioadă de maxim 65 de zile.'
+                                . ' <br> ' .
+                                'කරුණාකර දින 65ක උපරිම කාලයක් සඳහා සොයන්න.'
+                                . ' <br> ' .
+                                'Please search for a maximum period of 65 days.'
+                            )
+                    ));
         }
 
         // if ($search_data_inceput && $search_data_sfarsit){
@@ -332,9 +384,37 @@ class AngajatAplicatieController extends Controller
 
             // $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $angajat->numar_de_faza)->first();
 
-            return back()->with('success', 'Comanda a fost ștearsă cu succes!');
+            return back()->with('success',
+                    (
+                        ($angajat->limba_aplicatie === 1) ?
+                            (
+                                'Comanda a fost ștearsă cu succes!'
+                            )
+                            :
+                            (
+                                'Comanda a fost ștearsă cu succes!'
+                                . ' <br> ' .
+                                'ඇණවුම සාර්ථකව මකා ඇත!'
+                                . ' <br> ' .
+                                'The order has been successfully deleted!'
+                            )
+                    ));
         } else {
-            return back()->with('error', 'Această comandă nu poate fi ștearsă!');
+            return back()->with('error',
+                    (
+                        ($angajat->limba_aplicatie === 1) ?
+                            (
+                                'Această comandă nu poate fi ștearsă!'
+                            )
+                            :
+                            (
+                                'Această comandă nu poate fi ștearsă!'
+                                . ' <br> ' .
+                                'මෙම ඇණවුම මකා දැමිය නොහැක!'
+                                . ' <br> ' .
+                                'This order cannot be deleted!'
+                            )
+                    ));
         }
     }
 

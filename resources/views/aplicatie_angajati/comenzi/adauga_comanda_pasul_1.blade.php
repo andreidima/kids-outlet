@@ -15,18 +15,47 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">
+                            DECONECTARE
+                            @if ($angajat->limba_aplicatie === 2)
+                                <br>
+                                පිටවීම
+                                <br>
+                                LOGOUT
+                            @endif
+                        </a>
                     </div>
                 </div>
 
 
                 <div class="mb-2" style="background-color: #000000; height:5px;"></div>
 
-                <h4 class="mb-5"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
+
+                <h4 class="mb-4">
+                    <small>
+                        Bun venit
+                        @if ($angajat->limba_aplicatie === 2)
+                            /
+                            සාදරයෙන් පිළිගනිමු
+                            /
+                            Welcome
+                            <br>
+                        @endif
+                    </small>
+                    <b>{{ $angajat->nume }}</b>
+                </h4>
 
                 @include('errors')
 
-                <h4 class="text-center">ALEGE PRODUSUL</h4>
+                <h4 class="text-center">
+                    ALEGE PRODUSUL
+                    @if ($angajat->limba_aplicatie === 2)
+                        <br>
+                        නිෂ්පාදනය තෝරන්න
+                        <br>
+                        SELECT THE PRODUCT
+                    @endif
+                </h4>
 
                 @if ((\App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->value('valoare') === 'nu') && ($angajat->id != 4))
                     <br>
@@ -50,7 +79,15 @@
                     @endforeach
                 @endif
 
-                <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">RENUNȚĂ</a>
+                <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">
+                    RENUNȚĂ
+                    @if ($angajat->limba_aplicatie === 2)
+                        <br>
+                        අත්හැර දමන්න
+                        <br>
+                        GIVE UP
+                    @endif
+                </a>
             </div>
         </div>
     </div>

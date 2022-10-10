@@ -17,13 +17,33 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">
+                            DECONECTARE
+                            @if ($angajat->limba_aplicatie === 2)
+                                <br>
+                                පිටවීම
+                                <br>
+                                LOGOUT
+                            @endif
+                        </a>
                     </div>
                 </div>
 
                 <div class="mb-2" style="background-color: #000000; height:5px;"></div>
 
-                <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
+                <h4 class="mb-4">
+                    <small>
+                        Bun venit
+                        @if ($angajat->limba_aplicatie === 2)
+                            /
+                            සාදරයෙන් පිළිගනිමු
+                            /
+                            Welcome
+                            <br>
+                        @endif
+                    </small>
+                    <b>{{ $angajat->nume }}</b>
+                </h4>
 
                 {{ $angajat->numar_de_faza }}
                 <br>
@@ -47,8 +67,24 @@
                 @if (
                     !($angajat->id === 91) // Borchina Liliana
                 )
-                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/adauga-comanda-pasul-1" role="button" style="background-color: #FC4A1A; border:2px solid white;">COMANDĂ</a>
-                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">REALIZAT</a>
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/adauga-comanda-pasul-1" role="button" style="background-color: #FC4A1A; border:2px solid white;">
+                        COMANDĂ
+                        @if ($angajat->limba_aplicatie === 2)
+                            <br>
+                            නියෝග
+                            <br>
+                            ORDER
+                        @endif
+                    </a>
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/realizat" role="button" style="background-color: #FC4A1A; border:2px solid white;">
+                        REALIZAT
+                        @if ($angajat->limba_aplicatie === 2)
+                            <br>
+                            සාදන ලදී
+                            <br>
+                            MAKED
+                        @endif
+                    </a>
                 @endif
 
                 {{-- Conturile ce pot vedea si fazele si ce s-a introdus la fiecare --}}

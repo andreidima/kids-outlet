@@ -15,23 +15,63 @@
                         {{-- <form class="needs-validation" novalidate method="POST" action="/adauga-comanda-noua">
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">
+                            DECONECTARE
+                            @if ($angajat->limba_aplicatie === 2)
+                                <br>
+                                පිටවීම
+                                <br>
+                                LOGOUT
+                            @endif
+                        </a>
                     </div>
                 </div>
 
+
                 <div class="mb-2" style="background-color: #000000; height:5px;"></div>
 
-                <h4 class="mb-4"><small>Bun venit</small> <b>{{ $angajat->nume }}</b></h4>
+
+                <h4 class="mb-4">
+                    <small>
+                        Bun venit
+                        @if ($angajat->limba_aplicatie === 2)
+                            /
+                            සාදරයෙන් පිළිගනිමු
+                            /
+                            Welcome
+                            <br>
+                        @endif
+                    </small>
+                    <b>{{ $angajat->nume }}</b>
+                </h4>
 
                 @include('errors')
 
-                <h4 class="mb-4 text-center"><b>REALIZAT</b>  </h4>
+                <h4 class="mb-4 text-center">
+                    <b>
+                        REALIZAT
+                        @if ($angajat->limba_aplicatie === 2)
+                            <br>
+                            සාදන ලදී
+                            <br>
+                            MAKED
+                        @endif
+                    </b>
+                </h4>
 
                 <div class="row text-center mb-4 mx-0" id="app1">
                     <form class="needs-validation" novalidate method="GET" action="{{ route('aplicatie_angajati.realizat') }}">
                         @csrf
                             <div class="col-lg-12 mb-3 d-flex justify-content-between">
-                                <label for="search_data_inceput" class="mb-0 align-self-center me-1">De la:</label>
+                                <label for="search_data_inceput" class="mb-0 align-self-center me-1">
+                                    De la:
+                                    @if ($angajat->limba_aplicatie === 2)
+                                        /
+                                        සිට
+                                        /
+                                        From
+                                    @endif
+                                </label>
                                     <vue2-datepicker
                                         data-veche="{{ $search_data_inceput }}"
                                         nume-camp-db="search_data_inceput"
@@ -43,7 +83,15 @@
 
                             </div>
                             <div class="col-lg-12 mb-3 d-flex justify-content-between">
-                                <label for="search_data_sfarsit" class="mb-0 align-self-center me-1">Până la:</label>
+                                <label for="search_data_sfarsit" class="mb-0 align-self-center me-1">
+                                    Până la:
+                                    @if ($angajat->limba_aplicatie === 2)
+                                        /
+                                        දක්වා
+                                        /
+                                        Up to
+                                    @endif
+                                </label>
                                     <vue2-datepicker
                                         data-veche="{{ $search_data_sfarsit }}"
                                         nume-camp-db="search_data_sfarsit"
@@ -57,7 +105,14 @@
                                 <button class="btn btn-lg w-100 text-white"
                                     type="submit"
                                     style="background-color: #FC4A1A; border:2px solid white;">
-                                    <i class="fas fa-search text-white me-1"></i>Caută
+                                    <i class="fas fa-search text-white me-1"></i>
+                                        Caută
+                                        @if ($angajat->limba_aplicatie === 2)
+                                            <br>
+                                            සොයන්න
+                                            <br>
+                                            Search
+                                        @endif
                                 </button>
                                 {{-- <a class="btn btn-lg w-100 text-white"
                                     role="button"
@@ -102,16 +157,70 @@
                 @forelse ($norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
                     @forelse ($norme_lucrate_per_data as $norma_lucrata)
                         <div class="mb-4 px-1 rounded-3" style="background-color:#007e6b;">
-                            <small>Data:</small> {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
+                            <small>
+                                Data:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    දිනය
+                                    /
+                                    Date:
+                                @endif
+                            </small>
+                            {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
+
                             <br>
-                            <small>Produs:</small> {{ $norma_lucrata->produs_operatie->produs->nume }}
+
+                            <small>
+                                Produs:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    නිෂ්පාදන
+                                    /
+                                    Product:
+                                @endif
+                            </small>
+                            {{ $norma_lucrata->produs_operatie->produs->nume }}
+
                             <br>
-                            <small>Număr de fază:</small> {{ $norma_lucrata->produs_operatie->numar_de_faza }}
+
+                            <small>
+                                Număr de fază:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    අදියර අංකය
+                                    /
+                                    Phase number:
+                                @endif
+                            </small>
+                            {{ $norma_lucrata->produs_operatie->numar_de_faza }}
+
                             <br>
-                            <small>Operație:</small> {{ $norma_lucrata->produs_operatie->nume }}
+
+                            <small>
+                                Operație:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    මෙහෙයුම්
+                                    /
+                                    Operation:
+                                @endif
+                            </small>
+                            {{ $norma_lucrata->produs_operatie->nume }}
+
                             <br>
-                            <small>Număr de bucăți:</small> {{ $norma_lucrata->cantitate }}
-                            @if (
+
+                            <small>
+                                Număr de bucăți:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    කෑලි ගණන
+                                    /
+                                    Number of pieces:
+                                @endif
+                            </small>
+                            {{ $norma_lucrata->cantitate }}
+
+                            {{-- @if (
                                     (
                                         (\Carbon\Carbon::now()->day < 6)
                                         // (\Carbon\Carbon::parse('2022-06-06')->day < 6)
@@ -127,9 +236,9 @@
                                         ($norma_lucrata->data >= \Carbon\Carbon::now()->startOfMonth()->toDateString())
                                         // ($norma_lucrata->data >= \Carbon\Carbon::parse('2022-06-06')->startOfMonth()->toDateString())
                                     )
-                                )
+                                ) --}}
                             {{-- @if ($data_stergere_lucru_pana_la->lessThan(\Carbon\Carbon::parse($norma_lucrata->data))) --}}
-                            {{-- @if (\Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()) --}}
+                            @if (\Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth())
                                     <br>
                                     <div class="text-start">
                                         <a
@@ -142,6 +251,12 @@
                                             >
                                             {{-- <span class="badge bg-danger"> --}}
                                                 ȘTERGE COMANDA
+                                                @if ($angajat->limba_aplicatie === 2)
+                                                    <br>
+                                                    ඇණවුම මකන්න
+                                                    <br>
+                                                    DELETE ORDER
+                                                @endif
                                             {{-- </span> --}}
                                         </a>
                                     </div>
@@ -156,9 +271,21 @@
                     {{-- Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 5 (inclusiv) a lunii următoare. --}}
                     {{-- Nu puteți șterge comenzi mai vechi de {{ $data_stergere_lucru_pana_la->isoFormat("DD.MM.YYYY") }} inclusiv. --}}
                     Puteți șterge comenzi doar din luna curentă.
+                    <br>
+                    ඔබට වත්මන් මාසයේ සිට පමණක් ඇණවුම් මැකීමට හැකිය.
+                    <br>
+                    You can only delete orders from the current month.
                 </div>
 
-                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
+                <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">
+                    MENIUL PRINCIPAL
+                    @if ($angajat->limba_aplicatie === 2)
+                        <br>
+                        ප්රධාන මෙනුව
+                        <br>
+                        MAIN MENU
+                    @endif
+                </a>
 
             </div>
         </div>
@@ -185,21 +312,66 @@
                         <div class="modal-content">
                         <div class="modal-header bg-danger">
                             <h5 class="modal-title text-white" id="exampleModalLabel">
-                                Produs: <b>{{ $norma_lucrata->produs_operatie->produs->nume }}</b>
+                                Produs:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    නිෂ්පාදන
+                                    /
+                                    Product:
+                                @endif
+                                <b>{{ $norma_lucrata->produs_operatie->produs->nume }}</b>
+
                                 <br>
-                                Operație: <b>{{ $norma_lucrata->produs_operatie->nume }}</b>
+                                Operație:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    මෙහෙයුම්
+                                    /
+                                    Operation:
+                                @endif
+                                <b>{{ $norma_lucrata->produs_operatie->nume }}</b>
+
                                 <br>
-                                Cantitate: <b>{{ $norma_lucrata->cantitate }}</b>
+                                Număr de bucăți:
+                                @if ($angajat->limba_aplicatie === 2)
+                                    /
+                                    කෑලි ගණන
+                                    /
+                                    Number of pieces:
+                                @endif
+                                <b>{{ $norma_lucrata->cantitate }}</b>
                             </h5>
                             <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" style="text-align:left;">
                             Ești sigur ca vrei să ștergi Comanda?
+                                @if ($angajat->limba_aplicatie === 2)
+                                    <br>
+                                    ඔබට ඇණවුම මැකීමට අවශ්‍ය බව විශ්වාසද?
+                                    <br>
+                                    Are you sure you want to delete the Order?
+                                @endif
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                RENUNȚĂ
+                                @if ($angajat->limba_aplicatie === 2)
+                                    <br>
+                                    අත්හැර දමන්න
+                                    <br>
+                                    GIVE UP
+                                @endif
+                            </button>
 
-                            <a class="btn btn-danger text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button">ȘTERGE COMANDA</a>
+                            <a class="btn btn-danger text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button">
+                                ȘTERGE COMANDA
+                                @if ($angajat->limba_aplicatie === 2)
+                                    <br>
+                                    ඇණවුම මකන්න
+                                    <br>
+                                    DELETE ORDER
+                                @endif
+                            </a>
 
                         </div>
                         </div>
