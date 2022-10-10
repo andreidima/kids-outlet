@@ -13,9 +13,9 @@
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
                         <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">
-                            DECONECTARE
-                            @if ($angajat->limba_aplicatie === 2)
-                                <br>
+                            @if ($angajat->limba_aplicatie === 1)
+                                DECONECTARE
+                            @elseif ($angajat->limba_aplicatie === 2)
                                 පිටවීම
                                 <br>
                                 LOGOUT
@@ -30,9 +30,9 @@
 
                 <h4 class="mb-4">
                     <small>
-                        Bun venit
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Bun venit
+                        @elseif ($angajat->limba_aplicatie === 2)
                             සාදරයෙන් පිළිගනිමු
                             /
                             Welcome
@@ -43,9 +43,9 @@
                 </h4>
 
                 <h4 class="alert-success p-2">
-                    Comanda a fost introdusă cu success!
-                    @if ($angajat->limba_aplicatie === 2)
-                        <br>
+                    @if ($angajat->limba_aplicatie === 1)
+                        Comanda a fost introdusă cu success!
+                    @elseif ($angajat->limba_aplicatie === 2)
                         ඇණවුම සාර්ථකව ඇතුළු විය!
                         <br>
                         Order successfully entered!
@@ -54,9 +54,9 @@
 
                 <h4 class="mb-4">
                     <small>
-                        Produs:
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Produs:
+                        @elseif ($angajat->limba_aplicatie === 2)
                             නිෂ්පාදන:
                             /
                             Product:
@@ -64,9 +64,9 @@
                     </small> {{ $angajat->produs_nume }}
                     <br>
                     <small>
-                        Număr de fază:
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Număr de fază:
+                        @elseif ($angajat->limba_aplicatie === 2)
                             අදියර අංකය:
                             /
                             Phase number:
@@ -74,9 +74,9 @@
                     </small> {{ $angajat->numar_de_faza }}
                     <br>
                     <small>
-                        Operație:
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Operație:
+                        @elseif ($angajat->limba_aplicatie === 2)
                             මෙහෙයුම්:
                             /
                             Operation:
@@ -90,9 +90,9 @@
                 @include('errors')
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">
-                    MENIUL PRINCIPAL
-                    @if ($angajat->limba_aplicatie === 2)
-                        <br>
+                    @if ($angajat->limba_aplicatie === 1)
+                        MENIUL PRINCIPAL
+                    @elseif ($angajat->limba_aplicatie === 2)
                         ප්රධාන මෙනුව
                         <br>
                         MAIN MENU

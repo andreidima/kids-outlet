@@ -16,9 +16,9 @@
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
                         <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">
-                            DECONECTARE
-                            @if ($angajat->limba_aplicatie === 2)
-                                <br>
+                            @if ($angajat->limba_aplicatie === 1)
+                                DECONECTARE
+                            @elseif ($angajat->limba_aplicatie === 2)
                                 පිටවීම
                                 <br>
                                 LOGOUT
@@ -33,9 +33,9 @@
 
                 <h4 class="mb-4">
                     <small>
-                        Bun venit
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Bun venit
+                        @elseif ($angajat->limba_aplicatie === 2)
                             සාදරයෙන් පිළිගනිමු
                             /
                             Welcome
@@ -49,9 +49,9 @@
 
                 <h4 class="mb-4 text-center">
                     <b>
-                        REALIZAT
-                        @if ($angajat->limba_aplicatie === 2)
-                            <br>
+                        @if ($angajat->limba_aplicatie === 1)
+                            REALIZAT
+                        @elseif ($angajat->limba_aplicatie === 2)
                             සාදන ලදී
                             <br>
                             MAKED
@@ -64,9 +64,9 @@
                         @csrf
                             <div class="col-lg-12 mb-3 d-flex justify-content-between">
                                 <label for="search_data_inceput" class="mb-0 align-self-center me-1">
-                                    De la:
-                                    @if ($angajat->limba_aplicatie === 2)
-                                        /
+                                    @if ($angajat->limba_aplicatie === 1)
+                                        De la:
+                                    @elseif ($angajat->limba_aplicatie === 2)
                                         සිට
                                         /
                                         From
@@ -84,9 +84,9 @@
                             </div>
                             <div class="col-lg-12 mb-3 d-flex justify-content-between">
                                 <label for="search_data_sfarsit" class="mb-0 align-self-center me-1">
-                                    Până la:
-                                    @if ($angajat->limba_aplicatie === 2)
-                                        /
+                                    @if ($angajat->limba_aplicatie === 1)
+                                        Până la:
+                                    @elseif ($angajat->limba_aplicatie === 2)
                                         දක්වා
                                         /
                                         Up to
@@ -106,9 +106,9 @@
                                     type="submit"
                                     style="background-color: #FC4A1A; border:2px solid white;">
                                     <i class="fas fa-search text-white me-1"></i>
-                                        Caută
-                                        @if ($angajat->limba_aplicatie === 2)
-                                            <br>
+                                        @if ($angajat->limba_aplicatie === 1)
+                                            Caută
+                                        @elseif ($angajat->limba_aplicatie === 2)
                                             සොයන්න
                                             <br>
                                             Search
@@ -158,9 +158,9 @@
                     @forelse ($norme_lucrate_per_data as $norma_lucrata)
                         <div class="mb-4 px-1 rounded-3" style="background-color:#007e6b;">
                             <small>
-                                Data:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Data:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     දිනය
                                     /
                                     Date:
@@ -171,9 +171,9 @@
                             <br>
 
                             <small>
-                                Produs:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Produs:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     නිෂ්පාදන
                                     /
                                     Product:
@@ -184,9 +184,9 @@
                             <br>
 
                             <small>
-                                Număr de fază:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Număr de fază:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     අදියර අංකය
                                     /
                                     Phase number:
@@ -197,9 +197,9 @@
                             <br>
 
                             <small>
-                                Operație:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Operație:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     මෙහෙයුම්
                                     /
                                     Operation:
@@ -210,9 +210,9 @@
                             <br>
 
                             <small>
-                                Număr de bucăți:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Număr de bucăți:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     කෑලි ගණන
                                     /
                                     Number of pieces:
@@ -250,9 +250,9 @@
                                             style="background-color: #FC4A1A; border:1px solid white;"
                                             >
                                             {{-- <span class="badge bg-danger"> --}}
-                                                ȘTERGE COMANDA
-                                                @if ($angajat->limba_aplicatie === 2)
-                                                    <br>
+                                                @if ($angajat->limba_aplicatie === 1)
+                                                    ȘTERGE COMANDA
+                                                @elseif ($angajat->limba_aplicatie === 2)
                                                     ඇණවුම මකන්න
                                                     <br>
                                                     DELETE ORDER
@@ -270,17 +270,20 @@
                 <div class="mb-4 px-1 text-dark rounded-3" style="background-color:#d5ff88;">
                     {{-- Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 5 (inclusiv) a lunii următoare. --}}
                     {{-- Nu puteți șterge comenzi mai vechi de {{ $data_stergere_lucru_pana_la->isoFormat("DD.MM.YYYY") }} inclusiv. --}}
-                    Puteți șterge comenzi doar din luna curentă.
-                    <br>
-                    ඔබට වත්මන් මාසයේ සිට පමණක් ඇණවුම් මැකීමට හැකිය.
-                    <br>
-                    You can only delete orders from the current month.
+
+                    @if ($angajat->limba_aplicatie === 1)
+                        Puteți șterge comenzi doar din luna curentă.
+                    @elseif ($angajat->limba_aplicatie === 2)
+                        ඔබට වත්මන් මාසයේ සිට පමණක් ඇණවුම් මැකීමට හැකිය.
+                        <br>
+                        You can only delete orders from the current month.
+                    @endif
                 </div>
 
                 <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">
-                    MENIUL PRINCIPAL
-                    @if ($angajat->limba_aplicatie === 2)
-                        <br>
+                    @if ($angajat->limba_aplicatie === 1)
+                        MENIUL PRINCIPAL
+                    @elseif ($angajat->limba_aplicatie === 2)
                         ප්රධාන මෙනුව
                         <br>
                         MAIN MENU
@@ -312,9 +315,9 @@
                         <div class="modal-content">
                         <div class="modal-header bg-danger">
                             <h5 class="modal-title text-white" id="exampleModalLabel">
-                                Produs:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Produs:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     නිෂ්පාදන
                                     /
                                     Product:
@@ -322,9 +325,9 @@
                                 <b>{{ $norma_lucrata->produs_operatie->produs->nume }}</b>
 
                                 <br>
-                                Operație:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Operație:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     මෙහෙයුම්
                                     /
                                     Operation:
@@ -332,9 +335,9 @@
                                 <b>{{ $norma_lucrata->produs_operatie->nume }}</b>
 
                                 <br>
-                                Număr de bucăți:
-                                @if ($angajat->limba_aplicatie === 2)
-                                    /
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Număr de bucăți:
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     කෑලි ගණන
                                     /
                                     Number of pieces:
@@ -344,19 +347,19 @@
                             <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" style="text-align:left;">
-                            Ești sigur ca vrei să ștergi Comanda?
-                                @if ($angajat->limba_aplicatie === 2)
-                                    <br>
-                                    ඔබට ඇණවුම මැකීමට අවශ්‍ය බව විශ්වාසද?
-                                    <br>
-                                    Are you sure you want to delete the Order?
-                                @endif
+                            @if ($angajat->limba_aplicatie === 1)
+                                Ești sigur ca vrei să ștergi Comanda?
+                            @elseif ($angajat->limba_aplicatie === 2)
+                                ඔබට ඇණවුම මැකීමට අවශ්‍ය බව විශ්වාසද?
+                                <br>
+                                Are you sure you want to delete the Order?
+                            @endif
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                RENUNȚĂ
-                                @if ($angajat->limba_aplicatie === 2)
-                                    <br>
+                                @if ($angajat->limba_aplicatie === 1)
+                                    RENUNȚĂ
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     අත්හැර දමන්න
                                     <br>
                                     GIVE UP
@@ -364,9 +367,9 @@
                             </button>
 
                             <a class="btn btn-danger text-white" href="/aplicatie-angajati/norma-lucrata/{{ $norma_lucrata->id }}/sterge" role="button">
-                                ȘTERGE COMANDA
-                                @if ($angajat->limba_aplicatie === 2)
-                                    <br>
+                                @if ($angajat->limba_aplicatie === 1)
+                                    ȘTERGE COMANDA
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     ඇණවුම මකන්න
                                     <br>
                                     DELETE ORDER

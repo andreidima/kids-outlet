@@ -42,6 +42,10 @@ class AngajatAplicatieController extends Controller
         $request->validate(
                 [
                     'cod_de_acces' => 'required|exists:angajati,cod_de_acces',
+                ],
+                [
+                    'cod_de_acces.required' => ('Câmpul cod de acces este obligatoriu. <br> The access code field is mandatory.'),
+                    'cod_de_acces.exists' => ('Câmpul cod de acces selectat nu este valid. <br> The selected access code field is not valid.'),
                 ]
             );
 
@@ -56,7 +60,19 @@ class AngajatAplicatieController extends Controller
         if ($angajat->activ === 1){
             $request->session()->put('angajat', $angajat);
         } else {
-            return back ()->with('error', 'Acest cont este dezactivat!');
+            return back ()->with('error',
+                    (
+                        ($angajat->limba_aplicatie === 1) ?
+                            (
+                                'Acest cont este dezactivat!'
+                            )
+                            :
+                            (
+                                'මෙම ගිණුම අබල කර ඇත!'
+                                . ' <br> ' .
+                                'This account is disabled!'
+                            )
+                    ));
         }
 
         return redirect('aplicatie-angajati/meniul-principal');
@@ -177,7 +193,7 @@ class AngajatAplicatieController extends Controller
                     ],
                 ],
                 [
-                    'numar_de_faza.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de faza este obligatoriu.' : 'Câmpul numar de faza este obligatoriu. <br> අදියර අංක ක්ෂේත්රය අනිවාර්ය වේ. <br> The phase number field is mandatory.')
+                    'numar_de_faza.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de faza este obligatoriu.' : 'අදියර අංක ක්ෂේත්රය අනිවාර්ය වේ. <br> The phase number field is mandatory.')
                 ]
             );
 
@@ -219,11 +235,11 @@ class AngajatAplicatieController extends Controller
                     ],
                     [
                         'numar_de_bucati.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de bucati este obligatoriu.' :
-                                                            'Câmpul numar de bucati este obligatoriu. <br> කෑලි ක්ෂේත්රයේ සංඛ්යාව අනිවාර්ය වේ. <br> The number of pieces field is mandatory.'),
+                                                            'කෑලි ක්ෂේත්රයේ සංඛ්යාව අනිවාර්ය වේ. <br> The number of pieces field is mandatory.'),
                         'numar_de_bucati.numeric' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de bucati trebuie să fie un număr.' :
-                                                            'Câmpul numar de bucati trebuie să fie un număr. <br> කෑලි ක්ෂේත්රයේ සංඛ්යාව අංකයක් විය යුතුය. <br> The number of pieces field must be a number.'),
+                                                            'කෑලි ක්ෂේත්රයේ සංඛ්යාව අංකයක් විය යුතුය. <br> The number of pieces field must be a number.'),
                         'numar_de_bucati.between' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de bucati trebuie să fie între 1 și 9999.' :
-                                                            'Câmpul numar de bucati trebuie să fie între 1 și 9999. <br> කෑලි ක්ෂේත්‍ර ගණන 1 සහ 9999 අතර විය යුතුය. <br> The number of pieces field must be between 1 and 9999.'),
+                                                            'කෑලි ක්ෂේත්‍ර ගණන 1 සහ 9999 අතර විය යුතුය. <br> The number of pieces field must be between 1 and 9999.'),
                     ]
                 );
 
@@ -250,9 +266,6 @@ class AngajatAplicatieController extends Controller
                             )
                             :
                             (
-                                'Cantitatea pe care doriți să o introduceți depășește norma totală pentru Faza "' . $produs_operatie->numar_de_faza .
-                                '". Cantitatea maximă pe care o mai puteți adăuga este "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!'
-                                . ' <br> ' .
                                 ' ඔබට ඇතුළත් කිරීමට අවශ්‍ය මුදල අදියර සඳහා වන මුළු අනුපාතය ඉක්මවයි "' . $produs_operatie->numar_de_faza .
                                 '". ඔබට එකතු කළ හැකි උපරිම මුදල වේ "' . (($produs_operatie->produs->cantitate ?? 0) - $produs_operatie->norma_totala_efectuata) . '"!'
                                 . ' <br> ' .
@@ -317,8 +330,6 @@ class AngajatAplicatieController extends Controller
                             )
                             :
                             (
-                                'Vă rog căutați o perioadă de maxim 65 de zile.'
-                                . ' <br> ' .
                                 'කරුණාකර දින 65ක උපරිම කාලයක් සඳහා සොයන්න.'
                                 . ' <br> ' .
                                 'Please search for a maximum period of 65 days.'
@@ -392,8 +403,6 @@ class AngajatAplicatieController extends Controller
                             )
                             :
                             (
-                                'Comanda a fost ștearsă cu succes!'
-                                . ' <br> ' .
                                 'ඇණවුම සාර්ථකව මකා ඇත!'
                                 . ' <br> ' .
                                 'The order has been successfully deleted!'
@@ -408,8 +417,6 @@ class AngajatAplicatieController extends Controller
                             )
                             :
                             (
-                                'Această comandă nu poate fi ștearsă!'
-                                . ' <br> ' .
                                 'මෙම ඇණවුම මකා දැමිය නොහැක!'
                                 . ' <br> ' .
                                 'This order cannot be deleted!'

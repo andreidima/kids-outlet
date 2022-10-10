@@ -16,9 +16,9 @@
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
                         <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">
-                            DECONECTARE
-                            @if ($angajat->limba_aplicatie === 2)
-                                <br>
+                            @if ($angajat->limba_aplicatie === 1)
+                                DECONECTARE
+                            @elseif ($angajat->limba_aplicatie === 2)
                                 පිටවීම
                                 <br>
                                 LOGOUT
@@ -33,9 +33,9 @@
 
                 <h4 class="mb-4">
                     <small>
-                        Bun venit
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Bun venit
+                        @elseif ($angajat->limba_aplicatie === 2)
                             සාදරයෙන් පිළිගනිමු
                             /
                             Welcome
@@ -49,9 +49,9 @@
 
                 <h4 class="text-left mb-4">
                     <small>
-                        Produs:
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Produs:
+                        @elseif ($angajat->limba_aplicatie === 2)
                             නිෂ්පාදන:
                             /
                             Product:
@@ -60,9 +60,9 @@
                 </h4>
 
                 <h4 class="text-center">
-                    NUMĂR DE FAZĂ:
-                    @if ($angajat->limba_aplicatie === 2)
-                        <br>
+                    @if ($angajat->limba_aplicatie === 1)
+                        NUMĂR DE FAZĂ:
+                    @elseif ($angajat->limba_aplicatie === 2)
                         අදියර අංකය:
                         <br>
                         PHASE NUMBER:
@@ -79,18 +79,18 @@
                             <input class="form-control form-control-lg mb-3" type="text" name="numar_de_faza" autofocus>
 
                             <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
-                                SELECTEAZĂ
-                                    @if ($angajat->limba_aplicatie === 2)
-                                        <br>
-                                        තෝරන්න
-                                        <br>
-                                        SELECT
-                                    @endif
+                                @if ($angajat->limba_aplicatie === 1)
+                                    SELECTEAZĂ
+                                @elseif ($angajat->limba_aplicatie === 2)
+                                    තෝරන්න
+                                    <br>
+                                    SELECT
+                                @endif
                             </button>
                             <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">
-                                RENUNȚĂ
-                                @if ($angajat->limba_aplicatie === 2)
-                                    <br>
+                                @if ($angajat->limba_aplicatie === 1)
+                                    RENUNȚĂ
+                                @elseif ($angajat->limba_aplicatie === 2)
                                     අත්හැර දමන්න
                                     <br>
                                     GIVE UP

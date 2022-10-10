@@ -16,9 +16,9 @@
                             <button type="submit" class="btn btn-sm text-white" style="background-color: #FC4A1A;">DECONECTARE</button>
                         </form> --}}
                         <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">
-                            DECONECTARE
-                            @if ($angajat->limba_aplicatie === 2)
-                                <br>
+                            @if ($angajat->limba_aplicatie === 1)
+                                DECONECTARE
+                            @elseif ($angajat->limba_aplicatie === 2)
                                 පිටවීම
                                 <br>
                                 LOGOUT
@@ -33,9 +33,9 @@
 
                 <h4 class="mb-4">
                     <small>
-                        Bun venit
-                        @if ($angajat->limba_aplicatie === 2)
-                            /
+                        @if ($angajat->limba_aplicatie === 1)
+                            Bun venit
+                        @elseif ($angajat->limba_aplicatie === 2)
                             සාදරයෙන් පිළිගනිමු
                             /
                             Welcome
@@ -48,9 +48,9 @@
                 @include('errors')
 
                 <h4 class="text-center">
-                    ALEGE PRODUSUL
-                    @if ($angajat->limba_aplicatie === 2)
-                        <br>
+                    @if ($angajat->limba_aplicatie === 1)
+                        ALEGE PRODUSUL
+                    @elseif ($angajat->limba_aplicatie === 2)
                         නිෂ්පාදනය තෝරන්න
                         <br>
                         SELECT THE PRODUCT
@@ -80,9 +80,9 @@
                 @endif
 
                 <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">
-                    RENUNȚĂ
-                    @if ($angajat->limba_aplicatie === 2)
-                        <br>
+                    @if ($angajat->limba_aplicatie === 1)
+                        RENUNȚĂ
+                    @elseif ($angajat->limba_aplicatie === 2)
                         අත්හැර දමන්න
                         <br>
                         GIVE UP
