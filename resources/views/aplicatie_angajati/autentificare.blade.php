@@ -11,14 +11,14 @@
                 @include('errors')
 
                 <h4 class="text-center">
-                    COD DE ACCES
-                    {{-- @if ($angajat->limba_aplicatie === 2) --}}
+                    {{-- COD DE ACCES
+                    @if ($angajat->limba_aplicatie === 2)
                         <br>
-                        {{-- පිවිසුම් කේතය
+                        පිවිසුම් කේතය
                         <br> --}}
                         ACCESS CODE
-                        <br>
-                    {{-- @endif --}}
+                        {{-- <br>
+                    @endif --}}
                 </h4>
 
                 <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati"
@@ -31,14 +31,14 @@
                             <input class="form-control form-control-lg mb-3" type="text" name="cod_de_acces" autofocus>
 
                             <button type="submit" class="btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
-                                AUTENTIFICARE
-                                {{-- @if ($angajat->limba_aplicatie === 2) --}}
-                                    {{-- <br>
-                                    ඇතුල් වන්න --}}
+                                {{-- AUTENTIFICARE
+                                @if ($angajat->limba_aplicatie === 2)
                                     <br>
+                                    ඇතුල් වන්න
+                                    <br> --}}
                                     LOGIN
-                                    <br>
-                                {{-- @endif --}}
+                                    {{-- <br>
+                                @endif --}}
                             </button>
                         </div>
                     </div>
