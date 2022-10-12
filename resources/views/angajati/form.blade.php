@@ -48,6 +48,7 @@
                     <option selected>Selectează</option>
                     <option value="Darimode Style S.R.L." {{ old('firma', $angajat->firma) === "Darimode Style S.R.L." ? 'selected' : '' }}>Darimode Style S.R.L.</option>
                     <option value="Petit Atelier S.R.L." {{ old('firma', $angajat->firma) === "Petit Atelier S.R.L." ? 'selected' : '' }}>Petit Atelier S.R.L.</option>
+                    <option value="Mate Andy Style" {{ old('firma', $angajat->firma) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
                 </select>
             </div>
             <div class="col-lg-3 mb-4">
@@ -90,6 +91,7 @@
                     <option value="Kids Ooutlet Depozit Darimode" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Kids Ooutlet Depozit Darimode" ? 'selected' : '' }}>Kids Ooutlet Depozit Darimode</option>
                     <option value="Kids Outlet Depozit Petit" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Kids Outlet Depozit Petit" ? 'selected' : '' }}>Kids Outlet Depozit Petit</option>
                     <option value="Petit Magazin depozit - DO" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Petit Magazin depozit - DO" ? 'selected' : '' }}>Petit Magazin depozit - DO</option>
+                    <option value="Mate Andy Style" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
                 </select>
             </div>
             <div class="col-lg-3 mb-4 d-flex align-items-center justify-content-center">
