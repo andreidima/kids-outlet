@@ -94,6 +94,15 @@
                     <option value="Mate Andy Style" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
                 </select>
             </div>
+            <div class="col-lg-3 mb-4">
+                <label for="limba_aplicatie" class="mb-0 ps-3">Limba:</label>
+                <select name="limba_aplicatie" class="form-select rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
+                    <option value ="" selected>Selectează</option>
+                    <option value="1" {{ old('limba_aplicatie', $angajat->limba_aplicatie) == "1" ? 'selected' : '' }}>Română</option>
+                    <option value="2" {{ old('limba_aplicatie', $angajat->limba_aplicatie) == "2" ? 'selected' : '' }}>Singaleză</option>
+                    {{ old('limba_aplicatie') }}
+                </select>
+            </div>
             <div class="col-lg-3 mb-4 d-flex align-items-center justify-content-center">
                 <div class="">
                     <div class="form-check">

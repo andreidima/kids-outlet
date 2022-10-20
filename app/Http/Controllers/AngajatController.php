@@ -101,6 +101,7 @@ class AngajatController extends Controller
      */
     public function update(Request $request, Angajat $angajat)
     {
+        // dd($request);
         $angajat->update($this->validateRequest($request, $angajat));
         $angajat->angajati_pontatori()->sync($request->angajat_pontatori);
 
@@ -127,7 +128,7 @@ class AngajatController extends Controller
     protected function validateRequest(Request $request, $angajat = null)
     {
         return request()->validate([
-            'nume' => 'nullable|max:100',
+            'nume' => 'required|max:100',
             'telefon' => 'nullable|max:50',
             'cod_de_acces' => [
                 'nullable',
@@ -138,8 +139,9 @@ class AngajatController extends Controller
             'firma' => 'nullable|max:500',
             'prod' => 'nullable|max:200',
             'ore_angajare' => 'required|numeric|between:1,12',
-            'avans' => 'numeric|max:99999',
+            'avans' => 'required|numeric|max:99999',
             'foaie_pontaj' => 'nullable|max:200',
+            'limba_aplicatie' => 'required',
             'activ' => 'nullable|integer|between:0,1'
         ]);
     }
