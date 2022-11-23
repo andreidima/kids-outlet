@@ -15,7 +15,7 @@ class ImportFisierExcelController extends Controller
 
         foreach ($import_produse_operatii as $import_produs_operatie){
             $produs_operatie = new ProdusOperatie;
-            $produs_operatie->produs_id = 112;
+            $produs_operatie->produs_id = 113;
             $produs_operatie->nume = $import_produs_operatie->{'DESCRIEREA OPERATIEI'};
             $produs_operatie->numar_de_faza = $import_produs_operatie->{'nr crt'};
             $produs_operatie->timp = str_replace(',', '.', $import_produs_operatie->{'TIMP'});
