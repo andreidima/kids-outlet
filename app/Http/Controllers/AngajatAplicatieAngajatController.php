@@ -18,7 +18,7 @@ class AngajatAplicatieAngajatController extends Controller
         $angajati = Angajat::where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
             ->orderBy('nume')->get();
 
-        return view('angajati.aplicatieAngajati.index', compact('angajati'));
+        return view('aplicatie_angajati.angajati.index', compact('angajati'));
     }
 
     /**
@@ -28,7 +28,7 @@ class AngajatAplicatieAngajatController extends Controller
      */
     public function create()
     {
-        return view('angajati.create');
+        return view('aplicatie_angajati.angajati.create');
     }
 
     /**
@@ -41,7 +41,7 @@ class AngajatAplicatieAngajatController extends Controller
     {
         $angajat = Angajat::create($this->validateRequest($request));
 
-        return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost adăugat cu succes!');
+        return redirect('/aplicatie-angajati/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost adăugat cu succes!');
     }
 
     /**
@@ -52,7 +52,7 @@ class AngajatAplicatieAngajatController extends Controller
      */
     public function show(Angajat $angajat)
     {
-        return view('angajati.show', compact('angajat'));
+        return view('aplicatie_angajati.angajati.show', compact('angajat'));
     }
 
     /**
@@ -63,7 +63,13 @@ class AngajatAplicatieAngajatController extends Controller
      */
     public function edit(Angajat $angajat)
     {
-        return view('angajati.edit', compact('angajat'));
+        $angajati = Angajat::select('id', 'nume')
+            ->where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
+            ->where('activ', 1)
+            ->orderBy('nume', 'asc')
+            ->get();
+
+        return view('aplicatie_angajati.angajati.edit', compact('angajat', 'angajati'));
     }
 
     /**
@@ -76,8 +82,9 @@ class AngajatAplicatieAngajatController extends Controller
     public function update(Request $request, Angajat $angajat)
     {
         $angajat->update($this->validateRequest($request, $angajat));
+        $angajat->angajati_pontatori()->sync($request->angajat_pontatori);
 
-        return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost modificat cu succes!');
+        return redirect('/aplicatie-angajati/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost modificat cu succes!');
     }
 
     /**
@@ -88,8 +95,8 @@ class AngajatAplicatieAngajatController extends Controller
      */
     public function destroy(Angajat $angajat)
     {
-        $angajat->delete();
-        return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost șters cu succes!');
+        // $angajat->delete();
+        // return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost șters cu succes!');
     }
 
     /**
@@ -106,21 +113,13 @@ class AngajatAplicatieAngajatController extends Controller
                 'nullable',
                 'max:50',
                 Rule::unique('App\Models\Angajat')->ignore($angajat),
-            ]
+            ],
+            'sectia' => 'nullable|max:500',
+            'firma' => 'nullable|max:500',
+            'prod' => 'nullable|max:200',
+            'ore_angajare' => 'required|numeric|between:1,12',
+            'foaie_pontaj' => 'nullable|max:200',
+            'activ' => 'nullable|integer|between:0,1'
         ]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function indexAplicatieAngajat()
-    {
-        $angajati = Angajat::
-            orderBy('nume')
-            ->get();
-
-        return view('angajati.aplicatieAngajat.index', compact('angajati'));
     }
 }

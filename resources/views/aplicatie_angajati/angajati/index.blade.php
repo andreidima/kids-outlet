@@ -52,7 +52,7 @@
                                                 Ore angajare
                                             </th>
                                             {{-- <th>
-                                                Stare cont
+
                                             </th> --}}
                                         </tr>
                                     </thead>
@@ -60,7 +60,13 @@
                                         @foreach ($angajati_per_prod->sortBy('nume') as $angajat)
                                             <tr>
                                                 <td>
-                                                    {{ $angajat->nume }}
+                                                    {{-- <a class="btn btn-primary border border-dark rounded-3" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
+                                                        <i class="fas fa-edit text-white"></i>
+                                                    </a> --}}
+                                                    <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
+                                                        {{-- <i class="fas fa-edit text-white"></i> --}}
+                                                        {{ $angajat->nume }}
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     {{-- Conturilor pentru care se afiseaza codurile de acces --}}
@@ -88,11 +94,9 @@
                                                     {{ $angajat->ore_angajare }}
                                                 </td>
                                                 {{-- <td>
-                                                    @if ($angajat->activ === 1)
-                                                        <small class="text-success">Deschis</small>
-                                                    @else
-                                                        <small class="text-danger">Închis</small>
-                                                    @endif
+                                                    <a class="btn btn-primary border border-dark rounded-3" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
+                                                        <i class="fas fa-edit text-white"></i>
+                                                    </a>
                                                 </td> --}}
                                             </tr>
                                         @endforeach
