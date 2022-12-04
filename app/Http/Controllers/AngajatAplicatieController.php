@@ -712,4 +712,18 @@ class AngajatAplicatieController extends Controller
 
         return back();
     }
+
+    public function produse(Request $request)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+
+        $angajat = $request->session()->get('angajat');
+
+        $produse = Produs::select('nume', 'activ')
+            ->orderBy('activ', 'desc')->latest()->simplePaginate(25);
+
+        return view('aplicatie_angajati/produse/index', compact('angajat', 'produse'));
+    }
 }

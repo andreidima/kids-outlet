@@ -167,6 +167,13 @@
 
                 @endif --}}
 
+                {{-- Conturile ce pot vedea toate produsele, si le si pot modifica cantitatea sau statusul „activ” --}}
+                @if (
+                        ($angajat->id === 4) // Mocanu Geanina
+                    )
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">PRODUSE</a>
+                @endif
+
 
             </div>
         </div>

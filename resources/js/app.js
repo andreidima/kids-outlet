@@ -49,33 +49,84 @@ if (document.querySelector('#produs')) {
         el: '#produs',
         data: {
             nrOperatii: ((typeof nrOperatii !== 'undefined') ? nrOperatii : ''),
-            operatii: ((typeof operatii !== 'undefined') ? operatii : ''),
+            // operatii: ((typeof operatii !== 'undefined') ? operatii : ''),
+            // operatii: ((typeof operatii !== 'undefined') ? operatii : ''),
+            operatii: [],
             xls: ((typeof xls !== 'undefined') ? xls : ''),
             xls_array: [],
 
+            timp_total: 0,
         },
         // created: function () {
         //     this.formatCells()
         // },
         watch: {
+            operatii: {
+                deep: true,
+                handler: function () {
+                    this.operatii.forEach(element => {
+                        // this.timp_total += element[2];
+                        console.log(element);
+                    });
+                    console.log('hi');
+                }
+            },
             xls: function () {
-                this.xls = this.xls.replace(/\n+$/, "");
-                // this.xls_array = this.xls.split(/\r|\n)/gm);
-                this.xls_array = this.xls.split(/\n|\t/gi);
-                // this.xls_array = this.xls_array.split(/\t/gi);
-                console.log(arrGroup.length);
+                console.log('xls')
             }
         },
 
-        // methods: {
-        //     formatCells(group){
+        methods: {
+            formatCells() {
+                this.xls = this.xls.replace(/\n+$/, "");
+                // this.xls_array = this.xls.split(/\n|\t/gi);
+                // Se imparte pe randuri
+                this.xls_array = this.xls.split(/\n/g);
 
-        //         this.xls_array = this.xls.split(/\t/gi);
-        //         console.log(arrGroup.length);
-        //         // for(var i = 0; i<arrGroup.length; i++){
-        //         //     document.forms[0].elements[group + "_" + i].value = arrGroup[i];
-        //         // }
-        //     }
-        // }
+                this.nrOperatii = this.xls_array.length;
+
+                this.xls_array.forEach((rand, rand_index) => {
+                    let rand_array = [];
+                    // console.log(rand);
+                    rand_array = (rand.split(/\t/gi)); // Se sparge randul in celule
+                    this.operatii[rand_index] = [];
+                    rand_array.forEach((celula, celula_index) =>{
+                        if (celula_index >= 2){
+                            celula = celula.replace(",", ".");
+                        }
+                        this.operatii[rand_index][celula_index] = celula;
+                    })
+                    // this.xls_array.forEach((element, index) => {
+                    //     var nr_operatie = Math.floor(this.xls_array.length / 10);
+                    //     if ((index % 10) === 0) {
+                    //         var operatie = [];
+                    //         operatie[index % 10] = element;
+                    //         this.operatii.push(operatie);
+                            // console.log(Math.floor(this.xls_array.length / 10));
+                            // console.log(rand_array);
+                        // }
+                    // });
+                    // var favMovies = ['Begin Again', 'Soul', ['Matrix', 'Matix Reloaded', 'Matrix Revolutions'], ['Frozen', 'Frozen 2', ['Tangled', 'Alladin']]]
+                    // favMovies[2][2] = 'Andrei';
+                    // console.log(favMovies[2][2]);
+                    // favMovies[2][3] = 'Andrei2';
+                    // console.log(favMovies[2][3]);
+                });
+                // console.log(this.operatii.length);
+                // console.log(this.operatii[0][0]);
+            },
+            updateTotaluri() {
+                this.timp_total = 0;
+                this.operatii.forEach(element => {
+
+                    this.timp_total += Number(element[2]);
+                    console.log(this.timp_total, ' --- ', Number(element[2]));
+                });
+
+                this.timp_total = Math.round(this.timp_total * 10000000) / 10000000
+                // console.log(timp_total);
+                console.log(this.timp_total);
+            }
+        }
     });
 }
