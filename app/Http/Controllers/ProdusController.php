@@ -121,6 +121,14 @@ class ProdusController extends Controller
             'nr_operatii' => '',
             'operatii' => '',
             'operatii.*.0' => 'required|integer|min:0|max:300',
+            'operatii.*.1' => 'required|max:100',
+            'operatii.*.2' => 'required|max:100',
+            'operatii.*.3' => 'required|max:100',
+            'operatii.*.4' => 'required|max:100',
+            'operatii.*.5' => 'required|max:100',
+            'operatii.*.6' => 'required|max:100',
+            'operatii.*.7' => 'required|max:100',
+            'operatii.*.8' => 'required|max:100',
         ]);
     }
 
