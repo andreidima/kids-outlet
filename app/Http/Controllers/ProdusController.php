@@ -118,6 +118,9 @@ class ProdusController extends Controller
             // 'cost_produs' => 'nullable|numeric|between:0.00,99999.99',
             // 'cantitate' => 'nullable|numeric|between:0,99999',
             // 'observatii' => 'nullable|max:1000',
+            'nr_operatii' => '',
+            'operatii' => '',
+            'operatii.*.0' => 'required|integer|min:0|max:300',
         ]);
     }
 
