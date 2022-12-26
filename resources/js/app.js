@@ -48,7 +48,7 @@ if (document.querySelector('#produs')) {
     const app = new Vue({
         el: '#produs',
         data: {
-            nrOperatii: ((typeof nrOperatii !== 'undefined') ? nrOperatii : ''),
+            // nrOperatii: ((typeof nrOperatii !== 'undefined') ? nrOperatii : ''),
             // operatii: ((typeof operatii !== 'undefined') ? operatii : ''),
             // operatii: ((typeof operatii !== 'undefined') ? operatii : ''),
             operatii: [],

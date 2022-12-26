@@ -54,9 +54,9 @@
                 operatii={!! json_encode(old('operatii', $produs->produse_operatii->pluck('id')->toArray() ?? [] )) !!}
                 // operatiiNumereDeFazaVechi={!! json_encode(\Illuminate\Support\Arr::flatten(old('operatii.numereDeFaza', ($produs->produse_operatii['numereDeFaza'] ?? [])))) !!}
                 // operatiiNumeVechi={!! json_encode(\Illuminate\Support\Arr::flatten(old('operatii.nume', ($produs->produse_operatii['nume'] ?? [])))) !!}
-                nrOperatii = 5;
+                // nrOperatii = 5;
             </script>
-            <div class="col-lg-12 mb-4">
+            {{-- <div class="col-lg-12 mb-4">
                 <label for="nrOperatii" class="mb-0 ps-3">Nr. operații:</label>
                 <input
                     type="text"
@@ -65,7 +65,7 @@
                     placeholder=""
                     v-model="nrOperatii"
                     required>
-            </div>
+            </div> --}}
             <div class="col-lg-12">
                 <label for="nrOperatii" class="mb-0 ps-3">
                     Excel (copiati din excel si dupa inseratati aici doar fazele, fara cap de tabel sau totaluri):
@@ -100,16 +100,16 @@
                         {{-- <tr v-for="(operatie, index) in nrOperatii"> --}}
                         <tr v-for="(index) in operatii.length">
                             {{-- <td v-for="i in 10"> --}}
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][0]'" v-model="operatii[index-1][0]" style="width: 100%;"></td>
-                            <td><input type="text" class="text-start" :name="'operatii[' + (index-1) + '][1]'" v-model="operatii[index-1][1]" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][2]'" v-model="operatii[index-1][2]" @keyup="updateTotaluri()" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][3]'" v-model="operatii[index-1][3]" @keyup="updateTotaluri()" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][4]'" v-model="operatii[index-1][4]" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][5]'" v-model="operatii[index-1][5]" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][6]'" v-model="operatii[index-1][6]" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][7]'" v-model="operatii[index-1][7]" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][8]'" v-model="operatii[index-1][8]" style="width: 100%"></td>
-                            <td><input type="text" class="text-end" :name="'operatii[' + (index-1) + '][9]'" v-model="operatii[index-1][9]" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][1]'" v-model="operatii[index-1][0]" style="width: 100%;"></td>
+                            <td><input type="text" class="text-start" :name="'operatii[' + index + '][2]'" v-model="operatii[index-1][1]" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][3]'" v-model="operatii[index-1][2]" @keyup="updateTotaluri()" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][4]'" v-model="operatii[index-1][3]" @keyup="updateTotaluri()" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][5]'" v-model="operatii[index-1][4]" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][6]'" v-model="operatii[index-1][5]" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][7]'" v-model="operatii[index-1][6]" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][8]'" v-model="operatii[index-1][7]" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][9]'" v-model="operatii[index-1][8]" style="width: 100%"></td>
+                            <td><input type="text" class="text-end" :name="'operatii[' + index + '][10]'" v-model="operatii[index-1][9]" style="width: 100%"></td>
                         </tr>
                         <tr>
                             <td></td>
