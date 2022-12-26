@@ -47,7 +47,9 @@
             </div>
         </div>
 
-
+@php
+    dd($operatii, $produs->produse_operatii->pluck('id')->toArray());
+@endphp
         {{-- Gestionarea operatiilor produsului --}}
         <div class="row" id="produs">
             <script type="application/javascript">

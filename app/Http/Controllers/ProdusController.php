@@ -85,7 +85,9 @@ class ProdusController extends Controller
      */
     public function edit(Produs $produs)
     {
-        return view('produse.edit', compact('produs'));
+        $operatii = $produs->produse_operatii;
+
+        return view('produse.edit', compact('produs', 'operatii'));
     }
 
     /**
