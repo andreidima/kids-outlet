@@ -48,7 +48,7 @@ if (document.querySelector('#produs')) {
     const app = new Vue({
         el: '#produs',
         data: {
-            nrOperatii: ((typeof nrOperatii !== 'undefined') ? nrOperatii : ''),
+            // nrOperatii: ((typeof nrOperatii !== 'undefined') ? nrOperatii : ''),
             // operatii: ((typeof operatii !== 'undefined') ? operatii : ''),
             // operatii: ((typeof operatii !== 'undefined') ? operatii : ''),
             operatii: [],
@@ -56,38 +56,26 @@ if (document.querySelector('#produs')) {
             xls_array: [],
 
             timp_total: 0,
+            pret_total: 0,
         },
         // created: function () {
         //     this.formatCells()
         // },
-        watch: {
-            operatii: {
-                deep: true,
-                handler: function () {
-                    this.operatii.forEach(element => {
-                        // this.timp_total += element[2];
-                        console.log(element);
-                    });
-                    console.log('hi');
-                }
-            },
-            xls: function () {
-                console.log('xls')
-            }
-        },
 
         methods: {
             formatCells() {
+                this.operatii = [];
+
                 this.xls = this.xls.replace(/\n+$/, "");
                 // this.xls_array = this.xls.split(/\n|\t/gi);
-                // Se imparte pe randuri
-                this.xls_array = this.xls.split(/\n/g);
+
+                this.xls_array = this.xls.split(/\n/g); // Se imparte pe randuri
 
                 this.nrOperatii = this.xls_array.length;
 
                 this.xls_array.forEach((rand, rand_index) => {
                     let rand_array = [];
-                    // console.log(rand);
+
                     rand_array = (rand.split(/\t/gi)); // Se sparge randul in celule
                     this.operatii[rand_index] = [];
                     rand_array.forEach((celula, celula_index) =>{
@@ -96,36 +84,18 @@ if (document.querySelector('#produs')) {
                         }
                         this.operatii[rand_index][celula_index] = celula;
                     })
-                    // this.xls_array.forEach((element, index) => {
-                    //     var nr_operatie = Math.floor(this.xls_array.length / 10);
-                    //     if ((index % 10) === 0) {
-                    //         var operatie = [];
-                    //         operatie[index % 10] = element;
-                    //         this.operatii.push(operatie);
-                            // console.log(Math.floor(this.xls_array.length / 10));
-                            // console.log(rand_array);
-                        // }
-                    // });
-                    // var favMovies = ['Begin Again', 'Soul', ['Matrix', 'Matix Reloaded', 'Matrix Revolutions'], ['Frozen', 'Frozen 2', ['Tangled', 'Alladin']]]
-                    // favMovies[2][2] = 'Andrei';
-                    // console.log(favMovies[2][2]);
-                    // favMovies[2][3] = 'Andrei2';
-                    // console.log(favMovies[2][3]);
                 });
-                // console.log(this.operatii.length);
-                // console.log(this.operatii[0][0]);
+            this.updateTotaluri();
             },
             updateTotaluri() {
                 this.timp_total = 0;
+                this.pret_total = 0;
                 this.operatii.forEach(element => {
-
                     this.timp_total += Number(element[2]);
-                    console.log(this.timp_total, ' --- ', Number(element[2]));
+                    this.pret_total += Number(element[3]);
                 });
-
                 this.timp_total = Math.round(this.timp_total * 10000000) / 10000000
-                // console.log(timp_total);
-                console.log(this.timp_total);
+                this.pret_total = Math.round(this.pret_total * 10000000) / 10000000
             }
         }
     });
