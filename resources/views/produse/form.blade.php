@@ -48,7 +48,11 @@
         </div>
 
 @php
-    dd($operatii, $produs->produse_operatii->pluck('id')->toArray());
+    // dd($produs->produse_operatii->pluck('id')->toArray());
+    foreach (old('operatii') as $operatie){
+        echo $operatie[1] . '. ' . $operatie[2] . '<br>';
+    }
+    // dd(old('operatii'));
 @endphp
         {{-- Gestionarea operatiilor produsului --}}
         <div class="row" id="produs">
