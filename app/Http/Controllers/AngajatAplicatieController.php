@@ -625,6 +625,26 @@ class AngajatAplicatieController extends Controller
                     }
                 }
                 break;
+            case 'concediu_odihna_da':
+                foreach ($angajati as $angajat){
+                    $pontaj = Pontaj::firstOrNew([
+                        'angajat_id' => $angajat->id,
+                        'data' => $data_pontaj
+                    ]);
+                    $pontaj->concediu = 2; // medical
+                    $pontaj->save();
+                }
+                break;
+            case 'concediu_odihna_nu':
+                foreach ($angajati as $angajat){
+                    $pontaj = Pontaj::firstOrNew([
+                        'angajat_id' => $angajat->id,
+                        'data' => $data_pontaj
+                    ]);
+                    $pontaj->concediu = 0; // medical
+                    $pontaj->save();
+                }
+                break;
         }
 
         return redirect('/aplicatie-angajati/pontaj');
