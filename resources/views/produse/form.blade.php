@@ -56,6 +56,12 @@
     @endif
 @php
     // dd($produs->produse_operatii->pluck('id')->toArray());
+<<<<<<< HEAD
+=======
+    // foreach (old('operatii') as $operatie){
+    //     echo $operatie[1] . '. ' . $operatie[2] . '<br>';
+    // }
+>>>>>>> 5cd6d84e497850978e19f781d4f0a4240ec62e87
     // dd(old('operatii'));
 @endphp
         {{-- Gestionarea operatiilor produsului --}}
