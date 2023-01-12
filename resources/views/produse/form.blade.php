@@ -47,11 +47,15 @@
             </div>
         </div>
 
+
+    @if (old('operatii'))
+        @forelse (old('operatii') as $operatie)
+            {{ $operatie[1] }} . {{ $operatie[2] }} <br>
+        @empty
+        @endforelse
+    @endif
 @php
     // dd($produs->produse_operatii->pluck('id')->toArray());
-    foreach (old('operatii') as $operatie){
-        echo $operatie[1] . '. ' . $operatie[2] . '<br>';
-    }
     // dd(old('operatii'));
 @endphp
         {{-- Gestionarea operatiilor produsului --}}
