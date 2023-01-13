@@ -724,26 +724,52 @@ class AngajatAplicatieController extends Controller
         return view('aplicatie_angajati/vezi_norme', compact('angajat', 'norme_lucrate', 'return_url'));
     }
 
-    public function blocheazaDeblocheazaIntroducereComenzi()
-    {
-        $acces_introducere_comenzi = \App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->first();
-        ($acces_introducere_comenzi->valoare === 'da') ? ($acces_introducere_comenzi->valoare = 'nu') : ($acces_introducere_comenzi->valoare = 'da');
-        $acces_introducere_comenzi->save();
+    // public function blocheazaDeblocheazaIntroducereComenzi()
+    // {
+    //     $acces_introducere_comenzi = \App\Models\Variabila::where('variabila', 'acces_introducere_comenzi')->first();
+    //     ($acces_introducere_comenzi->valoare === 'da') ? ($acces_introducere_comenzi->valoare = 'nu') : ($acces_introducere_comenzi->valoare = 'da');
+    //     $acces_introducere_comenzi->save();
 
-        return back();
-    }
+    //     return back();
+    // }
 
-    public function produse(Request $request)
+    // public function produse(Request $request)
+    // {
+    //     $angajat = $request->session()->get('angajat');
+    //     if(($angajat->id ?? '') !== 4){ // Conturile ce pot muta lucrul pe luna trecuta, Mocanu Geanina id=4
+    //         return redirect('/aplicatie-angajati');
+    //     }
+
+    //     $produse = Produs::select('nume', 'activ')
+    //         ->orderBy('activ', 'desc')->latest()->simplePaginate(25);
+
+    //     return view('aplicatie_angajati/produse/index', compact('angajat', 'produse'));
+    // }
+
+    public function mutaLucrulPeLunaAnterioara(Request $request)
     {
-        if(empty($request->session()->get('angajat'))){
+        $angajat = $request->session()->get('angajat');
+        if(($angajat->id ?? '') !== 4){ // Conturile ce pot muta lucrul pe luna trecuta, Mocanu Geanina id=4
             return redirect('/aplicatie-angajati');
         }
 
-        $angajat = $request->session()->get('angajat');
+        $norme_lucrate = NormaLucrata::select('id', 'data')
+            ->where('data', '>=', Carbon::today()->startOfMonth())
+            ->where('data', '<=', Carbon::today()->startOfMonth()->addDays(14))
+            ->get();
 
-        $produse = Produs::select('nume', 'activ')
-            ->orderBy('activ', 'desc')->latest()->simplePaginate(25);
+        // Daca a fost apasat butonul de mutare al lucrului, acesta va fi mutat
+        if ($request->action === 'mutaLucrul'){
+            if ($norme_lucrate->count() === 0){
+                return redirect('/aplicatie-angajati/muta-lucrul-pe-luna-anterioara')->with('warning', 'Nu exista „norme lucrate” de mutat!');
+            }
+            NormaLucrata::select('id', 'data')
+                ->where('data', '>=', Carbon::today()->startOfMonth())
+                ->where('data', '<=', Carbon::today()->startOfMonth()->addDays(14))
+                ->update(['data' => Carbon::today()->subMonthNoOverflow()->endOfMonth()]);
+            return redirect('/aplicatie-angajati/muta-lucrul-pe-luna-anterioara')->with('status', 'Au fost mutate cu succes un număr de ' . $norme_lucrate->count() . ' ”norme lucrate”!');
+        }
 
-        return view('aplicatie_angajati/produse/index', compact('angajat', 'produse'));
+        return view('aplicatie_angajati/mutaLucrulPeLunaAnterioara', compact('angajat', 'norme_lucrate'));
     }
 }

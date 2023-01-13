@@ -267,7 +267,7 @@
                                 <td class="text-center bg-warning py-5">
                                     <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/pontaj/concediu_odihna_da/ponteaza-toti" autocomplete="off">
                                         @csrf
-                                        <button class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #fd0000; border:2px solid white;"
+                                        <button class="px-0 mb-0 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;"
                                             type="submit" role="button">
                                             DA
                                         </button>

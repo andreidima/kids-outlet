@@ -543,4 +543,33 @@ class NormaLucrataController extends Controller
                 break;
         }
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\NormaLucrata  $norma_lucrata
+     * @return \Illuminate\Http\Response
+     */
+    public function mutaLucrulPeLunaAnterioara(Request $request)
+    {
+        $norme_lucrate = NormaLucrata::select('id', 'data')
+            ->where('data', '>=', Carbon::today()->startOfMonth())
+            ->where('data', '<=', Carbon::today()->startOfMonth()->addDays(14))
+            ->get();
+
+        // Daca a fost apasat butonul de mutare al lucrului, acesta va fi mutat
+        if ($request->action === 'mutaLucrul'){
+            if ($norme_lucrate->count() === 0){
+                return redirect('/norme-lucrate/muta-lucrul-pe-luna-anterioara')->with('warning', 'Nu exista „norme lucrate” de mutat!');
+            }
+            NormaLucrata::select('id', 'data')
+                ->where('data', '>=', Carbon::today()->startOfMonth())
+                ->where('data', '<=', Carbon::today()->startOfMonth()->addDays(14))
+                ->update(['data' => Carbon::today()->subMonthNoOverflow()->endOfMonth()]);
+            return redirect('/norme-lucrate/muta-lucrul-pe-luna-anterioara')->with('status', 'Au fost mutate cu succes un număr de ' . $norme_lucrate->count() . ' ”norme lucrate”!');
+        }
+
+        return view('norme_lucrate/diverse/mutaLucrulPeLunaAnterioara', compact('norme_lucrate'));
+    }
 }
