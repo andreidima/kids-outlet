@@ -13,8 +13,18 @@ class AngajatAplicatieAngajatController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        // $angajat = $request->session()->get('angajat');
+        // if( // Conturile ce pot vedea angajatii
+        //     (($angajat->id ?? '') !== 4) || // Mocanu Geanina id = 4
+        //     (($angajat->id ?? '') !== 12) || // Duna Luminita
+        //     (($angajat->id ?? '') !== 91) // Borchina Liliana
+        //     )
+        //     { // Conturile ce pot vedea angajatii, Mocanu Geanina id = 4
+        //     return redirect('/aplicatie-angajati');
+        // }
+
         $angajati = Angajat::where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
             ->orderBy('nume')->get();
 
