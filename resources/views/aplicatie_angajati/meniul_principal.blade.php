@@ -174,6 +174,13 @@
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">PRODUSE</a>
                 @endif
 
+                {{-- Conturile ce pot muta lucrul pe luna trecuta --}}
+                @if (
+                        ($angajat->id === 4) // Mocanu Geanina
+                    )
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/muta-lucrul-pe-luna-anterioara" role="button" style="background-color: #FC4A1A; border:2px solid white;">MUTĂ LUCRUL PE LUNA ANTERIOARĂ</a>
+                @endif
+
 
             </div>
         </div>

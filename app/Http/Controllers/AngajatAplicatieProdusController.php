@@ -15,7 +15,8 @@ class AngajatAplicatieProdusController extends Controller
      */
     public function index(Request $request)
     {
-        if(empty($request->session()->get('angajat'))){
+        $angajat = $request->session()->get('angajat');
+        if(($angajat->id ?? '') !== 4){ // Conturile ce pot cedea produsele, Mocanu Geanina id=4
             return redirect('/aplicatie-angajati');
         }
 
@@ -65,8 +66,12 @@ class AngajatAplicatieProdusController extends Controller
      * @param  \App\Models\Produs  $produs
      * @return \Illuminate\Http\Response
      */
-    public function edit(Produs $produs)
+    public function edit(Request $request, Produs $produs)
     {
+        $angajat = $request->session()->get('angajat');
+        if(($angajat->id ?? '') !== 4){ // Conturile ce pot cedea produsele, Mocanu Geanina id=4
+            return redirect('/aplicatie-angajati');
+        }
 
         return view('aplicatie_angajati.produse.edit', compact('produs'));
     }
@@ -80,6 +85,11 @@ class AngajatAplicatieProdusController extends Controller
      */
     public function update(Request $request, Produs $produs)
     {
+        $angajat = $request->session()->get('angajat');
+        if(($angajat->id ?? '') !== 4){ // Conturile ce pot cedea produsele, Mocanu Geanina id=4
+            return redirect('/aplicatie-angajati');
+        }
+
         echo $request->cantitate . '<br><br>';
         foreach($produs->produse_operatii as $operatie){
             if ($request->cantitate < $operatie->norma_totala_efectuata){

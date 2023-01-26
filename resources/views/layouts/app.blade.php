@@ -64,6 +64,8 @@
                                     <li><a class="dropdown-item" href="{{ route('norme-lucrate.afisare_lunar') }}">Vizualizare tabelară</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ route('norme-lucrate.index') }}">Administrare</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/norme-lucrate/muta-lucrul-pe-luna-anterioara">Mută lucrul pe luna anterioară</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item me-3">
@@ -95,6 +97,8 @@
                                     <li><a class="dropdown-item" href="{{ route('norme-lucrate.afisare_lunar') }}">Vizualizare tabelară</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ route('norme-lucrate.index') }}">Administrare</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/norme-lucrate/muta-lucrul-pe-luna-anterioara">Mută lucrul pe luna anterioară</a></li>
                                 </ul>
                             </li>
                             {{-- <li class="nav-item me-3">

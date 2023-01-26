@@ -68,9 +68,11 @@ Route::get('/aplicatie-angajati/vezi-norme/{produs_operatie}', [AngajatAplicatie
 
 Route::resource('/aplicatie-angajati/angajati', AngajatAplicatieAngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
 
-Route::get('/aplicatie-angajati/blocheaza-deblocheaza-introducere-comenzi', [AngajatAplicatieController::class, 'blocheazaDeblocheazaIntroducereComenzi']);
+// Route::get('/aplicatie-angajati/blocheaza-deblocheaza-introducere-comenzi', [AngajatAplicatieController::class, 'blocheazaDeblocheazaIntroducereComenzi']);
 
 Route::resource('/aplicatie-angajati/produse', AngajatAplicatieProdusController::class, ['parameters' => ['produse' => 'produs']]);
+
+Route::any('/aplicatie-angajati/muta-lucrul-pe-luna-anterioara', [AngajatAplicatieController::class, 'mutaLucrulPeLunaAnterioara']);
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -92,6 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
     Route::get('norme-lucrate/per-angajat-per-data/{angajat}/{data}', [NormaLucrataController::class, 'index']);
     Route::get('norme-lucrate/adauga/per-angajat-per-data/{angajat?}/{data?}', [NormaLucrataController::class, 'create']);
+    Route::any('/norme-lucrate/muta-lucrul-pe-luna-anterioara', [NormaLucrataController::class, 'mutaLucrulPeLunaAnterioara']);
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 
     Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
