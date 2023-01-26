@@ -143,7 +143,9 @@
                                         @foreach ($angajati_per_activ->sortBy('nume') as $angajat)
                                             <tr>
                                                 <td>
-                                                    {{ $angajat->nume }}
+                                                    <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
+                                                        {{ $angajat->nume }}
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     {{-- Conturilor pentru care se afiseaza codurile de acces --}}
