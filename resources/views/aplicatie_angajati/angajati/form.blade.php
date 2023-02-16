@@ -36,7 +36,7 @@
             <div class="col-lg-3 mb-4">
                 <label for="sectia" class="mb-0 ps-3">Secția:</label>
                 <select name="sectia" class="form-select rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
-                    <option selected>Selectează</option>
+                    <option value="" selected>Selectează</option>
                     <option value="Moda" {{ old('sectia', $angajat->sectia) === "Moda" ? 'selected' : '' }}>Moda</option>
                     <option value="Sectie" {{ old('sectia', $angajat->sectia) === "Sectie" ? 'selected' : '' }}>Sectie</option>
                     <option value="Mostre" {{ old('sectia', $angajat->sectia) === "Mostre" ? 'selected' : '' }}>Mostre</option>
@@ -45,7 +45,7 @@
             <div class="col-lg-3 mb-4">
                 <label for="firma" class="mb-0 ps-3">Firma:</label>
                 <select name="firma" class="form-select rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
-                    <option selected>Selectează</option>
+                    <option value="" selected>Selectează</option>
                     <option value="Darimode Style S.R.L." {{ old('firma', $angajat->firma) === "Darimode Style S.R.L." ? 'selected' : '' }}>Darimode Style S.R.L.</option>
                     <option value="Petit Atelier S.R.L." {{ old('firma', $angajat->firma) === "Petit Atelier S.R.L." ? 'selected' : '' }}>Petit Atelier S.R.L.</option>
                     <option value="Mate Andy Style" {{ old('firma', $angajat->firma) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
@@ -84,7 +84,7 @@
             <div class="col-lg-3 mb-4">
                 <label for="foaie_pontaj" class="mb-0 ps-3">Foaie pontaj:</label>
                 <select name="foaie_pontaj" class="form-select rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
-                    <option selected>Selectează</option>
+                    <option value="" selected>Selectează</option>
                     <option value="Darimode Style S.R.L." {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Darimode Style S.R.L." ? 'selected' : '' }}>Darimode Style S.R.L.</option>
                     <option value="Petit Atelier S.R.L." {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Petit Atelier S.R.L." ? 'selected' : '' }}>Petit Atelier S.R.L.</option>
                     <option value="Darimode Magazin Depozit - DO" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Darimode Magazin Depozit - DO" ? 'selected' : '' }}>Darimode Magazin Depozit - DO</option>
@@ -94,15 +94,14 @@
                     <option value="Mate Andy Style" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
                 </select>
             </div>
-            {{-- <div class="col-lg-3 mb-4">
+            <div class="col-lg-3 mb-4">
                 <label for="limba_aplicatie" class="mb-0 ps-3">Limba:</label>
                 <select name="limba_aplicatie" class="form-select rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
                     <option value ="" selected>Selectează</option>
                     <option value="1" {{ old('limba_aplicatie', $angajat->limba_aplicatie) == "1" ? 'selected' : '' }}>Română</option>
                     <option value="2" {{ old('limba_aplicatie', $angajat->limba_aplicatie) == "2" ? 'selected' : '' }}>Singaleză</option>
-                    {{ old('limba_aplicatie') }}
                 </select>
-            </div> --}}
+            </div>
             <div class="col-lg-3 mb-4 d-flex align-items-center justify-content-center">
                 <div class="">
                     <div class="form-check">

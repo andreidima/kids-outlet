@@ -120,7 +120,8 @@ class AngajatAplicatieAngajatController extends Controller
             'nume' => 'nullable|max:100',
             'telefon' => 'nullable|max:50',
             'cod_de_acces' => [
-                'nullable',
+                'required',
+                'min:8',
                 'max:50',
                 Rule::unique('App\Models\Angajat')->ignore($angajat),
             ],
@@ -129,6 +130,7 @@ class AngajatAplicatieAngajatController extends Controller
             'prod' => 'nullable|max:200',
             'ore_angajare' => 'required|numeric|between:1,12',
             'foaie_pontaj' => 'nullable|max:200',
+            'limba_aplicatie' => 'required',
             'activ' => 'nullable|integer|between:0,1'
         ]);
     }
