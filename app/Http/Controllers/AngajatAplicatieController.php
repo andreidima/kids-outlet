@@ -122,6 +122,8 @@ class AngajatAplicatieController extends Controller
             $produse = Produs::where('activ', 1)->where('sectia', 'Sectie')->latest()->get();
         } elseif ($angajat->sectia === "Mostre"){
             $produse = Produs::where('activ', 1)->latest()->get(); // se afiseaza toate
+        } else {
+            $produse = '';
         }
 
         // dd($produse->toArray());
