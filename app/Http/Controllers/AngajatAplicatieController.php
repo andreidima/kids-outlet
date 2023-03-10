@@ -123,7 +123,7 @@ class AngajatAplicatieController extends Controller
         } elseif ($angajat->sectia === "Mostre"){
             $produse = Produs::where('activ', 1)->latest()->get(); // se afiseaza toate
         } else {
-            $produse = '';
+            $produse = Produs::where('id', 0); // se afiseaza colectia goala
         }
 
         // dd($produse->toArray());
