@@ -75,6 +75,10 @@ Route::resource('/aplicatie-angajati/produse', AngajatAplicatieProdusController:
 Route::any('/aplicatie-angajati/muta-lucrul-pe-luna-anterioara', [AngajatAplicatieController::class, 'mutaLucrulPeLunaAnterioara']);
 
 
+// Seful de sectie poate sterge, pana in data de 15, si norme de pe una anterioara
+Route::get('/aplicatie-angajati/cont-sef-sectie/norma-lucrata/{norma_lucrata}/sterge', [AngajatAplicatieController::class, 'stergeNormaLucrataDinContSefSectie']);
+
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/acasa', function () {
         return view('acasa');

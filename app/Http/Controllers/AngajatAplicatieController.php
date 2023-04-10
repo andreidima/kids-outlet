@@ -712,6 +712,31 @@ class AngajatAplicatieController extends Controller
         return view('aplicatie_angajati/vezi_faze_produse', compact('angajat', 'produse', 'produse_operatii'));
     }
 
+    public function stergeNormaLucrataDinContSefSectie(Request $request, NormaLucrata $norma_lucrata)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+        $angajat = $request->session()->get('angajat');
+
+        if (\Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
+            ||
+            (
+                \Carbon\Carbon::parse($norma_lucrata->data)->isLastMonth()
+                &&
+                \Carbon\Carbon::now()->day <= 14
+            )
+        ){
+            $norma_lucrata->produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
+            $norma_lucrata->produs_operatie->save();
+            $norma_lucrata->delete();
+
+            return back()->with('success', 'Comanda a fost ștearsă cu succes!');
+        } else {
+            return back()->with('error', 'Această comandă nu poate fi ștearsă!');
+        }
+    }
+
     public function veziNormeProdusOperatie(Request $request, ProdusOperatie $produs_operatie = null)
     {
         if(empty($request->session()->get('angajat'))){
