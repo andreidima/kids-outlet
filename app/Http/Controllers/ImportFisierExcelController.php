@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProdusOperatie;
+use App\Models\ProdusOperatieUpdateDinExcel;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -57,5 +58,24 @@ class ImportFisierExcelController extends Controller
         }
 
         echo 'Tuturor operatiilor, ' . $produse_operatii->count() . ', le-a fost setata norma de 992!';
+    }
+
+    public function getUpdateFazeProduse($update = null)
+    {
+        $produseOperatiiDeUpdatat = ProdusOperatieUpdateDinExcel::get();
+
+        foreach ($produseOperatiiDeUpdatat as $operatie){
+            $operatie->pret = str_replace(",", ".", $operatie->pret);
+        }
+
+        if ($update === 'update'){
+            foreach ($produseOperatiiDeUpdatat as $operatie){
+                $operatie->produsOperatie->pret = $operatie->pret;
+                $operatie->produsOperatie->save();
+                // echo $operatie->produsOperatie->pret . ' = ' . $operatie->pret . '<br>';
+            }
+        }
+
+        return view('import/produseOperatiiUpdateDinExcel', compact('produseOperatiiDeUpdatat'));
     }
 }

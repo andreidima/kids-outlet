@@ -101,7 +101,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::any('/norme-lucrate/muta-lucrul-pe-luna-anterioara', [NormaLucrataController::class, 'mutaLucrulPeLunaAnterioara']);
     Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 
-    Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
+    // Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
     // Route::get('/import/import-produse-operatii/setare-norme', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNorme']);
 
     // Route::get('inserare-angajati', [InserareAngajatiController::class, 'inserareAngajati']);
@@ -109,4 +109,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Route::get('/inserare-pontaje-de-test', [InserareDateDeTestController::class, 'inserarePontaje']);
     // Route::get('/inserare-comenzi-de-test', [InserareDateDeTestController::class, 'inserareComenzi']);
+
+    // Update faze produse. Se face update din tabelul sheet1, ce contine toate fazele iar in ultima coloana contine id-ul produsului
+    Route::any('/import/update-faze-produse/{update?}', [ImportFisierExcelController::class, 'getUpdateFazeProduse']);
+
 });

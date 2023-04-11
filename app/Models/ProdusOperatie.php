@@ -34,4 +34,9 @@ class ProdusOperatie extends Model
     {
         return $this->hasMany(NormaLucrata::class, 'produs_operatie_id');
     }
+
+    public function istoricuri()
+    {
+        return $this->hasMany(ProdusOperatieIstoric::class, 'id');
+    }
 }
