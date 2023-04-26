@@ -123,7 +123,7 @@ class AngajatAplicatieProdusController extends Controller
     {
         return request()->validate([
             'nume' => 'required|max:100',
-            'cantitate' => 'required|integer|min:0|max:9999',
+            'cantitate' => 'required|integer|min:0|max:99999',
             'activ' => 'nullable|integer|between:0,1'
         ]);
     }
