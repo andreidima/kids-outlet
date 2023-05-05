@@ -33,6 +33,7 @@
                         || ($angajat->id === 4) // Mocanu Geanina
                         || ($angajat->id === 12) // Duna Luminita
                         || ($angajat->id === 91) // Borchina Liliana
+                        || ($angajat->id === 165) // Maria Toader
                         )
                     @else
                         <br>

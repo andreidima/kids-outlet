@@ -776,7 +776,10 @@ class AngajatAplicatieController extends Controller
     public function mutaLucrulPeLunaAnterioara(Request $request)
     {
         $angajat = $request->session()->get('angajat');
-        if(($angajat->id ?? '') !== 4){ // Conturile ce pot muta lucrul pe luna trecuta, Mocanu Geanina id=4
+        if( // Conturile ce pot muta lucrul pe luna trecuta
+            (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
+            || (($angajat->id ?? '') !== 165) // Maria Toader id=165
+        ){
             return redirect('/aplicatie-angajati');
         }
 

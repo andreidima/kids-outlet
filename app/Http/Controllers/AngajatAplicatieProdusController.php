@@ -16,7 +16,10 @@ class AngajatAplicatieProdusController extends Controller
     public function index(Request $request)
     {
         $angajat = $request->session()->get('angajat');
-        if(($angajat->id ?? '') !== 4){ // Conturile ce pot cedea produsele, Mocanu Geanina id=4
+        if( // Conturile ce pot vedea produsele
+            (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
+            || (($angajat->id ?? '') !== 165) // Maria Toader id=165
+        ){
             return redirect('/aplicatie-angajati');
         }
 
@@ -69,7 +72,10 @@ class AngajatAplicatieProdusController extends Controller
     public function edit(Request $request, Produs $produs)
     {
         $angajat = $request->session()->get('angajat');
-        if(($angajat->id ?? '') !== 4){ // Conturile ce pot cedea produsele, Mocanu Geanina id=4
+        if( // Conturile ce pot vedea produsele
+            (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
+            || (($angajat->id ?? '') !== 165) // Maria Toader id=165
+        ){
             return redirect('/aplicatie-angajati');
         }
 
@@ -86,7 +92,10 @@ class AngajatAplicatieProdusController extends Controller
     public function update(Request $request, Produs $produs)
     {
         $angajat = $request->session()->get('angajat');
-        if(($angajat->id ?? '') !== 4){ // Conturile ce pot cedea produsele, Mocanu Geanina id=4
+        if( // Conturile ce pot vedea produsele
+            (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
+            || (($angajat->id ?? '') !== 165) // Maria Toader id=165
+        ){
             return redirect('/aplicatie-angajati');
         }
 

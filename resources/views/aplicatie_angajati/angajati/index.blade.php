@@ -76,6 +76,7 @@
                                                             || ($angajat->id === 4) // Mocanu Geanina
                                                             || ($angajat->id === 12) // Duna Luminita
                                                             || ($angajat->id === 91) // Porchina Luminita
+                                                            || ($angajat->id === 165) // Maria Toader
                                                         )
                                                     @else
                                                         {{ $angajat->cod_de_acces }}
@@ -155,6 +156,7 @@
                                                             || ($angajat->id === 4) // Mocanu Geanina
                                                             || ($angajat->id === 12) // Duna Luminita
                                                             || ($angajat->id === 91) // Porchina Luminita
+                                                            || ($angajat->id === 165) // Maria Toader
                                                         )
                                                     @else
                                                         {{ $angajat->cod_de_acces }}
