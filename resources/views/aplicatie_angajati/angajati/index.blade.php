@@ -60,13 +60,30 @@
                                         @foreach ($angajati_per_prod->sortBy('nume') as $angajat)
                                             <tr>
                                                 <td>
-                                                    {{-- <a class="btn btn-primary border border-dark rounded-3" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
-                                                        <i class="fas fa-edit text-white"></i>
-                                                    </a> --}}
-                                                    <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
-                                                        {{-- <i class="fas fa-edit text-white"></i> --}}
-                                                        {{ $angajat->nume }}
-                                                    </a>
+                                                    {{-- Conturilor care nu se pot edita decat de ei insusi, sunt conturi de admin --}}
+                                                    @php
+                                                        $angajat_sesiune = Session::get('angajat');
+                                                    @endphp
+                                                    @if (
+                                                            (
+                                                                ($angajat->id === 1) // Andrei Dima Administrator 1
+                                                                || ($angajat->id === 3) // Andrei Dima Administrator 3
+                                                                || ($angajat->id === 4) // Mocanu Geanina
+                                                                || ($angajat->id === 12) // Duna Luminita
+                                                                || ($angajat->id === 91) // Porchina Luminita
+                                                                || ($angajat->id === 162) // Toader Maria
+                                                            )
+                                                            &&
+                                                            (
+                                                                $angajat->id !== $angajat_sesiune->id
+                                                            )
+                                                        )
+                                                            {{ $angajat->nume }}
+                                                    @else
+                                                        <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
+                                                            {{ $angajat->nume }}
+                                                        </a>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{-- Conturilor pentru care se afiseaza codurile de acces --}}
@@ -144,28 +161,9 @@
                                         @foreach ($angajati_per_activ->sortBy('nume') as $angajat)
                                             <tr>
                                                 <td>
-                                                    {{-- Conturilor care nu se pot edita decat de ei insusi, sunt conturi de admin --}}
-                                                    @php
-                                                        $angajat_sesiune = $request->session()->get('angajat');
-                                                    @endphp
-                                                    @if (
-                                                            (
-                                                                ($angajat->id === 1) // Andrei Dima Administrator 1
-                                                                || ($angajat->id === 3) // Andrei Dima Administrator 3
-                                                                || ($angajat->id === 4) // Mocanu Geanina
-                                                                || ($angajat->id === 12) // Duna Luminita
-                                                                || ($angajat->id === 91) // Porchina Luminita
-                                                                || ($angajat->id === 162) // Toader Maria
-                                                            )
-                                                            &&
-                                                            (
-                                                                $angajat->id !== $angajat_sesiune->id
-                                                            )
-                                                        )
-                                                            <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
-                                                                {{ $angajat->nume }}
-                                                            </a>
-                                                    @endif
+                                                    <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
+                                                        {{ $angajat->nume }}
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     {{-- Conturilor pentru care se afiseaza codurile de acces --}}
