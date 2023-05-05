@@ -144,9 +144,28 @@
                                         @foreach ($angajati_per_activ->sortBy('nume') as $angajat)
                                             <tr>
                                                 <td>
-                                                    <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
-                                                        {{ $angajat->nume }}
-                                                    </a>
+                                                    {{-- Conturilor care nu se pot edita decat de ei insusi, sunt conturi de admin --}}
+                                                    @php
+                                                        $angajat_sesiune = $request->session()->get('angajat');
+                                                    @endphp
+                                                    @if (
+                                                            (
+                                                                ($angajat->id === 1) // Andrei Dima Administrator 1
+                                                                || ($angajat->id === 3) // Andrei Dima Administrator 3
+                                                                || ($angajat->id === 4) // Mocanu Geanina
+                                                                || ($angajat->id === 12) // Duna Luminita
+                                                                || ($angajat->id === 91) // Porchina Luminita
+                                                                || ($angajat->id === 162) // Toader Maria
+                                                            )
+                                                            &&
+                                                            (
+                                                                $angajat->id !== $angajat_sesiune->id
+                                                            )
+                                                        )
+                                                            <a class="" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
+                                                                {{ $angajat->nume }}
+                                                            </a>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{-- Conturilor pentru care se afiseaza codurile de acces --}}
