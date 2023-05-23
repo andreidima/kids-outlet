@@ -74,7 +74,9 @@ class AngajatAplicatieAngajatController extends Controller
     public function edit(Angajat $angajat)
     {
         $angajati = Angajat::select('id', 'nume')
-            ->where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
+            // ->where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
+            ->whereIn('id', [4,73])
+            ->where('id', '>', '3')
             ->where('activ', 1)
             ->orderBy('nume', 'asc')
             ->get();
