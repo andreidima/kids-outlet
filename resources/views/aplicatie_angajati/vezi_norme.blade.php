@@ -68,13 +68,17 @@
                                         </td>
                                         <td class="text-end">
                                             @if (
-                                                    \Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
-                                                    ||
                                                     (
-                                                        \Carbon\Carbon::parse($norma_lucrata->data)->isLastMonth()
-                                                        &&
-                                                        \Carbon\Carbon::now()->day <= 14
+                                                        \Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
+                                                        ||
+                                                        (
+                                                            \Carbon\Carbon::parse($norma_lucrata->data)->isLastMonth()
+                                                            &&
+                                                            \Carbon\Carbon::now()->day <= 14
+                                                        )
                                                     )
+                                                    &&
+                                                    ($angajat->id !== 12) // Duna Luminita
                                                 )
                                                 <a
                                                     href="#"
@@ -105,13 +109,17 @@
     {{-- Modalele pentru stergere --}}
     @foreach ($norme_lucrate as $norma_lucrata)
         @if (
-                \Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
-                ||
                 (
-                    \Carbon\Carbon::parse($norma_lucrata->data)->isLastMonth()
-                    &&
-                    \Carbon\Carbon::now()->day <= 14
+                    \Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth()
+                    ||
+                    (
+                        \Carbon\Carbon::parse($norma_lucrata->data)->isLastMonth()
+                        &&
+                        \Carbon\Carbon::now()->day <= 14
+                    )
                 )
+                &&
+                (!$angajat->id !== 12) // Duna Luminita
             )
                 <div class="modal fade text-dark" id="stergeComanda{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
