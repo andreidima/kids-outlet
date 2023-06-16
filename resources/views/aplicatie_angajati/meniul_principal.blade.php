@@ -92,7 +92,7 @@
                         ($angajat->id === 1) // Andrei Dima Administrator 1
                         || ($angajat->id === 3) // Andrei Dima Administrator 3
                         || ($angajat->id === 4) // Mocanu Geanina
-                        || ($angajat->id === 12) // Duna Luminita
+                        // || ($angajat->id === 12) // Duna Luminita
                         || ($angajat->id === 16) // Fodoroiu Geta
                         || ($angajat->id === 91) // Borchina Liliana
                         || ($angajat->id === 156) // Craciun Gabriel
@@ -104,7 +104,7 @@
                 {{-- Conturile ce poate vedea angajatii --}}
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
-                        || ($angajat->id === 12) // Duna Luminita
+                        // || ($angajat->id === 12) // Duna Luminita
                         || ($angajat->id === 91) // Borchina Liliana
                         || ($angajat->id === 162) // Toader Maria
                     )
