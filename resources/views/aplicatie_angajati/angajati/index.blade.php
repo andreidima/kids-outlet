@@ -12,11 +12,16 @@
                     <div class="mb-3" style="background-color: #000000; height:5px;"></div>
 
                     <div>
-                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a>
+                        {{-- <a class="btn btn-sm text-white" href="/aplicatie-angajati/deconectare" role="button" style="background-color: #FC4A1A; border:1px solid white;">DECONECTARE</a> --}}
+                        <a class="btn btn-sm text-white" href="/aplicatie-angajati/angajati/adauga" role="button" style="background-color: #008f0c; border:1px solid white;">ADAUGĂ UN ANGAJAT NOU</a>
                     </div>
                 </div>
 
                 <div class="mb-2" style="background-color: #000000; height:5px;"></div>
+
+                {{-- <div>
+                    <a class="btn text-white" href="/aplicatie-angajati/angajati/adauga" role="button" style="background-color: #008f0c; border:1px solid white;">ADAUGĂ UN ANGAJAT NOU</a>
+                </div> --}}
 
                 @include('errors')
 

@@ -38,7 +38,15 @@ class AngajatAplicatieAngajatController extends Controller
      */
     public function create()
     {
-        return view('aplicatie_angajati.angajati.create');
+        $angajati = Angajat::select('id', 'nume')
+            // ->where('id', '>', '3') // Se sare peste conturile de test Andrei Dima
+            ->whereIn('id', [4,73])
+            ->where('id', '>', '3')
+            ->where('activ', 1)
+            ->orderBy('nume', 'asc')
+            ->get();
+
+        return view('aplicatie_angajati.angajati.create', compact('angajati'));
     }
 
     /**
@@ -50,6 +58,10 @@ class AngajatAplicatieAngajatController extends Controller
     public function store(Request $request)
     {
         $angajat = Angajat::create($this->validateRequest($request));
+        $angajat->angajati_pontatori()->sync($request->angajat_pontatori);
+
+        $angajat->avans = intval(\App\Models\Variabila::where('variabila', 'avans_la_salariu')->value('valoare'));
+        $angajat->save();
 
         return redirect('/aplicatie-angajati/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost adăugat cu succes!');
     }
