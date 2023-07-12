@@ -135,12 +135,14 @@ class ProdusController extends Controller
      */
     public function destroy(Produs $produs)
     {
-        if (!count($produs->produse_operatii)) {
-            $produs->delete();
-            return redirect('/produse')->with('status', 'Produsul "' . $produs->nume . '" a fost șters cu succes!');
-        } else {
-            return back()->with('error', 'Produsul "' . $produs->nume . '" nu poate fi șters pentru că are adăugate operații. Ștergeti mai întâi operațiile adăugate acestuia!');
+        if (count($produs->normeLucrate)) {
+            return back()->with('error', 'Produsul "' . $produs->nume . '" nu poate fi șters pentru că are adăugate norme lucrate. Ștergeti mai întâi normele lucrate adăugate acestuia!');
         }
+
+        $produs->produse_operatii()->delete();
+        $produs->delete();
+
+        return redirect('/produse')->with('status', 'Produsul "' . $produs->nume . '" a fost șters cu succes!');
     }
 
     /**

@@ -26,4 +26,24 @@ class Produs extends Model
     {
         return $this->hasMany(ProdusOperatie::class, 'produs_id', 'id');
     }
+
+    /**
+     * Get all of the normeLucrate for the Produs
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function normeLucrate()
+    {
+        return $this->hasManyThrough(NormaLucrata::class, ProdusOperatie::class, 'produs_id', 'produs_operatie_id');
+    }
+
+    /**
+     * Get all of the comments for the Produs
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function comments(): HasManyThrough
+    {
+        return $this->hasManyThrough(Comment::class, Post::class);
+    }
 }
