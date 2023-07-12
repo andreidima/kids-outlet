@@ -81,6 +81,9 @@ if (document.querySelector('#produs')) {
                     rand_array.forEach((celula, celula_index) =>{
                         if (celula_index >= 2){
                             celula = celula.replace(",", ".");
+                            if (!celula || isNaN(celula)){
+                                celula = 0;
+                            }
                         }
                         this.operatii[rand_index][celula_index] = celula;
                     })

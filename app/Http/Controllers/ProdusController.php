@@ -46,21 +46,24 @@ class ProdusController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->operatii);
         $this->validateRequest($request);
         $produs = Produs::create($request->only('nume', 'cantitate', 'sectia', 'activ'));
-        foreach ($request->operatii as $operatie_formular) {
-            $operatie_produs = new ProdusOperatie;
-            $operatie_produs->numar_de_faza = $operatie_formular[1];
-            $operatie_produs->nume = $operatie_formular[2];
-            $operatie_produs->timp = $operatie_formular[3];
-            $operatie_produs->pret = $operatie_formular[4];
-            $operatie_produs->pret_pe_minut = $operatie_formular[5];
-            $operatie_produs->timp_total = $operatie_formular[6];
-            $operatie_produs->norma = $operatie_formular[7];
-            $operatie_produs->pret_100_pe_minut = $operatie_formular[8];
-            $operatie_produs->pret_100_pe_faze = $operatie_formular[9];
-            $operatie_produs->J = $operatie_formular[10];
-            $produs->produse_operatii()->save($operatie_produs);
+        if ($request->operatii){
+            foreach ($request->operatii as $operatie_formular) {
+                $operatie_produs = new ProdusOperatie;
+                $operatie_produs->numar_de_faza = $operatie_formular[1];
+                $operatie_produs->nume = $operatie_formular[2];
+                $operatie_produs->timp = $operatie_formular[3];
+                $operatie_produs->pret = $operatie_formular[4];
+                $operatie_produs->pret_pe_minut = $operatie_formular[5];
+                $operatie_produs->timp_total = $operatie_formular[6];
+                $operatie_produs->norma = $operatie_formular[7];
+                $operatie_produs->pret_100_pe_minut = $operatie_formular[8];
+                $operatie_produs->pret_100_pe_faze = $operatie_formular[9];
+                $operatie_produs->J = $operatie_formular[10];
+                $produs->produse_operatii()->save($operatie_produs);
+            }
         }
 
         return redirect('/produse')->with('status', 'Produsul "' . $produs->nume . '" a fost adăugat cu succes!');
@@ -99,7 +102,30 @@ class ProdusController extends Controller
      */
     public function update(Request $request, Produs $produs)
     {
-        $produs->update($this->validateRequest($request));
+        // $produs->update($this->validateRequest($request));
+        $this->validateRequest($request);
+        $produs->update($request->only('nume', 'cantitate', 'sectia', 'activ'));
+        if ($request->operatii){
+            foreach ($request->operatii as $operatie_formular) {
+                echo $operatie_formular[1] . '<br>';
+                $produs_operatie = $produs->produse_operatii()->where('numar_de_faza', $operatie_formular[1])->first();
+                // dd($produs_operatie);
+                if ($produs_operatie) {
+                    $produs_operatie->nume = $operatie_formular[2];
+                    $produs_operatie->timp = $operatie_formular[3];
+                    $produs_operatie->pret = $operatie_formular[4];
+                    $produs_operatie->pret_pe_minut = $operatie_formular[5];
+                    $produs_operatie->timp_total = $operatie_formular[6];
+                    $produs_operatie->norma = $operatie_formular[7];
+                    $produs_operatie->pret_100_pe_minut = $operatie_formular[8];
+                    $produs_operatie->pret_100_pe_faze = $operatie_formular[9];
+                    $produs_operatie->J = $operatie_formular[10];
+                    $produs_operatie->save();
+                }
+            }
+        }
+
+        // dd('stop');
 
         return redirect('/produse')->with('status', 'Produsul "' . $produs->nume . '" a fost modificat cu succes!');
     }
@@ -137,7 +163,8 @@ class ProdusController extends Controller
             // 'cantitate' => 'nullable|numeric|between:0,99999',
             // 'observatii' => 'nullable|max:1000',
             'nr_operatii' => '',
-            'operatii' => '',
+            'xls' => '',
+            'operatii' => 'required_with:xls',
             'operatii.*.1' => 'required|integer|between:0,300',
             'operatii.*.2' => 'required|max:300',
             'operatii.*.3' => 'required|numeric',
@@ -148,7 +175,11 @@ class ProdusController extends Controller
             'operatii.*.8' => 'required|numeric',
             'operatii.*.9' => 'required|numeric',
             'operatii.*.10' => 'required|numeric',
-        ]);
+        ],
+        [
+            'operatii.required_with' => 'Generați mai întâi operațiile'
+        ]
+        );
     }
 
     public function duplica(Produs $produs)

@@ -92,6 +92,7 @@
                     <option value="Kids Outlet Depozit Petit" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Kids Outlet Depozit Petit" ? 'selected' : '' }}>Kids Outlet Depozit Petit</option>
                     <option value="Petit Magazin depozit - DO" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Petit Magazin depozit - DO" ? 'selected' : '' }}>Petit Magazin depozit - DO</option>
                     <option value="Mate Andy Style" {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
+                    <option value="Bensar S.R.L." {{ old('foaie_pontaj', $angajat->foaie_pontaj) === "Bensar S.R.L." ? 'selected' : '' }}>Bensar S.R.L.</option>
                 </select>
             </div>
             <div class="col-lg-3 mb-4">

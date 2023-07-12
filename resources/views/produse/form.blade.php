@@ -1,5 +1,9 @@
 @csrf
 
+<script type="application/javascript">
+    xls =  {!! json_encode(old('xls') ?? '') !!}
+</script>
+
 <div class="row mb-0 d-flex border-radius: 0px 0px 40px 40px">
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
@@ -48,53 +52,33 @@
         </div>
 
 
-    @if (old('operatii'))
+    {{-- @if (str_contains(url()->current(), '/adauga')) --}}
+    {{-- @if (old('operatii'))
         @forelse (old('operatii') as $operatie)
             {{ $operatie[1] }} . {{ $operatie[2] }} <br>
         @empty
         @endforelse
-    @endif
-@php
-    // dd($produs->produse_operatii->pluck('id')->toArray());
-    // foreach (old('operatii') as $operatie){
-    //     echo $operatie[1] . '. ' . $operatie[2] . '<br>';
-    // }
-    // dd(old('operatii'));
-@endphp
+    @endif --}}
         {{-- Gestionarea operatiilor produsului --}}
         <div class="row" id="produs">
             <script type="application/javascript">
                 operatii={!! json_encode(old('operatii', $produs->produse_operatii->pluck('id')->toArray() ?? [] )) !!}
-                // operatiiNumereDeFazaVechi={!! json_encode(\Illuminate\Support\Arr::flatten(old('operatii.numereDeFaza', ($produs->produse_operatii['numereDeFaza'] ?? [])))) !!}
-                // operatiiNumeVechi={!! json_encode(\Illuminate\Support\Arr::flatten(old('operatii.nume', ($produs->produse_operatii['nume'] ?? [])))) !!}
-                // nrOperatii = 5;
             </script>
-            {{-- <div class="col-lg-12 mb-4">
-                <label for="nrOperatii" class="mb-0 ps-3">Nr. operații:</label>
-                <input
-                    type="text"
-                    class="form-control form-control-sm rounded-pill {{ $errors->has('nrOperatii') ? 'is-invalid' : '' }}"
-                    name="nrOperatii"
-                    placeholder=""
-                    v-model="nrOperatii"
-                    required>
-            </div> --}}
-            <div class="col-lg-12">
+            <div class="col-lg-12 my-2 mb-5">
                 <label for="nrOperatii" class="mb-0 ps-3">
-                    Excel (copiati din excel si dupa inseratati aici doar fazele, fara cap de tabel sau totaluri):
+                    @if (str_contains(url()->current(), '/modifica'))
+                        Dacă doriți să faceți modificări și la faze, adaugați aici fazele.
+                        <br>
+                    @endif
+                    Excel (copiați din excel și după inserați aici doar fazele, fără cap de tabel sau totaluri):
                 </label>
                 <textarea class="form-control {{ $errors->has('xls') ? 'is-invalid' : '' }}"
                     name="xls" v-model="xls" rows="4"></textarea>
-                <button type="button" v-on:click="formatCells">
-                    Genereaza
-                </button>
-                {{-- <textarea
-                    type="text"
-                    class="form-control form-control-sm rounded-pill {{ $errors->has('xls') ? 'is-invalid' : '' }}"
-                    name="xls"
-                    placeholder=""
-                    v-model="xls"
-                    required> --}}
+                <div class="my-2 text-center">
+                    <button type="button" v-on:click="formatCells" class="btn btn-success text-white me-2 rounded-pill">
+                        Generează Operații
+                    </button>
+                </div>
 
                 <div v-if="operatii.length" class="table-responsive rounded">
                     <table class="table table-info table-sm table-borderless rounded-3" width="1270">
@@ -138,34 +122,9 @@
                         </tr>
                     </table>
                 </div>
-            {{-- <div v-for="(pontator, index) in angajat_pontatori.length" class="col-lg-6">
-                <div class="row rounded-3 p-2">
-                    <div class="col-lg-6" style="background-color: darkcyan">
-                        <label :for="'angajat_pontatori[' + index + ']'" class="mb-0 ps-3 text-white">Pontator @{{ index+1 }}:</label>
-                        <select class="form-select rounded-pill mb-2 {{ $errors->has('angajat_pontatori') ? 'is-invalid' : '' }}"
-                            :name="'angajat_pontatori[' + index + ']'"
-                            v-model="angajat_pontatori[index]"
-                            >
-                            <option
-                                v-for='angajat in angajati'
-                                :value='angajat.id'
-                                >
-                                    @{{angajat.nume}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-lg-6 d-flex align-items-end" style="background-color: darkcyan">
-                        <button  type="button" class="btn m-0 p-0 mb-1" @click="angajat_pontatori.splice(index, 1)">
-                            <span class="px-1" style="background-color:red; color:white; border-radius:20px">
-                                Șterge pontatorul
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div> --}}
             </div>
         </div>
-
+    {{-- @endif --}}
 
         <div class="row py-2 justify-content-center">
             <div class="col-lg-12 d-flex justify-content-center">
