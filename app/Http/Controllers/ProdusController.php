@@ -109,7 +109,6 @@ class ProdusController extends Controller
             foreach ($request->operatii as $operatie_formular) {
                 echo $operatie_formular[1] . '<br>';
                 $produs_operatie = $produs->produse_operatii()->where('numar_de_faza', $operatie_formular[1])->first();
-                // dd($produs_operatie);
                 if ($produs_operatie) {
                     $produs_operatie->nume = $operatie_formular[2];
                     $produs_operatie->timp = $operatie_formular[3];
@@ -124,8 +123,6 @@ class ProdusController extends Controller
                 }
             }
         }
-
-        // dd('stop');
 
         return redirect('/produse')->with('status', 'Produsul "' . $produs->nume . '" a fost modificat cu succes!');
     }
