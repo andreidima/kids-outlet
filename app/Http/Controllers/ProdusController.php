@@ -184,7 +184,8 @@ class ProdusController extends Controller
     public function duplica(Produs $produs)
     {
         $clone_produs = $produs->replicate();
-        $clone_produs->activ = 0;
+        $clone_produs->cantitate = 0;
+        $clone_produs->activ = 1;
         $clone_produs->save();
 
         foreach ($produs->produse_operatii as $produs_operatie) {
