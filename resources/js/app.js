@@ -71,7 +71,7 @@ if (document.querySelector('#produs')) {
 
                 this.xls_array = this.xls.split(/\n/g); // Se imparte pe randuri
 
-                this.nrOperatii = this.xls_array.length;
+                // this.nrOperatii = this.xls_array.length;
 
                 this.xls_array.forEach((rand, rand_index) => {
                     let rand_array = [];
@@ -88,7 +88,15 @@ if (document.querySelector('#produs')) {
                         this.operatii[rand_index][celula_index] = celula;
                     })
                 });
-            this.updateTotaluri();
+
+                // Se sterg fazele goale, ce nu au nimic la denumire
+                this.operatii.forEach((rand, index) => {
+                    if (rand[1] === ""){
+                        this.operatii.splice(index, 1);
+                    }
+                });
+
+                this.updateTotaluri();
             },
             updateTotaluri() {
                 this.timp_total = 0;
