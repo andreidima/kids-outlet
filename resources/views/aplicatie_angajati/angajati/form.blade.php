@@ -116,7 +116,7 @@
                     </div>
                     <div style="line-height: 100%">
                         <small>
-                            * Această bifă nu are efect asupra pontajului sau a normelor lucrate, ci doar stabilește dacă angajatul se poate conecta in aplicație!
+                            * Se stabilește dacă angajatul se poate conecta in aplicație și va apărea în raportul pentru salarii!
                         </small>
                     </div>
                 </div>

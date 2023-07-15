@@ -266,51 +266,34 @@ class NormaLucrataController extends Controller
             ->when($search_nume, function ($query, $search_nume) {
                 $cuvinte_in_nume = explode(' ', $search_nume);
                 foreach($cuvinte_in_nume as $cuvant){
-                    // echo($cuvant);
                     $query->where('nume', 'like', '%' . $cuvant . '%');
                 }
                 return $query;
-// dd($cuvinte_in_nume, 'stop');
                 })
             ->where('activ', 1) // Contul este activ
             ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
             ->orderBy('prod')
             ->orderBy('nume')
-            // ->take(2)
-            // ->paginate(10);
-            ->get();
-// $cuvinte_in_nume = explode(' ', $search_nume);
-// dd($cuvinte_in_nume, 'stop');
-// exit();
-
-// foreach ($angajati as $angajat){
-//     echo $angajat->prod . ' ' . $angajat->nume . ' <br>';
-// }
-// dd('stop');
-        // foreach ($angajati as $angajat){
-        //     echo $angajat->nume . '<br>';
-        //     foreach ($angajat->norme_lucrate as $norma_lucrata){
-        //         echo $norma_lucrata->produs_operatie->produs->nume . ' --- ' . $norma_lucrata->produs_operatie->nume . ' --- ' . $norma_lucrata->cantitate;
-        //         echo '<br>';
-        //     }
-        //         echo '<br>';
-        // }
-        // dD($angajati->groupby('norme_lucrate'));
-        // foreach ($angajati->groupby('norme_lucrate.produs_operatie.produs') as $angajat){
-        //     echo $angajat->first()->norme_lucrate->first() . '<br>';
-        // }
-
-        $produse = Produs::whereHas('produse_operatii', function ($query) use ($search_data_inceput, $search_data_sfarsit){
-                return $query->whereHas('norme_lucrate', function ($query) use ($search_data_inceput, $search_data_sfarsit){
-                    return $query->whereDate('data', '>=', $search_data_inceput)
-                        ->whereDate('data', '<=', $search_data_sfarsit);
-                });
-            })
             ->get();
 
-        // foreach ($produse as $produs){
-        //     echo $produs->nume . '<br>';
-        // }
+
+        // Comentat si schimbat la 15.07.2023, pentru ca dura foarte mult, erau multe operatiuni asupra bazei de date
+        // $produse = Produs::whereHas('produse_operatii', function ($query) use ($search_data_inceput, $search_data_sfarsit){
+        //         return $query->whereHas('norme_lucrate', function ($query) use ($search_data_inceput, $search_data_sfarsit){
+        //             return $query->whereDate('data', '>=', $search_data_inceput)
+        //                 ->whereDate('data', '<=', $search_data_sfarsit);
+        //         });
+        //     })
+        //     ->get();
+        $produseIds = [];
+        foreach ($angajati as $angajat){
+            foreach ($angajat->norme_lucrate as $norma_lucrata) {
+                if (!in_array( $norma_lucrata->produs_operatie->produs->id, $produseIds,)){
+                    array_push($produseIds, $norma_lucrata->produs_operatie->produs->id);
+                }
+            }
+        }
+        $produse = Produs::whereIn('id', $produseIds)->get();
 
 
         switch ($request->input('action')) {
