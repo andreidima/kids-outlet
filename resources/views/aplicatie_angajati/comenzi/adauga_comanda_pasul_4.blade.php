@@ -82,6 +82,36 @@
                             Operation:
                         @endif
                     </small> {{ $angajat->operatie_nume }}
+                    <br>
+                    <small>
+                        @if ($angajat->limba_aplicatie === 1)
+                            Cantitate:
+                        @elseif ($angajat->limba_aplicatie === 2)
+                            {{-- මෙහෙයුම්:
+                            / --}}
+                            Amount:
+                        @endif
+                    </small> {{ $angajat->cantitate }}
+                    <br>
+                    <small>
+                        @if ($angajat->limba_aplicatie === 1)
+                            Preț pe bucată:
+                        @elseif ($angajat->limba_aplicatie === 2)
+                            {{-- මෙහෙයුම්:
+                            / --}}
+                            Price per piece:
+                        @endif
+                    </small> {{ $angajat->pret_pe_bucata }}
+                    <br>
+                    <small>
+                        @if ($angajat->limba_aplicatie === 1)
+                            Suma totală:
+                        @elseif ($angajat->limba_aplicatie === 2)
+                            {{-- මෙහෙයුම්:
+                            / --}}
+                            Total amount:
+                        @endif
+                    </small> {{ $angajat->cantitate * $angajat->pret_pe_bucata }}
                     {{-- <br>
                     <br>
                     <small>Preț pe bucată:</small> {{ $angajat->pret_pe_bucata }} lei --}}

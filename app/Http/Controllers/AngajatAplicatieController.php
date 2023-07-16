@@ -11,6 +11,7 @@ use App\Models\ProdusOperatie;
 use App\Models\NormaLucrata;
 use App\Models\LogareAplicatieAngajat;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 use Carbon\Carbon;
 
@@ -118,12 +119,19 @@ class AngajatAplicatieController extends Controller
 
         $angajat = $request->session()->get('angajat');
 
+        $query = Produs::whereHas('produse_operatii', function (Builder $query) use ($angajat) {
+                return $query->whereHas('angajati', function (Builder $query) use ($angajat) {
+                    return $query->where('angajat_id', $angajat->id);
+                });
+            })
+            ->where('activ', 1);
+
         if (($angajat->sectia === "Moda") || ($angajat->sectia === "Sectie") ){
-            $produse = Produs::where('activ', 1)->where('sectia', 'Sectie')->latest()->get();
+            $produse = $query->where('sectia', 'Sectie')->latest()->get();
         } elseif ($angajat->sectia === "Mostre"){
-            $produse = Produs::where('activ', 1)->latest()->get(); // se afiseaza toate
+            $produse = $query->latest()->get(); // se afiseaza toate
         } else {
-            $produse = Produs::where('activ', 1)->latest()->get(); // se afiseaza toate
+            $produse = $query->latest()->get(); // se afiseaza toate
         }
 
         // dd($produse->toArray());
@@ -166,7 +174,13 @@ class AngajatAplicatieController extends Controller
         }
 
         $angajat = $request->session()->get('angajat');
-        return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_2', compact('angajat'));
+
+        $produseOperatii = ProdusOperatie::where('produs_id', $angajat->produs_id)
+                ->whereHas('angajati', function (Builder $query) use ($angajat) {
+                    return $query->where('angajat_id', $angajat->id);
+                })->get();
+
+        return view('aplicatie_angajati/comenzi/adauga_comanda_pasul_2', compact('angajat', 'produseOperatii'));
     }
 
     /**
@@ -176,32 +190,34 @@ class AngajatAplicatieController extends Controller
     {
         $angajat = $request->session()->get('angajat');
 
-        $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $request->numar_de_faza)->first();
+        // $produs_operatie = ProdusOperatie::where('produs_id', $angajat->produs_id)->where('numar_de_faza', $request->numar_de_faza)->first();
 
-        $request->validate(
-                [
-                    'numar_de_faza' => ['required',
-                        function ($attribute, $value, $fail) use ($angajat, $produs_operatie) {
-                            if($produs_operatie === null){
-                                $produs = Produs::find($angajat->produs_id);
-                                $fail (
-                                    ($angajat->limba_aplicatie === 1) ?
-                                    ('Produsul ' . $produs->nume . ' nu are faza ' . $value)
-                                    :
-                                    ('Produsul ' . $produs->nume . ' nu are faza ' . $value . '. ' . 'නිපැයුම ' . $produs->nume . ' එයට අදියරක් නොමැත ' . $value . '. ' . 'The product ' . $produs->nume . ' it has no phase ' . $value . '.')
-                                );
-                            }
-                        },
-                    ],
-                ],
-                [
-                    'numar_de_faza.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de faza este obligatoriu.' : 'අදියර අංක ක්ෂේත්රය අනිවාර්ය වේ. <br> The phase number field is mandatory.')
-                ]
-            );
+        // $request->validate(
+        //         [
+        //             'numar_de_faza' => ['required',
+        //                 function ($attribute, $value, $fail) use ($angajat, $produs_operatie) {
+        //                     if($produs_operatie === null){
+        //                         $produs = Produs::find($angajat->produs_id);
+        //                         $fail (
+        //                             ($angajat->limba_aplicatie === 1) ?
+        //                             ('Produsul ' . $produs->nume . ' nu are faza ' . $value)
+        //                             :
+        //                             ('Produsul ' . $produs->nume . ' nu are faza ' . $value . '. ' . 'නිපැයුම ' . $produs->nume . ' එයට අදියරක් නොමැත ' . $value . '. ' . 'The product ' . $produs->nume . ' it has no phase ' . $value . '.')
+        //                         );
+        //                     }
+        //                 },
+        //             ],
+        //         ],
+        //         [
+        //             'numar_de_faza.required' => (($angajat->limba_aplicatie === 1) ? 'Câmpul numar de faza este obligatoriu.' : 'අදියර අංක ක්ෂේත්රය අනිවාර්ය වේ. <br> The phase number field is mandatory.')
+        //         ]
+        //     );
+
+        $produs_operatie = ProdusOperatie::where('id', $request->idOperatie)->first();
 
         $angajat->numar_de_faza = $produs_operatie->numar_de_faza;
         $angajat->operatie_nume = $produs_operatie->nume;
-        // $angajat->pret_pe_bucata = $produs_operatie->pret;
+        $angajat->pret_pe_bucata = $produs_operatie->pret;
 
         $request->session()->put('angajat', $angajat);
 

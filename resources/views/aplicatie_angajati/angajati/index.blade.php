@@ -44,7 +44,7 @@
                                             <th scope="col">
                                                 Cod de acces
                                             </th>
-                                            <th>
+                                            {{-- <th>
                                                 Sectia
                                             </th>
                                             <th>
@@ -55,10 +55,10 @@
                                             </th>
                                             <th>
                                                 Ore angajare
-                                            </th>
-                                            {{-- <th>
-
                                             </th> --}}
+                                            <th>
+                                                Acces faze
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -104,7 +104,7 @@
                                                         {{ $angajat->cod_de_acces }}
                                                     @endif
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     {{ $angajat->sectia }}
                                                 </td>
                                                 <td>
@@ -115,12 +115,17 @@
                                                 </td>
                                                 <td>
                                                     {{ $angajat->ore_angajare }}
-                                                </td>
+                                                </td> --}}
                                                 {{-- <td>
                                                     <a class="btn btn-primary border border-dark rounded-3" href="/aplicatie-angajati/angajati/{{ $angajat->id }}/modifica" role="button">
                                                         <i class="fas fa-edit text-white"></i>
                                                     </a>
                                                 </td> --}}
+                                                <td>
+                                                    <a class="btn btn-primary text-white border border-dark rounded-3" href="/aplicatie-angajati/angajati-acces-faze/{{ $angajat->id }}" role="button">
+                                                        Faze
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

@@ -125,7 +125,7 @@
         </div>
 
         {{-- Gestionarea pontatorilor angajatului --}}
-        <div class="row" id="angajati">
+        <div class="row mb-5" id="angajati">
             <script type="application/javascript">
                 angajati = {!! json_encode($angajati) !!}
                 // angajatPontatori={!! json_encode(\Illuminate\Support\Arr::flatten(old('angajat_pontatori', $angajat->angajati_pontatori->pluck('nume', 'id')->toArray() ?? [] ))) !!}

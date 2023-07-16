@@ -67,6 +67,8 @@ Route::get('/aplicatie-angajati/vezi-faze-produse/{produs?}', [AngajatAplicatieC
 Route::get('/aplicatie-angajati/vezi-norme/{produs_operatie}', [AngajatAplicatieController::class, 'veziNormeProdusOperatie']);
 
 Route::resource('/aplicatie-angajati/angajati', AngajatAplicatieAngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
+Route::get('/aplicatie-angajati/angajati-acces-faze/{angajat}', [AngajatAplicatieAngajatController::class, 'accesFaze']);
+Route::post('/aplicatie-angajati/angajati-acces-faze/{angajat}', [AngajatAplicatieAngajatController::class, 'accesFazePost']);
 
 // Route::get('/aplicatie-angajati/blocheaza-deblocheaza-introducere-comenzi', [AngajatAplicatieController::class, 'blocheazaDeblocheazaIntroducereComenzi']);
 

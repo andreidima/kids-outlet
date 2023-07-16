@@ -60,6 +60,7 @@ class AngajatController extends Controller
     {
         $angajat = Angajat::create($this->validateRequest($request));
         $angajat->angajati_pontatori()->sync($request->angajat_pontatori);
+        $angajat->produseOperatii()->sync($request->angajatProduseOperatii);
 
         return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost adăugat cu succes!');
     }
@@ -116,8 +117,8 @@ class AngajatController extends Controller
      */
     public function destroy(Angajat $angajat)
     {
-        $angajat->delete();
-        return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost șters cu succes!');
+        // $angajat->delete();
+        // return redirect('/angajati')->with('status', 'Angajatul "' . $angajat->nume . '" a fost șters cu succes!');
     }
 
     /**

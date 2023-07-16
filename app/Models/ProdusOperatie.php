@@ -39,4 +39,14 @@ class ProdusOperatie extends Model
     {
         return $this->hasMany(ProdusOperatieIstoric::class, 'id');
     }
+
+    /**
+     * Get the produseOperatii associated with the Angajat
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function angajati()
+    {
+        return $this->belongsToMany(Angajat::class, 'angajati_produse_operatii', 'produs_operatie_id', 'angajat_id', );
+    }
 }

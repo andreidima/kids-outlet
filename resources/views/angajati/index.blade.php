@@ -97,7 +97,7 @@
                                     >
                                         <span class="badge bg-primary">Modifică</span>
                                     </a>
-                                    <div style="flex" class="">
+                                    {{-- <div style="flex" class="">
                                         <a
                                             href="#"
                                             data-bs-toggle="modal"
@@ -106,7 +106,7 @@
                                             >
                                             <span class="badge bg-danger">Șterge</span>
                                         </a>
-                                    </div>
+                                    </div> --}}
                                 </td>
                             </tr>
                         @empty
@@ -126,7 +126,7 @@
     </div>
 
     {{-- Modalele pentru stergere angajat --}}
-    @foreach ($angajati as $angajat)
+    {{-- @foreach ($angajati as $angajat)
         <div class="modal fade text-dark" id="stergeAngajat{{ $angajat->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -155,6 +155,6 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach --}}
 
 @endsection

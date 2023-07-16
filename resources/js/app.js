@@ -44,6 +44,67 @@ if (document.querySelector('#angajati')) {
     });
 }
 
+if (document.querySelector('#gestionareFazeAngajati')) {
+    const app = new Vue({
+        el: '#gestionareFazeAngajati',
+        data: {
+            produse: ((typeof produse !== 'undefined') ? produse : ''),
+            // angajat_pontatori: ((typeof angajatPontatori !== 'undefined') ? angajatPontatori : ''),
+            angajatProduseOperatii: ((typeof angajatProduseOperatii !== 'undefined') ? angajatProduseOperatii : ''),
+
+            produsSelectat: '',
+            operatiiProdusSelectat: [],
+            operatieSelectata: '',
+        },
+        created: function () {
+            // se adauga numele produselor la operatii pentru afisarea in pagina
+            console.log(this.angajatProduseOperatii.length);
+            for (var i = 0; i < this.angajatProduseOperatii.length; i++) {
+                for (var j = 0; j < this.produse.length; j++) {
+                    console.log('a');
+                    if (this.angajatProduseOperatii[i].produs_id == this.produse[j].id) {
+                        this.angajatProduseOperatii[i].produsNume = this.produse[j].nume
+                    }
+                }
+            }
+        },
+        watch: {
+            produsSelectat: function () {
+                this.operatiiProdusSelectat = [];
+
+                for (var i = 0; i < this.produse.length; i++) {
+                    if (this.produse[i].id == this.produsSelectat) {
+                        for (var j = 0; j < this.produse[i].produse_operatii.length; j++) {
+                            this.operatiiProdusSelectat.push(this.produse[i].produse_operatii[j]);
+                        }
+                    }
+                }
+            }
+        },
+        methods: {
+            adaugaOperatieAngajatului() {
+                // Daca operatia este deja adaugata angajatului, se iese din functie
+                for (var i = 0; i < this.angajatProduseOperatii.length; i++) {
+                    if (this.angajatProduseOperatii[i].id == this.operatieSelectata) {
+                        return;
+                    }
+                }
+
+                // Se adauga operatia la angajat
+                for (var i = 0; i < this.produse.length; i++) {
+                    for (var j = 0; j < this.produse[i].produse_operatii.length; j++) {
+                        if (this.produse[i].produse_operatii[j].id == this.operatieSelectata) {
+                            this.angajatProduseOperatii.push(this.produse[i].produse_operatii[j]);
+                            this.angajatProduseOperatii[this.angajatProduseOperatii.length - 1].produsNume = this.produse[i].nume;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
 if (document.querySelector('#produs')) {
     const app = new Vue({
         el: '#produs',

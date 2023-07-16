@@ -69,7 +69,23 @@
                     @endif
                 </h4>
 
-                <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-2"
+                @foreach ($produseOperatii as $produsOperatie)
+                    <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-2"
+                        autocomplete="off"
+                    >
+                            @csrf
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <input class="form-control form-control-lg mb-3" type="hidden" name="idOperatie" value="{{ $produsOperatie->id }}">
+
+                                <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">{{ $produsOperatie->nume }}</button>
+                            </div>
+                        </div>
+                    </form>
+                @endforeach
+
+                {{-- <form class="needs-validation" novalidate method="POST" action="/aplicatie-angajati/adauga-comanda-pasul-2"
                     autocomplete="off"
                 >
                         @csrf
@@ -98,7 +114,16 @@
                             </a>
                         </div>
                     </div>
-                </form>
+                </form> --}}
+                <a class="btn btn-lg btn-secondary w-100" href="/aplicatie-angajati/meniul-principal" style="border:2px solid white;">
+                    @if ($angajat->limba_aplicatie === 1)
+                        RENUNȚĂ
+                    @elseif ($angajat->limba_aplicatie === 2)
+                        අත්හැර දමන්න
+                        <br>
+                        GIVE UP
+                    @endif
+                </a>
             </div>
         </div>
     </div>

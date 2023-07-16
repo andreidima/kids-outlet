@@ -61,4 +61,14 @@ class Angajat extends Model
     {
         return $this->belongsToMany(Angajat::class, 'angajati_pontatori', 'angajat_id', 'pontator_angajat_id');
     }
+
+    /**
+     * Get the produseOperatii associated with the Angajat
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function produseOperatii()
+    {
+        return $this->belongsToMany(ProdusOperatie::class, 'angajati_produse_operatii', 'angajat_id', 'produs_operatie_id');
+    }
 }

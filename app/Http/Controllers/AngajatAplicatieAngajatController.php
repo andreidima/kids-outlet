@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Angajat;
+use App\Models\Produs;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -147,5 +148,32 @@ class AngajatAplicatieAngajatController extends Controller
             'limba_aplicatie' => 'required',
             'activ' => 'nullable|integer|between:0,1'
         ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function accesFaze(Angajat $angajat)
+    {
+        $angajat = Angajat::where('id', $angajat->id)->with('produseOperatii')->first();
+        $produse = Produs::select('id', 'nume')->with('produse_operatii')->where('activ' , 1)->get();
+
+        return view('angajati.diverse.accesFazeForm', compact('angajat', 'produse'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function accesFazePost(Request $request, Angajat $angajat)
+    {
+        // dd($request->angajatProduseOperatii);
+        $angajat->produseOperatii()->sync($request->angajatProduseOperatii);
+
+        return redirect('/aplicatie-angajati/angajati')->with('status', 'Fazele angajatului "' . $angajat->nume . '" au fost modificate cu succes!');
     }
 }

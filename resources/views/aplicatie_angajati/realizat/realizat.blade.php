@@ -151,9 +151,10 @@
                     </b>
                 </h4> --}}
 
-                {{-- @php
-                    $data_stergere_lucru_pana_la = \Carbon\Carbon::parse(\App\Models\Variabila::where('variabila', 'data_stergere_lucru_pana_la')->value('valoare'));
-                @endphp --}}
+
+                @php
+                    $suma_totala = 0;
+                @endphp
                 @forelse ($norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
                     @forelse ($norme_lucrate_per_data as $norma_lucrata)
                         <div class="mb-4 px-1 rounded-3" style="background-color:#007e6b;">
@@ -220,26 +221,35 @@
                             </small>
                             {{ $norma_lucrata->cantitate }}
 
-                            {{-- @if (
-                                    (
-                                        (\Carbon\Carbon::now()->day < 6)
-                                        // (\Carbon\Carbon::parse('2022-06-06')->day < 6)
-                                        &&
-                                        ($norma_lucrata->data >= \Carbon\Carbon::now()->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
-                                        // ($norma_lucrata->data >= \Carbon\Carbon::parse('2022-06-06')->subMonthsNoOverflow(1)->startOfMonth()->toDateString())
-                                    )
-                                    ||
-                                    (
-                                        (\Carbon\Carbon::now()->day >= 6)
-                                        // (\Carbon\Carbon::parse('2022-06-06')->day >= 6)
-                                        &&
-                                        ($norma_lucrata->data >= \Carbon\Carbon::now()->startOfMonth()->toDateString())
-                                        // ($norma_lucrata->data >= \Carbon\Carbon::parse('2022-06-06')->startOfMonth()->toDateString())
-                                    )
-                                ) --}}
-                            {{-- @if ($data_stergere_lucru_pana_la->lessThan(\Carbon\Carbon::parse($norma_lucrata->data))) --}}
+                            <br>
+
+                            <small>
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Preț pe bucată:
+                                @elseif ($angajat->limba_aplicatie === 2)
+                                    {{-- කෑලි ගණන
+                                    / --}}
+                                    Price per piece:
+                                @endif
+                            </small>
+                            {{ $norma_lucrata->produs_operatie->pret }} lei
+
+                            <br>
+
+                            <small>
+                                @if ($angajat->limba_aplicatie === 1)
+                                    Suma totală:
+                                @elseif ($angajat->limba_aplicatie === 2)
+                                    {{-- කෑලි ගණන
+                                    / --}}
+                                    Total amount:
+                                @endif
+                            </small>
+                            {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }} lei
+
+                        <br>
+
                             @if (\Carbon\Carbon::parse($norma_lucrata->data)->isCurrentMonth())
-                                    <br>
                                     <div class="text-start">
                                         <a
                                             href="#"
@@ -262,10 +272,30 @@
                                     </div>
                             @endif
                         </div>
+
+                        @php
+                            $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;
+                        @endphp
                     @empty
                     @endforelse
                 @empty
                 @endforelse
+
+                <div class="mb-4 px-1 rounded-3" style="background-color:#003b33;">
+                    <h4 class="mb-4 text-center">
+                        <b>
+                            @if ($angajat->limba_aplicatie === 1)
+                                REALIZAT TOTAL:
+                            @elseif ($angajat->limba_aplicatie === 2)
+                                {{-- ඇණවුම මකන්න
+                                <br> --}}
+                                ACHIEVED TOTAL AMOUNT
+                            @endif
+                            <br>
+                            {{ $suma_totala }} lei
+                        </b>
+                    </h4>
+                </div>
 
                 <div class="mb-4 px-1 text-dark rounded-3" style="background-color:#d5ff88;">
                     {{-- Dacă ați introdus comenzi greșite, aveți disponibil butonul de ștergere până în ziua de 5 (inclusiv) a lunii următoare. --}}
