@@ -119,12 +119,23 @@ class AngajatAplicatieController extends Controller
 
         $angajat = $request->session()->get('angajat');
 
-        $query = Produs::whereHas('produse_operatii', function (Builder $query) use ($angajat) {
-                return $query->whereHas('angajati', function (Builder $query) use ($angajat) {
-                    return $query->where('angajat_id', $angajat->id);
-                });
-            })
-            ->where('activ', 1);
+        // $query = Produs::whereHas('produse_operatii', function (Builder $query) use ($angajat) {
+        //         return $query->whereHas('angajati', function (Builder $query) use ($angajat) {
+        //             return $query->where('angajat_id', $angajat->id);
+        //         });
+        //     })
+        //     ->where('activ', 1);
+
+        $angajatiOperatiiIds = DB::table('angajati_produse_operatii')->select('produs_operatie_id')->where('angajat_id', $angajat->id)->get();
+        $angajatiOperatiiIds = $angajatiOperatiiIds->pluck('produs_operatie_id')->toArray();
+
+        $produseIds = DB::table('produse_operatii')->select('produs_id')->whereIn('id', $angajatiOperatiiIds)->get();
+        $produseIds = $produseIds->pluck('produs_id')->unique();
+
+        $query = Produs::where('activ', 1)->whereIn('id', $produseIds);
+
+        // $produse = $query->where('sectia', 'Sectie')->latest()->get();
+        // dd($angajatiOperatiiIds, $produseIds, $produse);
 
         if (($angajat->sectia === "Moda") || ($angajat->sectia === "Sectie") ){
             $produse = $query->where('sectia', 'Sectie')->latest()->get();
