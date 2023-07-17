@@ -48,7 +48,6 @@
                 @include('errors')
 
                 <h4 class="mb-4 text-center">
-                    <b>
                         @if ($angajat->limba_aplicatie === 1)
                             REALIZAT
                             <br>
@@ -60,7 +59,6 @@
                             <br>
                             {{ \Carbon\Carbon::parse($searchData)->locale('en_EN')->isoFormat('MMMM YYYY') }}
                         @endif
-                    </b>
                 </h4>
 
                 <div class="row text-center mb-3 mx-0" id="app1">
