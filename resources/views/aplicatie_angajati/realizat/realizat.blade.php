@@ -51,18 +51,22 @@
                     <b>
                         @if ($angajat->limba_aplicatie === 1)
                             REALIZAT
+                            <br>
+                            {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
                         @elseif ($angajat->limba_aplicatie === 2)
                             සාදන ලදී
                             <br>
                             MAKED
+                            <br>
+                            {{ \Carbon\Carbon::parse($searchData)->locale('en_EN')->isoFormat('MMMM YYYY') }}
                         @endif
                     </b>
                 </h4>
 
-                <div class="row text-center mb-4 mx-0" id="app1">
+                <div class="row text-center mb-3 mx-0" id="app1">
                     <form class="needs-validation" novalidate method="GET" action="{{ route('aplicatie_angajati.realizat') }}">
                         @csrf
-                            <div class="col-lg-12 mb-3 d-flex justify-content-between">
+                            {{-- <div class="col-lg-12 mb-3 d-flex justify-content-between">
                                 <label for="search_data_inceput" class="mb-0 align-self-center me-1">
                                     @if ($angajat->limba_aplicatie === 1)
                                         De la:
@@ -100,8 +104,8 @@
                                         format="DD-MM-YYYY"
                                         :latime="{ width: '125px' }"
                                     ></vue2-datepicker>
-                            </div>
-                            <div class="col-lg-12 mb-3 d-flex justify-content-between">
+                            </div> --}}
+                            {{-- <div class="col-lg-12 mb-3 d-flex justify-content-between">
                                 <button class="btn btn-lg w-100 text-white"
                                     type="submit"
                                     style="background-color: #FC4A1A; border:2px solid white;">
@@ -114,12 +118,42 @@
                                             Search
                                         @endif
                                 </button>
-                                {{-- <a class="btn btn-lg w-100 text-white"
-                                    role="button"
-                                    type="submit"
-                                    style="background-color: #FC4A1A; border:2px solid white;">
-                                    <i class="fas fa-search text-white me-1"></i>CAUTĂ
-                                </a> --}}
+                            </div> --}}
+
+                            <input type="hidden" name="searchData" value={{ $searchData }}>
+                            <div class="col-lg-12 mb-2">
+                                <div class="row">
+                                    <div class="col-6 m-0 p-0">
+                                        <button class="btn btn-lg text-white"
+                                            type="submit"
+                                            style="background-color: #FC4A1A; border:2px solid white;"
+                                            name="action" value="lunaAnterioara"
+                                            >
+                                                @if ($angajat->limba_aplicatie === 1)
+                                                    << Luna Anterioară
+                                                @elseif ($angajat->limba_aplicatie === 2)
+                                                    {{-- සොයන්න
+                                                    <br> --}}
+                                                    Previous Month <<
+                                                @endif
+                                        </button>
+                                    </div>
+                                    <div class="col-6 m-0 p-0">
+                                        <button class="btn btn-lg text-white"
+                                            type="submit"
+                                            style="background-color: #FC4A1A; border:2px solid white;"
+                                            name="action" value="lunaUrmatoare"
+                                            >
+                                                @if ($angajat->limba_aplicatie === 1)
+                                                    >> Luna Următoare
+                                                @elseif ($angajat->limba_aplicatie === 2)
+                                                    {{-- සොයන්න
+                                                    <br> --}}
+                                                    Next month >>
+                                                @endif
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                     </form>
                 </div>
@@ -281,11 +315,11 @@
                 @empty
                 @endforelse
 
-                <div class="mb-4 px-1 rounded-3" style="background-color:#003b33;">
-                    <h4 class="mb-4 text-center">
-                        <b>
+                <div class="mb-4 px-1 py-2 rounded-3" style="background-color:#003b33;">
+                    <h1 class="mb-0 text-center" style="">
+                        {{-- <b> --}}
                             @if ($angajat->limba_aplicatie === 1)
-                                REALIZAT TOTAL:
+                                REALIZAT TOTAL
                             @elseif ($angajat->limba_aplicatie === 2)
                                 {{-- ඇණවුම මකන්න
                                 <br> --}}
@@ -293,8 +327,8 @@
                             @endif
                             <br>
                             {{ $suma_totala }} lei
-                        </b>
-                    </h4>
+                        {{-- </b> --}}
+                    </h1>
                 </div>
 
                 <div class="mb-4 px-1 text-dark rounded-3" style="background-color:#d5ff88;">

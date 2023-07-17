@@ -345,42 +345,55 @@ class AngajatAplicatieController extends Controller
 
         $angajat = $request->session()->get('angajat');
 
-        $search_data_inceput = \Request::get('search_data_inceput') ? Carbon::parse(\Request::get('search_data_inceput')) : Carbon::today();
-        $search_data_sfarsit = \Request::get('search_data_sfarsit') ? Carbon::parse(\Request::get('search_data_sfarsit')) : Carbon::today();
-        // $search_data_inceput = \Request::get('search_data_inceput');
-        // $search_data_sfarsit = \Request::get('search_data_sfarsit');
+        // $search_data_inceput = \Request::get('search_data_inceput') ? Carbon::parse(\Request::get('search_data_inceput')) : Carbon::today();
+        // $search_data_sfarsit = \Request::get('search_data_sfarsit') ? Carbon::parse(\Request::get('search_data_sfarsit')) : Carbon::today();
 
-        if ($search_data_inceput->diffInDays($search_data_sfarsit) > 65){
-            return back()->with('error',
-                    (
-                        ($angajat->limba_aplicatie === 1) ?
-                            (
-                                'Vă rog căutați o perioadă de maxim 65 de zile.'
-                            )
-                            :
-                            (
-                                'කරුණාකර දින 65ක උපරිම කාලයක් සඳහා සොයන්න.'
-                                . ' <br> ' .
-                                'Please search for a maximum period of 65 days.'
-                            )
-                    ));
-        }
-
-        // if ($search_data_inceput && $search_data_sfarsit){
-            $norme_lucrate = NormaLucrata::with('produs_operatie.produs')
-                ->where('angajat_id', $angajat->id)
-                ->whereDate('data', '>=', $search_data_inceput)
-                ->whereDate('data', '<=', $search_data_sfarsit)
-                ->orderBy('data')
-                ->orderBy('produs_operatie_id')
-                ->get();
-        // } else{
-        //     $norme_lucrate = '';
+        // if ($search_data_inceput->diffInDays($search_data_sfarsit) > 65){
+        //     return back()->with('error',
+        //             (
+        //                 ($angajat->limba_aplicatie === 1) ?
+        //                     (
+        //                         'Vă rog căutați o perioadă de maxim 65 de zile.'
+        //                     )
+        //                     :
+        //                     (
+        //                         'කරුණාකර දින 65ක උපරිම කාලයක් සඳහා සොයන්න.'
+        //                         . ' <br> ' .
+        //                         'Please search for a maximum period of 65 days.'
+        //                     )
+        //             ));
         // }
 
-        // dd($angajat, $norme_lucrate);
+        // $norme_lucrate = NormaLucrata::with('produs_operatie.produs')
+        //     ->where('angajat_id', $angajat->id)
+        //     ->whereDate('data', '>=', $search_data_inceput)
+        //     ->whereDate('data', '<=', $search_data_sfarsit)
+        //     ->orderBy('data')
+        //     ->orderBy('produs_operatie_id')
+        //     ->get();
 
-        return view('aplicatie_angajati/realizat/realizat', compact('angajat', ($norme_lucrate ? 'norme_lucrate' : ''), 'search_data_inceput', 'search_data_sfarsit'));
+        // return view('aplicatie_angajati/realizat/realizat', compact('angajat', ($norme_lucrate ? 'norme_lucrate' : ''), 'search_data_inceput', 'search_data_sfarsit'));
+
+        $searchData = \Request::get('searchData') ? Carbon::parse(\Request::get('searchData')) : Carbon::today();
+echo ($searchData);
+        switch ($request->input('action')) {
+            case 'lunaAnterioara':
+                    $searchData = $searchData->startOfMonth()->subMonthNoOverflow()->startOfMonth();
+                break;
+            case 'lunaUrmatoare':
+                    $searchData = $searchData->startOfMonth()->addMonthNoOverflow()->startOfMonth();
+                break;
+        }
+
+        $norme_lucrate = NormaLucrata::with('produs_operatie.produs')
+            ->where('angajat_id', $angajat->id)
+            ->whereMonth('data', $searchData)
+            ->whereYear('data', $searchData)
+            ->orderBy('data')
+            ->orderBy('produs_operatie_id')
+            ->get();
+
+        return view('aplicatie_angajati/realizat/realizat', compact('angajat', ($norme_lucrate ? 'norme_lucrate' : ''), 'searchData'));
     }
 
     public function stergeNormaLucrata(Request $request, NormaLucrata $norma_lucrata)
