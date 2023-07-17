@@ -79,7 +79,14 @@
                             <div class="col-md-12 text-center">
                                 <input class="form-control form-control-lg mb-3" type="hidden" name="idOperatie" value="{{ $produsOperatie->id }}">
 
-                                <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">{{ $produsOperatie->nume }}</button>
+                                <button type="submit" class="mb-2 btn btn-lg w-100 text-white" style="background-color: #FC4A1A; border:2px solid white;">
+                                    @if ($angajat->limba_aplicatie === 1)
+                                        Faza
+                                    @elseif ($angajat->limba_aplicatie === 2)
+                                        Phase
+                                    @endif
+                                    {{ $produsOperatie->numar_de_faza }} - {{ $produsOperatie->nume }}
+                                </button>
                             </div>
                         </div>
                     </form>
