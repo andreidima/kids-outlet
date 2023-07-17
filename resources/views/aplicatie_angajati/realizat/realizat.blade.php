@@ -118,7 +118,7 @@
                                 </button>
                             </div> --}}
 
-                            <input type="hidden" name="searchData" value={{ $searchData }}>
+                            {{-- <input type="hidden" name="searchData" value={{ $searchData }}>
                             <div class="col-lg-12 mb-2">
                                 <div class="row">
                                     <div class="col-6 m-0 p-0">
@@ -130,8 +130,6 @@
                                                 @if ($angajat->limba_aplicatie === 1)
                                                     << Luna Anterioară
                                                 @elseif ($angajat->limba_aplicatie === 2)
-                                                    {{-- සොයන්න
-                                                    <br> --}}
                                                     Previous Month <<
                                                 @endif
                                         </button>
@@ -145,14 +143,12 @@
                                                 @if ($angajat->limba_aplicatie === 1)
                                                     >> Luna Următoare
                                                 @elseif ($angajat->limba_aplicatie === 2)
-                                                    {{-- සොයන්න
-                                                    <br> --}}
                                                     Next month >>
                                                 @endif
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                     </form>
                 </div>
 
