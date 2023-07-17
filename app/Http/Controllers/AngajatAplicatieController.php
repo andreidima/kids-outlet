@@ -375,7 +375,7 @@ class AngajatAplicatieController extends Controller
         // return view('aplicatie_angajati/realizat/realizat', compact('angajat', ($norme_lucrate ? 'norme_lucrate' : ''), 'search_data_inceput', 'search_data_sfarsit'));
 
         $searchData = \Request::get('searchData') ? Carbon::parse(\Request::get('searchData')) : Carbon::today();
-echo ($searchData);
+
         switch ($request->input('action')) {
             case 'lunaAnterioara':
                     $searchData = $searchData->startOfMonth()->subMonthNoOverflow()->startOfMonth();
