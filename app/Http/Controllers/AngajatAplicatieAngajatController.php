@@ -158,7 +158,11 @@ class AngajatAplicatieAngajatController extends Controller
     public function accesFaze(Angajat $angajat)
     {
         $angajat = Angajat::where('id', $angajat->id)->with('produseOperatii')->first();
-        $produse = Produs::select('id', 'nume')->with('produse_operatii')->where('activ' , 1)->get();
+        $produse = Produs::select('id', 'nume')
+            ->with('produse_operatii', function ($query) {
+                return $query->orderBy('numar_de_faza');
+            })
+            ->where('activ' , 1)->get();
 
         return view('angajati.diverse.accesFazeForm', compact('angajat', 'produse'));
     }

@@ -260,7 +260,15 @@
                                     Price per piece:
                                 @endif
                             </small>
-                            {{ $norma_lucrata->produs_operatie->pret }} lei
+                            @if ($norma_lucrata->produs_operatie->pret == 0)
+                                @if ($angajat->limba_aplicatie === 1)
+                                    preț neintrodus momentan
+                                @elseif ($angajat->limba_aplicatie === 2)
+                                    price not currently entered
+                                @endif
+                            @else
+                                {{ $norma_lucrata->produs_operatie->pret }} lei
+                            @endif
 
                             <br>
 
@@ -273,7 +281,16 @@
                                     Total amount:
                                 @endif
                             </small>
-                            {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }} lei
+                            @if ($norma_lucrata->produs_operatie->pret == 0)
+                                @if ($angajat->limba_aplicatie === 1)
+                                    preț neintrodus momentan
+                                @elseif ($angajat->limba_aplicatie === 2)
+                                    price not currently entered
+                                @endif
+                            @else
+                                {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }} lei
+                            @endif
+
 
                         <br>
 

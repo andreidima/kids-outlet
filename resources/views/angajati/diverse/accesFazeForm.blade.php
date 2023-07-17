@@ -60,7 +60,7 @@
                                                     v-for='operatii in operatiiProdusSelectat'
                                                     :value='operatii.id'
                                                     >
-                                                        @{{operatii.nume}}
+                                                         @{{operatii.numar_de_faza}} - @{{operatii.nume}}
                                                 </option>
                                             </select>
                                         </div>
