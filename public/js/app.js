@@ -5427,6 +5427,7 @@ if (document.querySelector('#gestionareFazeAngajati')) {
       produse: typeof produse !== 'undefined' ? produse : '',
       // angajat_pontatori: ((typeof angajatPontatori !== 'undefined') ? angajatPontatori : ''),
       angajatProduseOperatii: typeof angajatProduseOperatii !== 'undefined' ? angajatProduseOperatii : '',
+      numarFaza: '',
       produsSelectat: '',
       operatiiProdusSelectat: [],
       operatieSelectata: ''
@@ -5456,6 +5457,17 @@ if (document.querySelector('#gestionareFazeAngajati')) {
             }
           }
         }
+      },
+      numarFaza: function numarFaza() {
+        // if (this.numarFaza !== ''){
+        for (var i = 0; i < this.operatiiProdusSelectat.length; i++) {
+          if (this.operatiiProdusSelectat[i].numar_de_faza == this.numarFaza) {
+            this.operatieSelectata = this.operatiiProdusSelectat[i].id;
+            return;
+          }
+        }
+
+        this.operatieSelectata = ''; // }
       }
     },
     methods: {

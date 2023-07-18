@@ -37,7 +37,7 @@
                                     dd($angajat->produseOperatii->toArray(), array_values($angajat->produseOperatii->where('produs.activ' , 1)->toArray()));
                                 @endphp --}}
                                 <div class="col-lg-12">
-                                    <div class="row rounded-3 p-2">
+                                    <div class="row rounded-3 p-2 mb-4">
                                         <div class="col-lg-4 mb-2">
                                             <label for="produse" class="mb-0 ps-3">Produse:</label>
                                             <select class="form-select rounded-pill mb-2 {{ $errors->has('produse') ? 'is-invalid' : '' }}"
@@ -51,7 +51,13 @@
                                                 </option>
                                             </select>
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-2">
+                                            <label for="numarFaza" class="mb-0 ps-3">Nr. faza:</label>
+                                            <input class="form-control rounded-pill mb-2"
+                                                v-model="numarFaza"
+                                                >
+                                        </div>
+                                        <div class="col-lg-4">
                                             <label for="produse" class="mb-0 ps-3">Faze:</label>
                                             <select class="form-select rounded-pill mb-2 {{ $errors->has('produse') ? 'is-invalid' : '' }}"
                                                 v-model="operatieSelectata"
@@ -72,11 +78,13 @@
                                                 {{-- </span> --}}
                                             </button>
                                         </div>
+                                    </div>
 
+                                    <div class="row rounded-3 p-2 mb-4">
                                         <div v-for="(operatie, index) in angajatProduseOperatii" class="col-lg-12 mb-3">
                                             <input type="hidden" name="angajatProduseOperatii[]" :value=operatie.id>
                                             {{-- @{{ index+1 }}. @{{ operatie.produsNume }} - @{{ operatie.nume }} --}}
-                                            @{{ operatie.produsNume }} - @{{ operatie.nume }}
+                                            @{{ operatie.produsNume }}: <b>@{{ operatie.numar_de_faza }}</b> - @{{ operatie.nume }}
                                             {{-- @{{ operatie.produs.nume }} - @{{ operatie.nume }} --}}
                                             <button type="button" class="btn m-0 p-0 mb-0" @click="angajatProduseOperatii.splice(index, 1)">
                                                 <span class="px-1" style="background-color:red; color:white; border-radius:20px">
