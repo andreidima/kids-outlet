@@ -70,6 +70,11 @@ Route::resource('/aplicatie-angajati/angajati', AngajatAplicatieAngajatControlle
 Route::get('/aplicatie-angajati/angajati-acces-faze/{angajat}', [AngajatAplicatieAngajatController::class, 'accesFaze']);
 Route::post('/aplicatie-angajati/angajati-acces-faze/{angajat}', [AngajatAplicatieAngajatController::class, 'accesFazePost']);
 
+// Gestionarea fazelor la care au acces angajatii
+Route::get('/aplicatie-angajati/produs-faze-angajati', [AngajatAplicatieController::class, 'produsFazeAngajat']);
+Route::post('/aplicatie-angajati/produs-faze-angajati', [AngajatAplicatieController::class, 'postProdusFazeAngajat']);
+Route::delete('/aplicatie-angajati/produs-faze-angajati/sterge', [AngajatAplicatieController::class, 'axiosStergeProdusFazeAngajat']);
+
 // Route::get('/aplicatie-angajati/blocheaza-deblocheaza-introducere-comenzi', [AngajatAplicatieController::class, 'blocheazaDeblocheazaIntroducereComenzi']);
 
 Route::resource('/aplicatie-angajati/produse', AngajatAplicatieProdusController::class, ['parameters' => ['produse' => 'produs']]);

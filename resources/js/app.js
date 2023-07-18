@@ -184,3 +184,99 @@ if (document.querySelector('#produs')) {
         }
     });
 }
+
+
+if (document.querySelector('#produsFazeAngajati')) {
+    const app = new Vue({
+        el: '#produsFazeAngajati',
+        data: {
+            produse: ((typeof produse !== 'undefined') ? produse : ''),
+            produsSelectat: '',
+            // angajat_pontatori: ((typeof angajatPontatori !== 'undefined') ? angajatPontatori : ''),
+            // angajatProduseOperatii: ((typeof angajatProduseOperatii !== 'undefined') ? angajatProduseOperatii : ''),
+        },
+        // created: function () {
+        //     console.log(this.angajatProduseOperatii.length);
+        //     for (var i = 0; i < this.angajatProduseOperatii.length; i++) {
+        //         for (var j = 0; j < this.produse.length; j++) {
+        //             console.log('a');
+        //             if (this.angajatProduseOperatii[i].produs_id == this.produse[j].id) {
+        //                 this.angajatProduseOperatii[i].produsNume = this.produse[j].nume
+        //             }
+        //         }
+        //     }
+        // },
+        // watch: {
+        //     produsSelectat: function () {
+        //         this.operatiiProdusSelectat = [];
+
+        //         for (var i = 0; i < this.produse.length; i++) {
+        //             if (this.produse[i].id == this.produsSelectat) {
+        //                 for (var j = 0; j < this.produse[i].produse_operatii.length; j++) {
+        //                     this.operatiiProdusSelectat.push(this.produse[i].produse_operatii[j]);
+        //                 }
+        //             }
+        //         }
+        //     },
+        //     numarFaza: function () {
+        //         // if (this.numarFaza !== ''){
+        //         for (var i = 0; i < this.operatiiProdusSelectat.length; i++) {
+        //             if (this.operatiiProdusSelectat[i].numar_de_faza == this.numarFaza) {
+        //                 this.operatieSelectata = this.operatiiProdusSelectat[i].id;
+        //                 return;
+        //             }
+        //         }
+        //         this.operatieSelectata = '';
+        //         // }
+        //     }
+        // },
+        methods: {
+            stergeAngajat(produs_id,operatie_id, angajat_id) {
+                // console.log(produs_id,operatie_id, angajat_id);
+
+                for (var i = 0; i < this.produse.length; i++){
+                    if (this.produse[i].id === produs_id){
+                        for (j = 0; j < this.produse[i].produse_operatii.length; j++) {
+                            if (this.produse[i].produse_operatii[j].id === operatie_id) {
+                                for (k = 0; k < this.produse[i].produse_operatii[j].angajati.length; k++) {
+                                    if (this.produse[i].produse_operatii[j].angajati[k].id === angajat_id) {
+                                        this.produse[i].produse_operatii[j].angajati.splice(k, 1);
+
+                                        axios
+                                            .delete('/aplicatie-angajati/produs-faze-angajati/sterge', {
+                                                params: {
+                                                    // request: 'judete_plecare',
+                                                    operatie_id: operatie_id,
+                                                    angajat_id: angajat_id,
+                                                }
+                                            })
+                                            .then((response) => console.log(response));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // adaugaOperatieAngajatului() {
+            //     // Daca operatia este deja adaugata angajatului, se iese din functie
+            //     for (var i = 0; i < this.angajatProduseOperatii.length; i++) {
+            //         if (this.angajatProduseOperatii[i].id == this.operatieSelectata) {
+            //             return;
+            //         }
+            //     }
+
+            //     // Se adauga operatia la angajat
+            //     for (var i = 0; i < this.produse.length; i++) {
+            //         for (var j = 0; j < this.produse[i].produse_operatii.length; j++) {
+            //             if (this.produse[i].produse_operatii[j].id == this.operatieSelectata) {
+            //                 this.angajatProduseOperatii.push(this.produse[i].produse_operatii[j]);
+            //                 this.angajatProduseOperatii[this.angajatProduseOperatii.length - 1].produsNume = this.produse[i].nume;
+            //                 return;
+            //             }
+            //         }
+            //     }
+            // }
+        }
+    });
+}

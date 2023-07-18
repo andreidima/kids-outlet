@@ -842,4 +842,35 @@ class AngajatAplicatieController extends Controller
 
         return view('aplicatie_angajati/mutaLucrulPeLunaAnterioara', compact('angajat', 'norme_lucrate'));
     }
+
+    /**
+     * Gestionarea fazelor la care au acces angajatii
+     */
+    public function produsFazeAngajat(Request $request)
+    {
+        if(empty($request->session()->get('angajat'))){
+            return redirect('/aplicatie-angajati');
+        }
+
+        $produse = Produs::with('produse_operatii.angajati')->where('activ', 1)->get();
+
+        return view('aplicatie_angajati/produsFazeAngajat/produsFazeAngajat', compact('produse'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function axiosStergeProdusFazeAngajat(Request $request)
+    {
+        $raspuns = 's-a facut';
+
+        DB::table('angajati_produse_operatii')->where('angajat_id', $request->angajat_id)->where('produs_operatie_id', $request->operatie_id)->delete();
+
+        return response()->json([
+            'raspuns' => $raspuns,
+        ]);
+    }
 }

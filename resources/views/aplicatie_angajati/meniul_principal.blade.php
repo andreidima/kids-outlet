@@ -171,6 +171,15 @@
 
                 @endif --}}
 
+                {{-- Conturile ce pot gestiona fazele la care au acces angajatii }} --}}
+                @if (
+                        ($angajat->id === 4) // Mocanu Geanina
+                        || ($angajat->id === 91) // Borchina Liliana
+                        || ($angajat->id === 162) // Toader Maria
+                    )
+                    <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/produs-faze-angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">PRODUS FAZE ANGAJAȚI</a>
+                @endif
+
                 {{-- Conturile ce pot vedea toate produsele, si le si pot modifica cantitatea sau statusul „activ” --}}
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
