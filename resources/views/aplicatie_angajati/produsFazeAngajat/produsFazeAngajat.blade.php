@@ -72,13 +72,13 @@
                                                 >
                                             <small class="ps-0">* se pot adăuga mai multe, despărțite prin virgulă</small>
                                         </div>
-                                        <div class="col-lg-2 mb-3 d-flex justify-content-center align-items-end mb-3">
+                                        <div class="col-lg-2 mb-3 d-flex justify-content-center align-items-center">
                                             <button type="button" class="btn btn-success text-white rounded-3 border" @click="adaugaAngajatiLaFaze">
                                                     Adaugă angajații la faze
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="row rounded-3 p-1 mb-4">
+                                    <div class="row rounded-3 p-1 mb-2">
                                         <div v-for="(produs, indexProdus) in produse">
                                             <div v-if="produs.id === produsSelectat">
                                                 <div v-for="(operatie, indexOperatie) in produs.produse_operatii" class="col-lg-12 mb-4 px-2" style="background-color:rgb(201, 252, 231)">
@@ -120,10 +120,8 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row py-2 justify-content-center">
-                            </div>
                         </div>
+                        <a class="btn btn-lg w-100 text-white" href="/aplicatie-angajati/meniul-principal" style="background-color: #FC4A1A; border:2px solid white;">MENIUL PRINCIPAL</a>
                     </div>
                 </div>
             </div>

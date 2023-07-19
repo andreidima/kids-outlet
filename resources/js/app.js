@@ -235,6 +235,7 @@ if (document.querySelector('#produsFazeAngajati')) {
             adaugaAngajatiLaFaze() {
                 if (!this.produsSelectat || !this.numereDeFaza || !this.iduriAngajati) {
                     this.mesajEroare = "Vă rugăm să completați toate câmpurile"
+                    return;
                 } else {
                     this.mesajEroare = "";
                 }
@@ -253,15 +254,12 @@ if (document.querySelector('#produsFazeAngajati')) {
                             params: {
                                 request: 'adaugareMultipla',
                                 produsId: this.produsSelectat,
-                                // numereDeFaza: numereDeFaza,
-                                // iduriAngajati: iduriAngajati
                             }
                         })
                     .then(function (response) {
                         app.mesajSucces = response.data.raspuns;
-                        // app.produse = [];
                         app.produse = response.data.produse;
-                        console.log(response.data.raspuns);
+                        // console.log(response.data.raspuns);
                     });
 
             },
