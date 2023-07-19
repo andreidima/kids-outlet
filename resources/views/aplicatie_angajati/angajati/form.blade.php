@@ -4,6 +4,15 @@
     <div class="col-lg-12 px-2 mb-0">
         <div class="row">
             <div class="col-lg-3 mb-4">
+                <label for="nume" class="mb-0 ps-3">Id:*</label>
+                <input
+                    type="text"
+                    class="form-control rounded-pill {{ $errors->has('nume') ? 'is-invalid' : '' }}"
+                    placeholder=""
+                    value="{{ $angajat->id }}"
+                    disabled>
+            </div>
+            <div class="col-lg-3 mb-4">
                 <label for="nume" class="mb-0 ps-3">Nume:*</label>
                 <input
                     type="text"
