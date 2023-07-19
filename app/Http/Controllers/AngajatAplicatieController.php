@@ -867,25 +867,36 @@ class AngajatAplicatieController extends Controller
      */
     public function axiosStergeProdusFazeAngajat(Request $request)
     {
-        $raspuns = 'dadada';
+        $raspuns = '';
+        // $raspuns = $_GET['request'];
+        // $raspuns .= $_GET['request'] . $request->produsId . " ";
         switch ($_GET['request']) {
             case 'adaugareMultipla':
-                // foreach ($request->numereDeFaza as $numarDeFaza){
-                //     $operatie = ProdusOperatie::where('produs_id', $request->produsId)->where('numar_de_faza', $numarDeFaza);
-                //     if ($operatie){
-                //         foreach ($request->iduriAngati as $angajatId){
-                //             $angajat = Angajat::where('id', $angajatId);
-                //             if ($angajat){
-                //                 DB::table('angajati_produse_operatii')->insert(['angajat_id' => $angajatId,'produs_operatie_id' => $operatieId]);
-                //                 $raspuns .= "Angajatul " . $angajat->nume . " a fost adăugat la faza " . $operatie->numar_de_faza . " - " . $operatie->nume . ". <br>";
-                //             } else {
-                //                 $raspuns .= "Angajatul cu ID-ul " . $angajatId . " nu există în baza de date. <br>";
-                //             }
-                //         }
-                //     } else {
-                //         $raspuns .= "Faza cu numărul " . $numarDeFaza . " nu există în baza de date. <br>";
-                //     }
-                // }
+                foreach ($request->numereDeFaza as $numarDeFaza){
+                    // $raspuns .= $numarDeFaza;
+                    $operatie = ProdusOperatie::where('produs_id', $request->produsId)->where('numar_de_faza', $numarDeFaza)->first();
+                    // $raspuns .= $operatie->id;
+                    // $raspuns .= $request->iduriAngajati;
+                    if (!empty($operatie)){
+                        foreach ($request->iduriAngajati as $angajatId){
+                            $angajat = Angajat::where('id', $angajatId)->first();
+                            // $raspuns .= $angajatId;
+                            // $raspuns .= $angajat->id;
+                            if (!empty($angajat)){
+                                if (DB::table('angajati_produse_operatii')->where('angajat_id', $angajatId)->where('produs_operatie_id', $operatie->id)->exists()){
+                                    $raspuns .= "<div class='mb-1 px-1 bg-warning text-dark'><b>" . $angajat->nume . "</b> are deja faza <b>" . $operatie->numar_de_faza . "</b>.</div>";
+                                } else {
+                                    DB::table('angajati_produse_operatii')->insert(['angajat_id' => $angajatId,'produs_operatie_id' => $operatie->id]);
+                                    $raspuns .= "<div class='mb-1 px-1 bg-success text-light'><b>" . $angajat->nume . "</b> a fost adăugat la faza <b>" . $operatie->numar_de_faza . "</b>.</div>";
+                                }
+                            } else {
+                                $raspuns .= "<div class='mb-1 px-1 bg-warning text-dark'>Angajat ID <b>" . $angajatId . "</b> nu există.</div>";
+                            }
+                        }
+                    } else {
+                        $raspuns .= "<div class='mb-1 px-1 bg-warning text-dark'>Faza <b>" . $numarDeFaza . "</b> nu există.</div>";
+                    }
+                }
             break;
             case 'stergere':
                 DB::table('angajati_produse_operatii')->where('angajat_id', $request->angajat_id)->where('produs_operatie_id', $request->operatie_id)->delete();
@@ -895,6 +906,7 @@ class AngajatAplicatieController extends Controller
         }
         return response()->json([
             'raspuns' => $raspuns,
+            'produse' => Produs::with('produse_operatii.angajati')->where('activ', 1)->get(),
         ]);
     }
 }

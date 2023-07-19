@@ -234,26 +234,33 @@ if (document.querySelector('#produsFazeAngajati')) {
         methods: {
             adaugaAngajatiLaFaze() {
                 if (!this.produsSelectat || !this.numereDeFaza || !this.iduriAngajati) {
-                    this.mesajEroare = "Toate câmpurile de mai sus trebuie completate"
+                    this.mesajEroare = "Vă rugăm să completați toate câmpurile"
                 } else {
                     this.mesajEroare = "";
                 }
 
                 numereDeFaza = this.numereDeFaza.split(",");
                 iduriAngajati = this.iduriAngajati.split(",");
-                // console.log(numereDeFaza, iduriAngajati);
+                console.log(numereDeFaza, iduriAngajati);
 
                 axios
-                    .post('/aplicatie-angajati/produs-faze-angajati/axios', {
-                        // params: {
-                            request: 'adaugareMultipla',
-                            produsId: this.produsSelectat,
+                    .post('/aplicatie-angajati/produs-faze-angajati/axios',
+                        {
                             numereDeFaza: numereDeFaza,
                             iduriAngajati: iduriAngajati
-                        // }
-                    })
+                        },
+                        {
+                            params: {
+                                request: 'adaugareMultipla',
+                                produsId: this.produsSelectat,
+                                // numereDeFaza: numereDeFaza,
+                                // iduriAngajati: iduriAngajati
+                            }
+                        })
                     .then(function (response) {
-                        this.mesajSucces = response.data.raspuns;
+                        app.mesajSucces = response.data.raspuns;
+                        // app.produse = [];
+                        app.produse = response.data.produse;
                         console.log(response.data.raspuns);
                     });
 
