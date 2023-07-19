@@ -854,7 +854,9 @@ class AngajatAplicatieController extends Controller
 
         $produse = Produs::with('produse_operatii.angajati')->where('activ', 1)->get();
 
-        return view('aplicatie_angajati/produsFazeAngajat/produsFazeAngajat', compact('produse'));
+        $angajati = Angajat::where('id', '>', 3)->where('activ', 1)->get();
+
+        return view('aplicatie_angajati/produsFazeAngajat/produsFazeAngajat', compact('produse', 'angajati'));
     }
 
     /**
@@ -865,10 +867,32 @@ class AngajatAplicatieController extends Controller
      */
     public function axiosStergeProdusFazeAngajat(Request $request)
     {
-        $raspuns = 's-a facut';
-
-        DB::table('angajati_produse_operatii')->where('angajat_id', $request->angajat_id)->where('produs_operatie_id', $request->operatie_id)->delete();
-
+        $raspuns = 'dadada';
+        switch ($_GET['request']) {
+            case 'adaugareMultipla':
+                // foreach ($request->numereDeFaza as $numarDeFaza){
+                //     $operatie = ProdusOperatie::where('produs_id', $request->produsId)->where('numar_de_faza', $numarDeFaza);
+                //     if ($operatie){
+                //         foreach ($request->iduriAngati as $angajatId){
+                //             $angajat = Angajat::where('id', $angajatId);
+                //             if ($angajat){
+                //                 DB::table('angajati_produse_operatii')->insert(['angajat_id' => $angajatId,'produs_operatie_id' => $operatieId]);
+                //                 $raspuns .= "Angajatul " . $angajat->nume . " a fost adăugat la faza " . $operatie->numar_de_faza . " - " . $operatie->nume . ". <br>";
+                //             } else {
+                //                 $raspuns .= "Angajatul cu ID-ul " . $angajatId . " nu există în baza de date. <br>";
+                //             }
+                //         }
+                //     } else {
+                //         $raspuns .= "Faza cu numărul " . $numarDeFaza . " nu există în baza de date. <br>";
+                //     }
+                // }
+            break;
+            case 'stergere':
+                DB::table('angajati_produse_operatii')->where('angajat_id', $request->angajat_id)->where('produs_operatie_id', $request->operatie_id)->delete();
+            break;
+            default:
+                break;
+        }
         return response()->json([
             'raspuns' => $raspuns,
         ]);

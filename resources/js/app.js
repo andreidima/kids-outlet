@@ -192,6 +192,16 @@ if (document.querySelector('#produsFazeAngajati')) {
         data: {
             produse: ((typeof produse !== 'undefined') ? produse : ''),
             produsSelectat: '',
+
+            angajati: ((typeof angajati !== 'undefined') ? angajati : ''),
+            angajatiSelectati: [],
+            angajatIdDeAdaugat: '',
+
+            numereDeFaza: '',
+            iduriAngajati: '',
+
+            mesajEroare: '',
+            mesajSucces: '',
             // angajat_pontatori: ((typeof angajatPontatori !== 'undefined') ? angajatPontatori : ''),
             // angajatProduseOperatii: ((typeof angajatProduseOperatii !== 'undefined') ? angajatProduseOperatii : ''),
         },
@@ -206,77 +216,63 @@ if (document.querySelector('#produsFazeAngajati')) {
         //         }
         //     }
         // },
-        // watch: {
-        //     produsSelectat: function () {
-        //         this.operatiiProdusSelectat = [];
+        watch: {
+            angajatIdDeAdaugat: function () {
+                this.angajatiSelectati = [];
 
-        //         for (var i = 0; i < this.produse.length; i++) {
-        //             if (this.produse[i].id == this.produsSelectat) {
-        //                 for (var j = 0; j < this.produse[i].produse_operatii.length; j++) {
-        //                     this.operatiiProdusSelectat.push(this.produse[i].produse_operatii[j]);
-        //                 }
-        //             }
-        //         }
-        //     },
-        //     numarFaza: function () {
-        //         // if (this.numarFaza !== ''){
-        //         for (var i = 0; i < this.operatiiProdusSelectat.length; i++) {
-        //             if (this.operatiiProdusSelectat[i].numar_de_faza == this.numarFaza) {
-        //                 this.operatieSelectata = this.operatiiProdusSelectat[i].id;
-        //                 return;
-        //             }
-        //         }
-        //         this.operatieSelectata = '';
-        //         // }
-        //     }
-        // },
-        methods: {
-            stergeAngajat(produs_id,operatie_id, angajat_id) {
-                // console.log(produs_id,operatie_id, angajat_id);
-
-                for (var i = 0; i < this.produse.length; i++){
-                    if (this.produse[i].id === produs_id){
-                        for (j = 0; j < this.produse[i].produse_operatii.length; j++) {
-                            if (this.produse[i].produse_operatii[j].id === operatie_id) {
-                                for (k = 0; k < this.produse[i].produse_operatii[j].angajati.length; k++) {
-                                    if (this.produse[i].produse_operatii[j].angajati[k].id === angajat_id) {
-                                        this.produse[i].produse_operatii[j].angajati.splice(k, 1);
-
-                                        axios
-                                            .delete('/aplicatie-angajati/produs-faze-angajati/sterge', {
-                                                params: {
-                                                    // request: 'judete_plecare',
-                                                    operatie_id: operatie_id,
-                                                    angajat_id: angajat_id,
-                                                }
-                                            })
-                                            .then((response) => console.log(response));
-                                    }
-                                }
-                            }
+                if (this.angajatIdDeAdaugat !== '') {
+                    for (var i = 0; i < this.angajati.length; i++) {
+                        if (this.angajati[i].id == this.angajatIdDeAdaugat) {
+                            this.angajatiSelectati.push(this.angajati[i]);
                         }
                     }
+                }else{
+                    this.angajatiSelectati = this.angajati;
                 }
-            }
-            // adaugaOperatieAngajatului() {
-            //     // Daca operatia este deja adaugata angajatului, se iese din functie
-            //     for (var i = 0; i < this.angajatProduseOperatii.length; i++) {
-            //         if (this.angajatProduseOperatii[i].id == this.operatieSelectata) {
-            //             return;
-            //         }
-            //     }
+            },
+        },
+        methods: {
+            adaugaAngajatiLaFaze() {
+                if (!this.produsSelectat || !this.numereDeFaza || !this.iduriAngajati) {
+                    this.mesajEroare = "Toate câmpurile de mai sus trebuie completate"
+                } else {
+                    this.mesajEroare = "";
+                }
 
-            //     // Se adauga operatia la angajat
-            //     for (var i = 0; i < this.produse.length; i++) {
-            //         for (var j = 0; j < this.produse[i].produse_operatii.length; j++) {
-            //             if (this.produse[i].produse_operatii[j].id == this.operatieSelectata) {
-            //                 this.angajatProduseOperatii.push(this.produse[i].produse_operatii[j]);
-            //                 this.angajatProduseOperatii[this.angajatProduseOperatii.length - 1].produsNume = this.produse[i].nume;
-            //                 return;
-            //             }
-            //         }
-            //     }
-            // }
+                numereDeFaza = this.numereDeFaza.split(",");
+                iduriAngajati = this.iduriAngajati.split(",");
+                // console.log(numereDeFaza, iduriAngajati);
+
+                axios
+                    .post('/aplicatie-angajati/produs-faze-angajati/axios', {
+                        // params: {
+                            request: 'adaugareMultipla',
+                            produsId: this.produsSelectat,
+                            numereDeFaza: numereDeFaza,
+                            iduriAngajati: iduriAngajati
+                        // }
+                    })
+                    .then(function (response) {
+                        this.mesajSucces = response.data.raspuns;
+                        console.log(response.data.raspuns);
+                    });
+
+            },
+            stergeAngajat(indexProdus,indexOperatie,indexAngajat) {
+                // console.log(indexProdus,indexOperatie,indexAngajat);
+                // console.log(this.produse[indexProdus].produse_operatii[indexOperatie].id);
+                // console.log(this.produse[indexProdus].produse_operatii[indexOperatie].angajati[indexAngajat].id);
+
+                axios
+                    .delete('/aplicatie-angajati/produs-faze-angajati/axios', {
+                        params: {
+                            request: 'stergere',
+                            operatie_id: this.produse[indexProdus].produse_operatii[indexOperatie].id,
+                            angajat_id: this.produse[indexProdus].produse_operatii[indexOperatie].angajati[indexAngajat].id,
+                        }
+                    });
+                this.produse[indexProdus].produse_operatii[indexOperatie].angajati.splice(indexAngajat, 1);
+            }
         }
     });
 }
