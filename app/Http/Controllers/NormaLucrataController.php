@@ -541,24 +541,24 @@ class NormaLucrataController extends Controller
                 $sheet->getStyle('A1')->getFont()->setSize(14);
                 $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 
-                $sheet->setCellValue('A4', 'Nr.');
+                $sheet->setCellValue('A5', 'Nr.');
                 $sheet->getColumnDimension('A')->setAutoSize(true);
-                $sheet->setCellValue('B4', 'Nume Prenume');
+                $sheet->setCellValue('B5', 'Nume Prenume');
                 $sheet->getColumnDimension('B')->setAutoSize(true);
 
-                $sheet->setCellValueByColumnAndRow((5), 4 , 'AVANS DE PLĂTIT se calculeaza astfel: zilePontate > 10');
+                $sheet->setCellValueByColumnAndRow((1), 3 , 'AVANS DE PLĂTIT se calculeaza astfel: zilePontate > 10 (avansul se plătește integral), zilePontate > 7 (avansul se plătește 300), zilePontate < 7 (avansul se plătește 0)');
 
-                $sheet->setCellValueByColumnAndRow((3), 4 , 'AVANS ÎN BAZA DE DATE');
-                $sheet->setCellValueByColumnAndRow((4), 4 , 'ZILE PONTATE (inclusiv medical sau CO');
-                $sheet->setCellValueByColumnAndRow((5), 4 , 'AVANS DE PLĂTIT');
-                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . '4')->getAlignment()->setWrapText(true);
-                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(4) . '4')->getAlignment()->setWrapText(true);
-                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . '4')->getAlignment()->setWrapText(true);
-                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 4)->getColumn())->setWidth(10);
-                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 4)->getColumn())->setWidth(10);
-                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((5), 4)->getColumn())->setWidth(10);
+                $sheet->setCellValueByColumnAndRow((3), 5 , 'AVANS ÎN BAZA DE DATE');
+                $sheet->setCellValueByColumnAndRow((4), 5 , 'ZILE PONTATE (inclusiv medical sau CO');
+                $sheet->setCellValueByColumnAndRow((5), 5 , 'AVANS DE PLĂTIT');
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . '5')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(4) . '5')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . '5')->getAlignment()->setWrapText(true);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 5)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 5)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((5), 5)->getColumn())->setWidth(10);
 
-                $rand = 5;
+                $rand = 6;
 
                 foreach ($angajati->groupby('prod') as $angajati_per_prod){
 
@@ -620,8 +620,9 @@ class NormaLucrataController extends Controller
                 }
                 // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
                 $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
-                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
-                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                $sheet->mergeCells('A3:' . $column->getColumnIndex() . '3');
+                $sheet->getStyle('A5:' . $column->getColumnIndex() . '5')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('A5:' . $column->getColumnIndex() . '5')->getFont()->setBold(true);
                 // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
 
                 $writer = new Xlsx($spreadsheet);
