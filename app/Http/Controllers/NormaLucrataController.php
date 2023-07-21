@@ -295,7 +295,6 @@ class NormaLucrataController extends Controller
         }
         $produse = Produs::whereIn('id', $produseIds)->get();
 
-
         switch ($request->input('action')) {
             case 'export_excel':
                 $salariul_minim_pe_economie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
@@ -350,7 +349,6 @@ class NormaLucrataController extends Controller
                 $rand = 5;
 
                 // $angajati->sortBy('prod');
-
                 foreach ($angajati->groupby('prod') as $angajati_per_prod){
 
                     if ($angajati_per_prod->first()->prod){
@@ -520,6 +518,16 @@ class NormaLucrataController extends Controller
 
                 break;
             case 'exportExcelAvansuri':
+                $angajati = Angajat::
+                    with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+                        $query->whereDate('data', '>=', $search_data_inceput)
+                            ->whereDate('data', '<=', $search_data_sfarsit);
+                        }])
+                    ->where('activ', 1) // Contul este activ
+                    ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
+                    ->orderBy('prod')
+                    ->orderBy('nume')
+                    ->get();
 
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
@@ -538,8 +546,15 @@ class NormaLucrataController extends Controller
                 $sheet->setCellValue('B4', 'Nume Prenume');
                 $sheet->getColumnDimension('B')->setAutoSize(true);
 
-                $index = 0; // Se stabileste un index initial, care reprezinta coloana
-                $sheet->setCellValueByColumnAndRow(($index+3), 4 , 'AVANS');
+                $sheet->setCellValueByColumnAndRow((3), 4 , 'AVANS ÎN BAZA DE DATE');
+                $sheet->setCellValueByColumnAndRow((4), 4 , 'ZILE PONTATE (inclusiv medical sau CO');
+                $sheet->setCellValueByColumnAndRow((5), 4 , 'AVANS DE PLĂTIT');
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . '4')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(4) . '4')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . '4')->getAlignment()->setWrapText(true);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 4)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 4)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((5), 4)->getColumn())->setWidth(10);
 
                 $rand = 5;
 
@@ -562,9 +577,20 @@ class NormaLucrataController extends Controller
 
                         // AVANS
                         if (isset($angajat->avans)){
-                            $sheet->setCellValueByColumnAndRow(($index+3), $rand , $angajat->avans);
+                            $sheet->setCellValueByColumnAndRow((3), $rand , $angajat->avans);
                         }
-                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+3), $rand)->getColumn())->setAutoSize(true);
+                        // $sheet->getColumnDimension($sheet->getCellByColumnAndRow((3), $rand)->getColumn())->setAutoSize(true);
+
+                        $sheet->setCellValueByColumnAndRow((4), $rand , $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count());
+
+                        if ($zilePontate >= 10){
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $angajat->avans);
+                        } else if ($zilePontate >= 7){
+                            $sheet->setCellValueByColumnAndRow((5), $rand , 300);
+                        } else{
+                            $sheet->setCellValueByColumnAndRow((5), $rand , 0);
+                        }
+
 
                         $rand ++;
                         $nr_crt_angajat ++;
@@ -573,14 +599,14 @@ class NormaLucrataController extends Controller
 
                     // CALCUL TOTALURI
                     // AVANS
-                    $sheet->setCellValueByColumnAndRow(($index+3), $rand , '=SUM(' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . $rand_initial . ':' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . ($rand-1) . ')');
+                    $sheet->setCellValueByColumnAndRow((3), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . ($rand-1) . ')');
 
                     // Schimbare culoare la totaluri in rosu
                     $sheet->getStyle(
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . $rand . ':' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . $rand
                         )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
 
                     $rand += 2;
