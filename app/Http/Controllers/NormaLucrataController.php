@@ -519,6 +519,90 @@ class NormaLucrataController extends Controller
                 exit();
 
                 break;
+            case 'exportExcelAvansuri':
+
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+
+                $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+                $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+
+                $sheet->setCellValue('A1', 'Avansuri - ' . Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
+                $sheet->getStyle('A1')->getFont()->setSize(14);
+                $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                $sheet->setCellValue('A4', 'Nr.');
+                $sheet->getColumnDimension('A')->setAutoSize(true);
+                $sheet->setCellValue('B4', 'Nume Prenume');
+                $sheet->getColumnDimension('B')->setAutoSize(true);
+
+                $index = 0; // Se stabileste un index initial, care reprezinta coloana
+                $sheet->setCellValueByColumnAndRow(($index+3), 4 , 'AVANS');
+
+                $rand = 5;
+
+                foreach ($angajati->groupby('prod') as $angajati_per_prod){
+
+                    if ($angajati_per_prod->first()->prod){
+                        $sheet->setCellValue('A' . $rand, 'Prod ' . $angajati_per_prod->first()->prod);
+                    } else {
+                        $sheet->setCellValue('A' . $rand, 'Prod ?');
+                    }
+
+                    $rand ++;
+                    $rand_initial = $rand;
+
+                    $nr_crt_angajat = 1;
+
+                    foreach ($angajati_per_prod as $angajat){
+                        $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
+                        $sheet->setCellValue('B' . $rand, $angajat->nume);
+
+                        // AVANS
+                        if (isset($angajat->avans)){
+                            $sheet->setCellValueByColumnAndRow(($index+3), $rand , $angajat->avans);
+                        }
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+3), $rand)->getColumn())->setAutoSize(true);
+
+                        $rand ++;
+                        $nr_crt_angajat ++;
+                    }
+
+
+                    // CALCUL TOTALURI
+                    // AVANS
+                    $sheet->setCellValueByColumnAndRow(($index+3), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . ($rand-1) . ')');
+
+                    // Schimbare culoare la totaluri in rosu
+                    $sheet->getStyle(
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . $rand . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand
+                        )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+
+                    $rand += 2;
+                }
+
+                // Se parcug toate coloanele si se stabileste latimea AUTO
+                foreach ($sheet->getColumnIterator() as $column) {
+                    // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                }
+                // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
+                $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+
+                $writer = new Xlsx($spreadsheet);
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="Avansuri.xlsx"');
+                $writer->save('php://output');
+                exit();
+
+                break;
             default:
                     $request->session()->forget('norme_lucrate_afisare_tabelara_return_url');
 

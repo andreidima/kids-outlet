@@ -3,7 +3,7 @@
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-        <div class="col-lg-3">
+        <div class="col-lg-2">
             {{-- <h4 class="mb-0"><a href="{{ route('norme-lucrate.afisare_lunar') }}">
                 <i class="fas fa-clipboard-list me-1"></i>Norme lucrate</a> /
                 {{ \Carbon\Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') ?? '' }}
@@ -24,7 +24,7 @@
                 </form>
             </div>
         </div>
-        <div class="col-lg-9" id="app1">
+        <div class="col-lg-10" id="app1">
             <form class="needs-validation" novalidate method="GET" action="{{ route('norme-lucrate.afisare_lunar') }}">
                 @csrf
                 <div class="row mb-1 input-group custom-search-form justify-content-center">
@@ -85,22 +85,30 @@
                     </a>
                 </div>
                 <div class="row input-group custom-search-form justify-content-center">
-                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
-                        name="action" value="saptamana_anterioara">
-                        << Săptămâna anterioară
-                    </button>
-                    <button class="btn btn-sm btn-primary text-white col-md-4 mx-1 border border-dark rounded-3 shadow" type="submit"
-                        name="action" value="saptamana_urmatoare">
-                        Săptămâna următoare >>
-                    </button>
-                    {{-- <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
-                        name="action" value="export_pdf">
-                        <i class="fas fa-file-pdf me-1"></i>Export PDF
-                    </button> --}}
-                    <button class="btn btn-sm btn-danger text-white col-md-3 mx-1 border border-dark rounded-3 shadow" type="submit"
-                        name="action" value="export_excel">
-                        Export Excel
-                    </button>
+                    <div class="col-md-3">
+                        <button class="btn btn-sm btn-primary text-white border border-dark rounded-3 shadow" type="submit"
+                            name="action" value="saptamana_anterioara">
+                            << Săptămâna anterioară
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-sm btn-primary text-white border border-dark rounded-3 shadow" type="submit"
+                            name="action" value="saptamana_urmatoare">
+                            Săptămâna următoare >>
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-sm btn-danger text-white border border-dark rounded-3 shadow" type="submit"
+                            name="action" value="export_excel">
+                            Export Excel Salarii
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-sm btn-warning text-dark border border-dark rounded-3 shadow" type="submit"
+                            name="action" value="exportExcelAvansuri">
+                            Export Excel Avansuri
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
