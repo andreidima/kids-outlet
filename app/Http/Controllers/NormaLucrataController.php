@@ -388,10 +388,21 @@ class NormaLucrataController extends Controller
                         // REALIZAT
                         $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala_formula);
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+4), $rand)->getColumn())->setAutoSize(true);
-
+// dd($angajati->where('id', 4)->first()->pontaj->whereIn('concediu', [0,1,2,3])->count());
                         // AVANS
                         if (isset($angajat->avans)){
-                            $sheet->setCellValueByColumnAndRow(($index+5), $rand , $angajat->avans);
+                            // $sheet->setCellValueByColumnAndRow(($index+5), $rand , $angajat->avans);
+
+                            // Zile pontate
+                            $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count();
+                            // Avans platit
+                            if ($zilePontate >= 10){
+                                $sheet->setCellValueByColumnAndRow(($index+5), $rand , $avansPlatit = $angajat->avans);
+                            } else if ($zilePontate >= 7){
+                                $sheet->setCellValueByColumnAndRow(($index+5), $rand , $avansPlatit = 300);
+                            } else{
+                                $sheet->setCellValueByColumnAndRow(($index+5), $rand , $avansPlatit = 0);
+                            }
                         }
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+5), $rand)->getColumn())->setAutoSize(true);
 
@@ -423,8 +434,8 @@ class NormaLucrataController extends Controller
 
                         // PUS
                         $sheet->setCellValueByColumnAndRow(($index+9), $rand , '=' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand . '-' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand);
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand);
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+9), $rand)->getColumn())->setAutoSize(true);
 
                         // REALIZAT TOTAL
