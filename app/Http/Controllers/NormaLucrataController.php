@@ -546,6 +546,8 @@ class NormaLucrataController extends Controller
                 $sheet->setCellValue('B4', 'Nume Prenume');
                 $sheet->getColumnDimension('B')->setAutoSize(true);
 
+                $sheet->setCellValueByColumnAndRow((5), 4 , 'AVANS DE PLĂTIT se calculeaza astfel: zilePontate > 10');
+
                 $sheet->setCellValueByColumnAndRow((3), 4 , 'AVANS ÎN BAZA DE DATE');
                 $sheet->setCellValueByColumnAndRow((4), 4 , 'ZILE PONTATE (inclusiv medical sau CO');
                 $sheet->setCellValueByColumnAndRow((5), 4 , 'AVANS DE PLĂTIT');
