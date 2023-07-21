@@ -259,8 +259,8 @@ class NormaLucrataController extends Controller
             }])
             ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
                 $query->whereDate('data', '>=', $search_data_inceput)
-                    ->whereDate('data', '<=', $search_data_sfarsit)
-                    ->where('concediu', '>', 0); // daca este 0, inseamna ca nu a fost in concediu
+                    ->whereDate('data', '<=', $search_data_sfarsit);
+                    // ->where('concediu', '>', 0); // daca este 0, inseamna ca nu a fost in concediu
                 }])
             // ->with('norme_lucrate.produs_operatie.produs')
             ->when($search_nume, function ($query, $search_nume) {
@@ -518,17 +518,6 @@ class NormaLucrataController extends Controller
 
                 break;
             case 'exportExcelAvansuri':
-                $angajati = Angajat::
-                    with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
-                        $query->whereDate('data', '>=', $search_data_inceput)
-                            ->whereDate('data', '<=', $search_data_sfarsit);
-                        }])
-                    ->where('activ', 1) // Contul este activ
-                    ->where('id', '>', 3) // Conturile de angajat pentru Andrei Dima
-                    ->orderBy('prod')
-                    ->orderBy('nume')
-                    ->get();
-
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -541,24 +530,32 @@ class NormaLucrataController extends Controller
                 $sheet->getStyle('A1')->getFont()->setSize(14);
                 $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 
-                $sheet->setCellValue('A5', 'Nr.');
-                $sheet->getColumnDimension('A')->setAutoSize(true);
-                $sheet->setCellValue('B5', 'Nume Prenume');
+                $sheet->setCellValue('A4', 'Nr.');
+                // $sheet->getColumnDimension('A')->setAutoSize(true);
+                $sheet->setCellValue('B4', 'Nume Prenume');
                 $sheet->getColumnDimension('B')->setAutoSize(true);
 
-                $sheet->setCellValueByColumnAndRow((1), 3 , 'AVANS DE PLĂTIT se calculeaza astfel: zilePontate > 10 (avansul se plătește integral), zilePontate > 7 (avansul se plătește 300), zilePontate < 7 (avansul se plătește 0)');
+                $sheet->setCellValueByColumnAndRow((3), 4 , 'AVANS ÎN BAZA DE DATE');
+                $sheet->setCellValueByColumnAndRow((4), 4 , 'ZILE PONTATE (inclusiv medical sau CO');
+                $sheet->setCellValueByColumnAndRow((5), 4 , 'AVANS DE PLĂTIT');
+                $sheet->setCellValueByColumnAndRow((6), 4 , 'BANCĂ');
+                $sheet->setCellValueByColumnAndRow((7), 4 , 'MÂNĂ');
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . '4')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(4) . '4')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . '4')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(6) . '4')->getAlignment()->setWrapText(true);
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . '4')->getAlignment()->setWrapText(true);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 4)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 4)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((5), 4)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((6), 4)->getColumn())->setWidth(10);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((7), 4)->getColumn())->setWidth(10);
 
-                $sheet->setCellValueByColumnAndRow((3), 5 , 'AVANS ÎN BAZA DE DATE');
-                $sheet->setCellValueByColumnAndRow((4), 5 , 'ZILE PONTATE (inclusiv medical sau CO');
-                $sheet->setCellValueByColumnAndRow((5), 5 , 'AVANS DE PLĂTIT');
-                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . '5')->getAlignment()->setWrapText(true);
-                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(4) . '5')->getAlignment()->setWrapText(true);
-                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . '5')->getAlignment()->setWrapText(true);
-                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 5)->getColumn())->setWidth(10);
-                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((4), 5)->getColumn())->setWidth(10);
-                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((5), 5)->getColumn())->setWidth(10);
+                $rand = 5;
 
-                $rand = 6;
+                $formulaTotalAvansDePlatit = "=";
+                $formulaTotalPlataPrinBanca = "=";
+                $formulaTotalPlanaInMana = "=";
 
                 foreach ($angajati->groupby('prod') as $angajati_per_prod){
 
@@ -583,14 +580,25 @@ class NormaLucrataController extends Controller
                         }
                         // $sheet->getColumnDimension($sheet->getCellByColumnAndRow((3), $rand)->getColumn())->setAutoSize(true);
 
+                        // Zile pontate
                         $sheet->setCellValueByColumnAndRow((4), $rand , $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count());
 
+                        // Avans de platit
                         if ($zilePontate >= 10){
-                            $sheet->setCellValueByColumnAndRow((5), $rand , $angajat->avans);
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = $angajat->avans);
                         } else if ($zilePontate >= 7){
-                            $sheet->setCellValueByColumnAndRow((5), $rand , 300);
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 300);
                         } else{
-                            $sheet->setCellValueByColumnAndRow((5), $rand , 0);
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 0);
+                        }
+
+                        // Mod de plata
+                        if ($angajat->firma){
+                            if (($angajat->firma === "Petit Atelier S.R.L.") || ($angajat->firma === "Mate Andy Style") || ($angajat->firma === "Bensar S.R.L.")){ // plata prin banca
+                                $sheet->setCellValueByColumnAndRow((6), $rand , $avansDePlatit);
+                            } else{ // plata in mana
+                                $sheet->setCellValueByColumnAndRow((7), $rand , $avansDePlatit);
+                            }
                         }
 
 
@@ -598,21 +606,62 @@ class NormaLucrataController extends Controller
                         $nr_crt_angajat ++;
                     }
 
-
                     // CALCUL TOTALURI
                     // AVANS
                     $sheet->setCellValueByColumnAndRow((3), $rand , '=SUM(' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand_initial . ':' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . ($rand-1) . ')');
+                    // AVANS DE PLATIT
+                    $sheet->setCellValueByColumnAndRow((5), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . ($rand-1) . ')');
+                    $formulaTotalAvansDePlatit .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . $rand . '+';
+                    // Pata prin banca
+                    $sheet->setCellValueByColumnAndRow((6), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(6) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(6) . ($rand-1) . ')');
+                    $formulaTotalPlataPrinBanca .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(6) . $rand . '+';
+                    // Pata in mana
+                    $sheet->setCellValueByColumnAndRow((7), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . ($rand-1) . ')');
+                    $formulaTotalPlanaInMana .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand . '+';
 
                     // Schimbare culoare la totaluri in rosu
                     $sheet->getStyle(
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . ':' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(5) . $rand
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand
                         )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
 
                     $rand += 2;
                 }
+
+                $rand += 1;
+
+                $sheet->setCellValue('B' . $rand, 'TOTAL GENERAL');
+                $sheet->getStyle('B' . $rand)->getAlignment()->setHorizontal('right');
+
+                $sheet->setCellValue('E' . $rand, substr_replace($formulaTotalAvansDePlatit ,"", -1));
+                $sheet->setCellValue('F' . $rand, substr_replace($formulaTotalPlataPrinBanca ,"", -1));
+                $sheet->setCellValue('G' . $rand, substr_replace($formulaTotalPlanaInMana ,"", -1));
+                // Schimbare culoare la totaluri in rosu
+                $sheet->getStyle(
+                    \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . ':' .
+                    \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand
+                    )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+                // Set bold totaluri generale
+                $sheet->getStyle('A' . $rand . ':' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand)->getFont()->setBold(true);
+
+                $rand += 3;
+                // Informare
+                $sheet->setCellValue('A' . $rand++, 'AVANS DE PLĂTIT se calculeaza astfel:');
+                $sheet->setCellValue('B' . $rand++, 'zilePontate > 10 - avansul se plătește integral');
+                $sheet->setCellValue('B' . $rand++, 'zilePontate > 7 - avansul se plătește 300');
+                $sheet->setCellValue('B' . $rand++, 'zilePontate < 7 - avansul se plătește 0');
+
+                $rand += 1;
+                // Informare
+                $sheet->setCellValue('A' . $rand++, 'Plata prin banca: Petit Atelier S.R.L., Mate Andy Style, Bensar S.R.L.');
 
                 // Se parcug toate coloanele si se stabileste latimea AUTO
                 foreach ($sheet->getColumnIterator() as $column) {
@@ -620,9 +669,9 @@ class NormaLucrataController extends Controller
                 }
                 // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
                 $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
-                $sheet->mergeCells('A3:' . $column->getColumnIndex() . '3');
-                $sheet->getStyle('A5:' . $column->getColumnIndex() . '5')->getAlignment()->setHorizontal('center');
-                $sheet->getStyle('A5:' . $column->getColumnIndex() . '5')->getFont()->setBold(true);
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+
                 // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
 
                 $writer = new Xlsx($spreadsheet);
