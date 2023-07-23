@@ -125,7 +125,7 @@
         </div>
 
         {{-- Gestionarea pontatorilor angajatului --}}
-        <div class="row mb-5" id="angajati">
+        <div class="row mb-4" id="angajati">
             <script type="application/javascript">
                 angajati = {!! json_encode($angajati) !!}
                 // angajatPontatori={!! json_encode(\Illuminate\Support\Arr::flatten(old('angajat_pontatori', $angajat->angajati_pontatori->pluck('nume', 'id')->toArray() ?? [] ))) !!}
@@ -168,6 +168,64 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="row mb-2" style="background-color:rgb(192, 216, 248)">
+            <div class="col-lg-12 py-2 text-center">
+                <span class="px-2 bg-info text-white rounded-3 fs-4">
+                    Date bancare
+                </span>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <label for="banca_angajat_nume" class="mb-0 ps-3">Angajat nume:</label>
+                <input
+                    type="text"
+                    class="form-control rounded-pill {{ $errors->has('banca_angajat_nume') ? 'is-invalid' : '' }}"
+                    name="banca_angajat_nume"
+                    placeholder=""
+                    value="{{ old('banca_angajat_nume', $angajat->banca_angajat_nume) }}"
+                    required>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <label for="banca_angajat_cnp" class="mb-0 ps-3">Angajat CNP:</label>
+                <input
+                    type="text"
+                    class="form-control rounded-pill {{ $errors->has('banca_angajat_cnp') ? 'is-invalid' : '' }}"
+                    name="banca_angajat_cnp"
+                    placeholder=""
+                    value="{{ old('banca_angajat_cnp', $angajat->banca_angajat_cnp) }}"
+                    required>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <label for="banca_iban" class="mb-0 ps-3">IBAN:</label>
+                <input
+                    type="text"
+                    class="form-control rounded-pill {{ $errors->has('banca_iban') ? 'is-invalid' : '' }}"
+                    name="banca_iban"
+                    placeholder=""
+                    value="{{ old('banca_iban', $angajat->banca_iban) }}"
+                    required>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <label for="banca_detalii_1" class="mb-0 ps-3">Detalii 1:</label>
+                <input
+                    type="text"
+                    class="form-control rounded-pill {{ $errors->has('banca_detalii_1') ? 'is-invalid' : '' }}"
+                    name="banca_detalii_1"
+                    placeholder=""
+                    value="{{ old('banca_detalii_1', $angajat->banca_detalii_1) }}"
+                    required>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <label for="banca_detalii_2" class="mb-0 ps-3">Detalii 2:</label>
+                <input
+                    type="text"
+                    class="form-control rounded-pill {{ $errors->has('banca_detalii_2') ? 'is-invalid' : '' }}"
+                    name="banca_detalii_2"
+                    placeholder=""
+                    value="{{ old('banca_detalii_2', $angajat->banca_detalii_2) }}"
+                    required>
             </div>
         </div>
 

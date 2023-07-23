@@ -143,7 +143,13 @@ class AngajatController extends Controller
             'avans' => 'required|numeric|max:99999',
             'foaie_pontaj' => 'nullable|max:200',
             'limba_aplicatie' => 'required',
-            'activ' => 'nullable|integer|between:0,1'
+            'activ' => 'nullable|integer|between:0,1',
+
+            'banca_angajat_nume' => 'nullable|max:200',
+            'banca_angajat_cnp' => 'nullable|max:200',
+            'banca_iban' => 'nullable|max:200',
+            'banca_detalii_1' => 'nullable|max:200',
+            'banca_detalii_2' => 'nullable|max:200',
         ]);
     }
 }

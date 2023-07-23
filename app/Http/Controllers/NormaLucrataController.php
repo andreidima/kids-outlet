@@ -547,7 +547,7 @@ class NormaLucrataController extends Controller
                 $sheet->getColumnDimension('B')->setAutoSize(true);
 
                 $sheet->setCellValueByColumnAndRow((3), 4 , 'AVANS ÎN BAZA DE DATE');
-                $sheet->setCellValueByColumnAndRow((4), 4 , 'ZILE PONTATE (inclusiv medical sau CO');
+                $sheet->setCellValueByColumnAndRow((4), 4 , 'ZILE PONTATE (inclusiv medical sau CO)');
                 $sheet->setCellValueByColumnAndRow((5), 4 , 'AVANS DE PLĂTIT');
                 $sheet->setCellValueByColumnAndRow((6), 4 , 'BANCĂ');
                 $sheet->setCellValueByColumnAndRow((7), 4 , 'MÂNĂ');
@@ -595,7 +595,7 @@ class NormaLucrataController extends Controller
                         $sheet->setCellValueByColumnAndRow((4), $rand , $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count());
 
                         // Avans de platit
-                        if ($zilePontate >= 10){
+                        if ($zilePontate > 10){
                             $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = $angajat->avans);
                         } else if ($zilePontate >= 7){
                             $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 300);
@@ -667,7 +667,7 @@ class NormaLucrataController extends Controller
                 // Informare
                 $sheet->setCellValue('A' . $rand++, 'AVANS DE PLĂTIT se calculeaza astfel:');
                 $sheet->setCellValue('B' . $rand++, 'zilePontate > 10 - avansul se plătește integral');
-                $sheet->setCellValue('B' . $rand++, 'zilePontate > 7 - avansul se plătește 300');
+                $sheet->setCellValue('B' . $rand++, 'zilePontate între 7 și 10 - avansul se plătește 300');
                 $sheet->setCellValue('B' . $rand++, 'zilePontate < 7 - avansul se plătește 0');
 
                 $rand += 1;
@@ -684,6 +684,55 @@ class NormaLucrataController extends Controller
                 $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
 
                 // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+
+                $writer = new Xlsx($spreadsheet);
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="Avansuri.xlsx"');
+                $writer->save('php://output');
+                exit();
+
+                break;
+            case 'exportExcelBancaIng':
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+
+                $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+                $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+                $sheet->setCellValue('A1', 'NRCRT');
+                $sheet->setCellValue('B1', 'SALARIAT');
+                $sheet->setCellValue('C1', 'CNP');
+                $sheet->setCellValue('D1', 'SUMA');
+                $sheet->setCellValue('E1', 'IBAN');
+                $sheet->setCellValue('F1', 'EXPLICATIE');
+
+                $rand = 2;
+
+                // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    foreach ($angajati as $index=>$angajat){
+                        $sheet->setCellValue('A' . $rand, $index);
+                        $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
+                        $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_cnp);
+
+                        // Avans de platit
+                        $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count();
+                        if ($zilePontate > 10){
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = $angajat->avans);
+                        } else if ($zilePontate >= 7){
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 300);
+                        } else{
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 0);
+                        }
+
+
+
+                        $rand ++;
+                    }
+                // Se parcug toate coloanele si se stabileste latimea AUTO
+                foreach ($sheet->getColumnIterator() as $column) {
+                    // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                }
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
