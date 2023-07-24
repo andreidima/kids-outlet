@@ -16,6 +16,12 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\PhpWord;
+
+use File;
+
+use Illuminate\Support\Facades\Response;
+
 
 use Carbon\Carbon;
 
@@ -710,35 +716,95 @@ class NormaLucrataController extends Controller
                 $rand = 2;
 
                 // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // dd($angajati->take(3));
                     foreach ($angajati as $index=>$angajat){
-                        $sheet->setCellValue('A' . $rand, $index);
+                        $sheet->setCellValue('A' . $rand, $index + 1);
+                        // dd($angajat->nume);
+                        // $sheet->setCellValue('B' . $rand, $index . $angajat->nume);
                         $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
-                        $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_cnp);
+
+                        // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
+                        $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
+                        $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
 
                         // Avans de platit
                         $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count();
                         if ($zilePontate > 10){
-                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = $angajat->avans);
+                            $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = $angajat->avans);
                         } else if ($zilePontate >= 7){
-                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 300);
+                            $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = 300);
                         } else{
-                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 0);
+                            $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = 0);
                         }
 
-
+                        $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
+                        $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
 
                         $rand ++;
                     }
                 // Se parcug toate coloanele si se stabileste latimea AUTO
                 foreach ($sheet->getColumnIterator() as $column) {
-                    // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
                 }
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="Avansuri.xlsx"');
+                header('Content-Disposition: attachment; filename="Avansuri ING.xlsx"');
                 $writer->save('php://output');
                 exit();
+
+                break;
+            case 'exportTxtBancaBt':
+
+                // Storage::put('Avansuri/Avans.txt', 'he he 22');
+$content = "hi";
+                // $headers = [
+                //     'Content-Description' => 'File Transfer',
+                //     'Content-Type' => 'application/txt',
+                // ];
+
+                // return Storage::download('Avansuri/Avans.txt', 'Avans.txt', $headers);
+
+// $headers = [
+//     'Content-Type' => 'application/txt'
+// ];
+// return response()->download($filesPath, $fileName, $headers);
+
+
+
+                // return response($content)
+                //     ->header('Content-Type', 'application/txt');
+
+// return response()->withHeaders(['Content-Type', 'application/txt'])->streamDownload(function () {
+//     $content;
+// }, 'laravel-readme.txt');
+
+$response = Response::make($content, 200);
+   $response->header('Content-Type', 'application/pdf');
+   return $response;
+
+
+
+                // $myfile = fopen("AVANSURI MATE.txt", "w");
+
+
+                // $sheet->setCellValue('A1', 'NRCRT');
+                // $sheet->setCellValue('B1', 'SALARIAT');
+                // $sheet->setCellValue('C1', 'CNP');
+                // $sheet->setCellValue('D1', 'SUMA');
+                // $sheet->setCellValue('E1', 'IBAN');
+                // $sheet->setCellValue('F1', 'EXPLICATIE');
+
+
+                // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //     foreach ($angajati as $index=>$angajat){
+                //     }
+
+                // $writer = new Xlsx($spreadsheet);
+                // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                // header('Content-Disposition: attachment; filename="Avansuri ING.xlsx"');
+                // $writer->save('php://output');
+                // exit();
 
                 break;
             default:
