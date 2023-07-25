@@ -761,8 +761,8 @@ class NormaLucrataController extends Controller
                 // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 foreach ($angajati->where('firma', 'Mate Andy Style') as $angajat){
                     $content .= "RO02INGB0000999912573918\t";
-                    // $content .= $angajat->banca_iban . "\t";
-                    $content .= $angajat->id . "\t";
+                    $content .= $angajat->banca_iban . "\t";
+                    // $content .= $angajat->id . "\t";
 
                     // Avans de platit
                     $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count();
