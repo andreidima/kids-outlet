@@ -715,34 +715,32 @@ class NormaLucrataController extends Controller
 
                 $rand = 2;
 
-                // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // dd($angajati->take(3));
-                    foreach ($angajati->whereIn('firma', ['Bensar S.R.L.', 'Petit Atelier S.R.L.'])->sortBy('banca_angajat_nume') as $index=>$angajat){
-                        $sheet->setCellValue('A' . $rand, $index + 1);
-                        // dd($angajat->nume);
-                        // $sheet->setCellValue('B' . $rand, $index . $angajat->nume);
-                        $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
+                $nrCrt = 1;
+                foreach ($angajati->whereIn('firma', ['Bensar S.R.L.', 'Petit Atelier S.R.L.'])->sortBy('banca_angajat_nume') as $index=>$angajat){
+                    $sheet->setCellValue('A' . $rand, $nrCrt++);
 
-                        // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
-                        $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
-                        $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
+                    $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
 
-                        // Avans de platit
-                        $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count();
-                        if ($zilePontate > 10){
-                            $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = $angajat->avans);
-                        } else if ($zilePontate >= 7){
-                            $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = 300);
-                        } else{
-                            $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = 0);
-                        }
+                    // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
+                    $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
+                    $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
 
-                        $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
-                        // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
-                        $sheet->setCellValue('F' . $rand, 'AVANS ' . Carbon::parse($search_data_inceput)->isoformat('MMMM YYYY'));
-
-                        $rand ++;
+                    // Avans de platit
+                    $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count();
+                    if ($zilePontate > 10){
+                        $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = $angajat->avans);
+                    } else if ($zilePontate >= 7){
+                        $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = 300);
+                    } else{
+                        $sheet->setCellValueByColumnAndRow((4), $rand , $avansDePlatit = 0);
                     }
+
+                    $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
+                    // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
+                    $sheet->setCellValue('F' . $rand, 'AVANS ' . Carbon::parse($search_data_inceput)->isoformat('MMMM YYYY'));
+
+                    $rand ++;
+                }
                 // Se parcug toate coloanele si se stabileste latimea AUTO
                 foreach ($sheet->getColumnIterator() as $column) {
                     $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
