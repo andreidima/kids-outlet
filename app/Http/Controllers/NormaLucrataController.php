@@ -721,7 +721,7 @@ class NormaLucrataController extends Controller
                         $sheet->setCellValue('A' . $rand, $index + 1);
                         // dd($angajat->nume);
                         // $sheet->setCellValue('B' . $rand, $index . $angajat->nume);
-                        $sheet->setCellValue('B' . $rand, $angajat->id . $angajat->banca_angajat_nume);
+                        $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
 
                         // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
                         $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
