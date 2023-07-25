@@ -745,10 +745,11 @@ class NormaLucrataController extends Controller
                 foreach ($sheet->getColumnIterator() as $column) {
                     $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
                 }
+                // $sheet->getColumnDimension('A')->setWidth(90);
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="Avansuri ING.xlsx"');
+                header('Content-Disposition: attachment; filename="Avansuri BT.xlsx"');
                 $writer->save('php://output');
                 exit();
 
