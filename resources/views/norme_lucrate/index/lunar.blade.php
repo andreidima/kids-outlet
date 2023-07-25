@@ -84,7 +84,7 @@
                         <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                     </a>
                 </div>
-                <div class="row input-group custom-search-form justify-content-center">
+                <div class="row mb-4 input-group custom-search-form justify-content-center">
                     <div class="col-md-3 d-grid gap-2">
                         <button class="btn btn-sm btn-primary text-white border border-dark rounded-3 shadow" type="submit"
                             name="action" value="saptamana_anterioara">
@@ -103,25 +103,30 @@
                             Export Excel Salarii
                         </button>
                     </div>
-                    <div class="col-md-3 d-grid gap-2">
-                        <button class="btn btn-sm btn-warning text-dark border border-dark rounded-3 shadow" type="submit"
-                            name="action" value="exportExcelAvansuri">
-                            Export Excel Avansuri
-                        </button>
-                    </div>
                 </div>
                 <div class="row input-group custom-search-form justify-content-center">
-                    <div class="col-md-3 d-grid gap-2">
-                        <button class="btn btn-sm btn-primary text-white border border-dark rounded-3 shadow" type="submit"
-                            name="action" value="exportExcelBancaIng">
-                            Export Excel ING
-                        </button>
-                    </div>
-                    <div class="col-md-3 d-grid gap-2">
-                        <button class="btn btn-sm btn-primary text-white border border-dark rounded-3 shadow" type="submit"
-                            name="action" value="exportTxtBancaBt">
-                            Export Txt BT
-                        </button>
+                    <div class="col-md-6 d-grid gap-2 d-flex align-items-center">
+                        <div class="px-2 d-flex align-items-center" style="background-color:rgb(252, 252, 173)">
+                            Export avansuri: &nbsp;
+                        {{-- </div>
+                        <div class="col-md-3 d-grid gap-2"> --}}
+                            <button class="btn btn-sm btn-warning text-dark mx-1 border border-dark rounded-3 shadow" type="submit"
+                                name="action" value="exportExcelAvansuri">
+                                Excel Toate
+                            </button>
+                        {{-- </div>
+                        <div class="col-md-3 d-grid gap-2"> --}}
+                            <button class="btn btn-sm btn-warning text-dark mx-1 border border-dark rounded-3 shadow" type="submit"
+                                name="action" value="exportExcelBancaBt">
+                                Excel BT
+                            </button>
+                        {{-- </div>
+                        <div class="col-md-3 d-grid gap-2"> --}}
+                            <button class="btn btn-sm btn-warning text-dark mx-1 border border-dark rounded-3 shadow" type="submit"
+                                name="action" value="exportTxtBancaIng">
+                                Txt ING
+                            </button>
+                        </div>
                     </div>
                     {{-- <div class="col-md-3 d-grid gap-2">
                         <button class="btn btn-sm btn-danger text-white border border-dark rounded-3 shadow" type="submit"

@@ -698,7 +698,7 @@ class NormaLucrataController extends Controller
                 exit();
 
                 break;
-            case 'exportExcelBancaIng':
+            case 'exportExcelBancaBt':
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -738,7 +738,8 @@ class NormaLucrataController extends Controller
                         }
 
                         $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
-                        $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
+                        // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
+                        $sheet->setCellValue('F' . $rand, 'AVANS ' . Carbon::parse($search_data_inceput)->isoformat('MMMM YYYY'));
 
                         $rand ++;
                     }
@@ -754,58 +755,48 @@ class NormaLucrataController extends Controller
                 exit();
 
                 break;
-            case 'exportTxtBancaBt':
-
-                // Storage::put('Avansuri/Avans.txt', 'he he 22');
-$content = "hi";
-                // $headers = [
-                //     'Content-Description' => 'File Transfer',
-                //     'Content-Type' => 'application/txt',
-                // ];
-
-                // return Storage::download('Avansuri/Avans.txt', 'Avans.txt', $headers);
-
-// $headers = [
-//     'Content-Type' => 'application/txt'
-// ];
-// return response()->download($filesPath, $fileName, $headers);
-
-
-
-                // return response($content)
-                //     ->header('Content-Type', 'application/txt');
-
-// return response()->withHeaders(['Content-Type', 'application/txt'])->streamDownload(function () {
-//     $content;
-// }, 'laravel-readme.txt');
-
-$response = Response::make($content, 200);
-   $response->header('Content-Type', 'application/pdf');
-   return $response;
-
-
-
-                // $myfile = fopen("AVANSURI MATE.txt", "w");
-
-
-                // $sheet->setCellValue('A1', 'NRCRT');
-                // $sheet->setCellValue('B1', 'SALARIAT');
-                // $sheet->setCellValue('C1', 'CNP');
-                // $sheet->setCellValue('D1', 'SUMA');
-                // $sheet->setCellValue('E1', 'IBAN');
-                // $sheet->setCellValue('F1', 'EXPLICATIE');
-
-
+            case 'exportTxtBancaIng':
+                // prepare content
+                $content = "Cont sursa\tCont destinatie\tSuma\tBeneficiar\tDetalii 1\tDetalii 2\n";
                 // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                //     foreach ($angajati as $index=>$angajat){
-                //     }
+                foreach ($angajati->where('firma', 'Mate Andy Style') as $angajat){
+                    $content .= "RO02INGB0000999912573918\t";
+                    // $content .= $angajat->banca_iban . "\t";
+                    $content .= $angajat->id . "\t";
 
-                // $writer = new Xlsx($spreadsheet);
-                // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                // header('Content-Disposition: attachment; filename="Avansuri ING.xlsx"');
-                // $writer->save('php://output');
-                // exit();
+                    // Avans de platit
+                    $zilePontate = $angajat->pontaj->whereIn('concediu', [0,1,2,3])->count();
+                    if ($zilePontate > 10){
+                        $content .= round($angajat->avans, 2) . "\t";
+                    } else if ($zilePontate >= 7){
+                        $content .= 300 . "\t";
+                    } else{
+                        $content .= 0 . "\t";
+                    }
 
+                    $content .= $angajat->banca_angajat_nume . "\t";
+                    $content .= 'AVANS' . "\t";
+                    $content .= Carbon::parse($search_data_inceput)->isoformat('MMMM YYYY') . "\t";
+
+                    $content .= "\n";
+                }
+                // foreach ($logs as $log) {
+                //   $content .= $logs->id;
+                //   $content .= "\n";
+                // }
+
+                // file name that will be used in the download
+                $fileName = "Avansuri MATE.txt";
+
+                // use headers in order to generate the download
+                $headers = [
+                'Content-type' => 'text/plain',
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
+                'Content-Length' => strlen($content)
+                ];
+
+                // make a response, with the content, a 200 response code and the headers
+                return Response::make($content, 200, $headers);
                 break;
             default:
                     $request->session()->forget('norme_lucrate_afisare_tabelara_return_url');
