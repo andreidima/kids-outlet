@@ -717,11 +717,11 @@ class NormaLucrataController extends Controller
 
                 // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 // dd($angajati->take(3));
-                    foreach ($angajati as $index=>$angajat){
+                    foreach ($angajati->whereIn('firma', ['Bensar S.R.L.', 'Petit Atelier S.R.L.'])->sortBy('banca_angajat_nume') as $index=>$angajat){
                         $sheet->setCellValue('A' . $rand, $index + 1);
                         // dd($angajat->nume);
                         // $sheet->setCellValue('B' . $rand, $index . $angajat->nume);
-                        $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
+                        $sheet->setCellValue('B' . $rand, $angajat->id . $angajat->banca_angajat_nume);
 
                         // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
                         $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
@@ -761,7 +761,7 @@ class NormaLucrataController extends Controller
                 // aici trebuie cei de la o anumita firma !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 foreach ($angajati->where('firma', 'Mate Andy Style') as $angajat){
 
-                    $content .= $angajat->id . "\t";
+                    // $content .= $angajat->id . "\t";
                     $content .= "RO02INGB0000999912573918\t";
                     $content .= $angajat->banca_iban . "\t";
 
