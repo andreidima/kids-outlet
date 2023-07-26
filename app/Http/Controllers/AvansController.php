@@ -301,7 +301,7 @@ class AvansController extends Controller
                     $content .= "RO02INGB0000999912573918\t";
                     $content .= $angajat->banca_iban . "\t";
 
-                    $content .= $angajat->avansuri->first()->suma;
+                    $content .= $angajat->avansuri->first()->suma . "\t";
 
                     $content .= $angajat->banca_angajat_nume . "\t";
                     $content .= 'AVANS' . "\t";
