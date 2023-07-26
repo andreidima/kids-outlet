@@ -69,17 +69,18 @@ class AvansController extends Controller
             }
         }
 
-        $angajati = Angajat::where('activ', 1)
-            ->with(['avansuri'=> function($query) use ($searchData){
-                $query->whereDate('data', $searchData);
-            }])
-            ->orderBy('prod')
-            ->orderBy('nume')
-            ->get();
 
 
         switch ($request->input('action')) {
             case 'exportExcelAvansuri':
+                $angajati = Angajat::where('activ', 1)
+                    ->with(['avansuri'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->orderBy('prod')
+                    ->orderBy('nume')
+                    ->get();
+
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -244,6 +245,16 @@ class AvansController extends Controller
 
                 break;
             case 'exportExcelBancaBt':
+                $angajati = Angajat::
+                    with(['avansuri'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->where('banca_iban', 'like', '%BTRL%')
+                    ->where('activ', 1)
+                    ->orderBy('prod')
+                    ->orderBy('banca_angajat_nume')
+                    ->get();
+
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -261,7 +272,8 @@ class AvansController extends Controller
                 $rand = 2;
 
                 $nrCrt = 1;
-                foreach ($angajati->whereIn('firma', ['Bensar S.R.L.', 'Petit Atelier S.R.L.'])->sortBy('banca_angajat_nume') as $index=>$angajat){
+
+                foreach ($angajati as $index=>$angajat){
                     $sheet->setCellValue('A' . $rand, $nrCrt++);
 
                     $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
@@ -293,10 +305,20 @@ class AvansController extends Controller
 
                 break;
             case 'exportTxtBancaIng':
+                $angajati = Angajat::
+                    with(['avansuri'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->where('banca_iban', 'like', '%ING%')
+                    ->where('activ', 1)
+                    ->orderBy('prod')
+                    ->orderBy('nume')
+                    ->get();
+
                 // prepare content
                 $content = "Cont sursa\tCont destinatie\tSuma\tBeneficiar\tDetalii 1\tDetalii 2\n";
 
-                foreach ($angajati->where('firma', 'Mate Andy Style') as $angajat){
+                foreach ($angajati as $angajat){
                     // $content .= $angajat->id . "\t";
                     $content .= "RO02INGB0000999912573918\t";
                     $content .= $angajat->banca_iban . "\t";
@@ -311,7 +333,7 @@ class AvansController extends Controller
                 }
 
                 // file name that will be used in the download
-                $fileName = "Avansuri MATE.txt";
+                $fileName = "Avansuri ING.txt";
 
                 // use headers in order to generate the download
                 $headers = [
@@ -323,7 +345,25 @@ class AvansController extends Controller
                 // make a response, with the content, a 200 response code and the headers
                 return Response::make($content, 200, $headers);
                 break;
-            case 'exportExcelMână':
+            case 'exportExcelMana':
+                $angajati = Angajat::
+                    with(['avansuri'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->where(function($query){
+                        $query->where(function($query){
+                            $query->where('banca_iban', 'not like', '%BTRL%')
+                                    ->where('banca_iban', 'not like', '%ING%');
+                            })
+                            ->orWhereNull('banca_iban');
+                    })
+                    // ->where('banca_iban', 'not like', '%BTRL%')
+                    // ->where('banca_iban', 'not like', '%ING%')
+                    ->where('activ', 1)
+                    ->orderBy('prod')
+                    ->orderBy('nume')
+                    ->get();
+
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -349,7 +389,7 @@ class AvansController extends Controller
 
                 $formulaTotalPlataInMana = "=";
 
-                foreach ($angajati->where('firma', '<>', "Petit Atelier S.R.L.")->where('firma', '<>', "Mate Andy Style")->where('firma', '<>', "Bensar S.R.L.")->groupby('prod') as $angajati_per_prod){
+                foreach ($angajati->groupby('prod') as $angajati_per_prod){
 
                     if ($angajati_per_prod->first()->prod){
                         $sheet->setCellValue('A' . $rand, 'Prod ' . $angajati_per_prod->first()->prod);
@@ -423,6 +463,15 @@ class AvansController extends Controller
 
                 break;
             default:
+                $angajati = Angajat::
+                    with(['avansuri'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->where('activ', 1)
+                    ->orderBy('prod')
+                    ->orderBy('nume')
+                    ->get();
+
                     return view('avansuri.index', compact('angajati', 'searchData', 'searchLuna', 'searchAn'));
                 break;
             }

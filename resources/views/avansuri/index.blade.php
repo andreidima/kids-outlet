@@ -89,7 +89,7 @@
                                 Txt ING
                             </button>
                             <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                name="action" value="exportExcelMână">
+                                name="action" value="exportExcelMana">
                                 Excel Mână
                             </button>
                         </div>
@@ -122,7 +122,7 @@
                                         </div>
                                     </th>
                                 <tr class="" style="padding:2rem">
-                                    <th>#</th>
+                                    <th style="width: 50px;">#</th>
                                     <th>Angajat</th>
                                     <th class="text-end" style="width: 80px;">Avans</th>
                                 </tr>
@@ -130,7 +130,7 @@
                             <tbody>
                             @foreach ($angajatiPerProd as $angajat)
                                 <tr>
-                                    <td align="">
+                                    <td>
                                         {{ $loop->iteration }}
                                     </td>
                                     <td>
