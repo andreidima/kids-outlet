@@ -18,8 +18,6 @@ use PhpOffice\PhpSpreadsheet\Style\Color;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\PhpWord;
 
-use File;
-
 use Illuminate\Support\Facades\Response;
 
 

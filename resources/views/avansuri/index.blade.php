@@ -5,7 +5,7 @@
         <form class="needs-validation" novalidate method="GET" action="{{ url()->current() }}">
             @csrf
             <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <h4 class="mb-0">Avansuri</a></h4>
                 </div>
                 <div class="col-lg-6" id="app1">
@@ -30,41 +30,72 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-3 d-flex align-items-center justify-content-end">
-                    <a
-                        class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
-                        href="#"
-                        data-bs-toggle="modal"
-                        data-bs-target="#calculeazaAutomatAvansurile"
-                        title="Calculează automat avansurile"
-                        >
-                        Calculează automat avansurile
-                    </a>
-                    <div class="modal fade text-dark" id="calculeazaAutomatAvansurile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                            <div class="modal-header bg-danger">
-                                <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
-                                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body" style="text-align:left;">
-                                Ești sigur ca vrei să se calculeze automat toate avansurile pentru luna aleasă?
-                                <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
-                                Toate avansurile introduse manual se vor șterge!
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                <div class="col-lg-4">
+                    <div class="mb-2 d-flex align-items-center justify-content-end">
+                        <a
+                            class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
+                            href="#"
+                            data-bs-toggle="modal"
+                            data-bs-target="#calculeazaAutomatAvansurile"
+                            title="Calculează automat avansurile"
+                            >
+                            Calculează automat avansurile
+                        </a>
+                        <div class="modal fade text-dark" id="calculeazaAutomatAvansurile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header bg-danger">
+                                    <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
+                                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="text-align:left;">
+                                    Ești sigur ca vrei să se calculeze automat toate avansurile pentru luna aleasă?
+                                    <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
+                                    Toate avansurile introduse manual se vor șterge!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
 
-                                    <button class="btn btn-danger text-white border border-dark" type="submit"
-                                        name="action" value="calculeazaAutomatAvansurile">
-                                        Calculează automat avansurile
-                                    </button>
+                                        <button class="btn btn-danger text-white border border-dark" type="submit"
+                                            name="action" value="calculeazaAutomatAvansurile">
+                                            Calculează automat avansurile
+                                        </button>
 
-                            </div>
+                                </div>
+                                </div>
                             </div>
                         </div>
+                        <i class="fas fa-question-circle fa-lg text-info" title="Avansurile se calculeaza astfel: zilePontate > 10 - avansul se plătește integral, zilePontate între 7 și 10 - avansul se plătește 300, zilePontate < 7 - avansul se plătește 0"></i>
                     </div>
-                    <i class="fas fa-question-circle fa-lg text-info" title="Avansurile se calculeaza astfel: zilePontate > 10 - avansul se plătește integral, zilePontate între 7 și 10 - avansul se plătește 300, zilePontate < 7 - avansul se plătește 0"></i>
+                    <div class="d-grid gap-2 d-flex align-items-center justify-content-end">
+                        <div class="px-2 py-0 d-flex align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
+                            Export: &nbsp;
+                        {{-- </div>
+                        <div class="col-md-3 d-grid gap-2"> --}}
+                            {{-- <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                name="action" value="exportExcelAvansuri">
+                                Excel Toate
+                            </button> --}}
+                        {{-- </div>
+                        <div class="col-md-3 d-grid gap-2"> --}}
+                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                name="action" value="exportExcelBancaBt">
+                                Excel BT
+                            </button>
+                        {{-- </div>
+                        <div class="col-md-3 d-grid gap-2"> --}}
+                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                name="action" value="exportTxtBancaIng">
+                                Txt ING
+                            </button>
+                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                name="action" value="exportExcelMână">
+                                Excel Mână
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 d-grid gap-2 d-flex align-items-center">
                 </div>
             </div>
         </form>
