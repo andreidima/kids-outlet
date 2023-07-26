@@ -400,7 +400,7 @@ class AvansController extends Controller
                     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand
                     )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
                 // Set bold totaluri generale
-                $sheet->getStyle('A' . $rand . ':' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand)->getFont()->setBold(true);
+                $sheet->getStyle('A' . $rand . ':' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand)->getFont()->setBold(true);
 
                 $rand += 3;
 
@@ -409,7 +409,7 @@ class AvansController extends Controller
                     // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
                 }
                 // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
-                $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
+                $sheet->mergeCells('A1:C1');
                 $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
                 $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
 
