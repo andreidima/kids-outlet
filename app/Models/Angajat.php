@@ -71,4 +71,9 @@ class Angajat extends Model
     {
         return $this->belongsToMany(ProdusOperatie::class, 'angajati_produse_operatii', 'angajat_id', 'produs_operatie_id');
     }
+
+    public function avansuri()
+    {
+        return $this->HasMany('App\Models\Avans', 'angajat_id');
+    }
 }

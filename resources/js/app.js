@@ -281,3 +281,84 @@ if (document.querySelector('#produsFazeAngajati')) {
         }
     });
 }
+
+
+if (document.querySelector('#setareAvansuri')) {
+    const app = new Vue({
+        el: '#setareAvansuri',
+        data: {
+            mesajSucces: '',
+            avansId: '',
+        },
+        methods: {
+            actualizeazaAvans(avansId, avansSuma) {
+                // console.log('yea');
+                console.log(avansId, avansSuma);
+
+                axios
+                    .post('/avansuri/axios-actualizare-suma',
+                        {
+                            avansId: avansId,
+                            avansSuma: avansSuma
+                        },
+                        {
+                            params: {
+                                request: 'actualizareSuma',
+                            }
+                        })
+                    .then(function (response) {
+                        app.mesajSucces = response.data.raspuns;
+                        app.avansId = response.data.avansId;
+                        console.log(app.mesajSucces, app.avansId);
+                    });
+
+            },
+            adaugaAngajatiLaFaze() {
+                if (!this.produsSelectat || !this.numereDeFaza || !this.iduriAngajati) {
+                    this.mesajEroare = "Vă rugăm să completați toate câmpurile"
+                    return;
+                } else {
+                    this.mesajEroare = "";
+                }
+
+                numereDeFaza = this.numereDeFaza.split(",");
+                iduriAngajati = this.iduriAngajati.split(",");
+                console.log(numereDeFaza, iduriAngajati);
+
+                axios
+                    .post('/aplicatie-angajati/produs-faze-angajati/axios',
+                        {
+                            numereDeFaza: numereDeFaza,
+                            iduriAngajati: iduriAngajati
+                        },
+                        {
+                            params: {
+                                request: 'adaugareMultipla',
+                                produsId: this.produsSelectat,
+                            }
+                        })
+                    .then(function (response) {
+                        app.mesajSucces = response.data.raspuns;
+                        app.produse = response.data.produse;
+                        // console.log(response.data.raspuns);
+                    });
+
+            },
+            stergeAngajat(indexProdus, indexOperatie, indexAngajat) {
+                // console.log(indexProdus,indexOperatie,indexAngajat);
+                // console.log(this.produse[indexProdus].produse_operatii[indexOperatie].id);
+                // console.log(this.produse[indexProdus].produse_operatii[indexOperatie].angajati[indexAngajat].id);
+
+                axios
+                    .delete('/aplicatie-angajati/produs-faze-angajati/axios', {
+                        params: {
+                            request: 'stergere',
+                            operatie_id: this.produse[indexProdus].produse_operatii[indexOperatie].id,
+                            angajat_id: this.produse[indexProdus].produse_operatii[indexOperatie].angajati[indexAngajat].id,
+                        }
+                    });
+                this.produse[indexProdus].produse_operatii[indexOperatie].angajati.splice(indexAngajat, 1);
+            }
+        }
+    });
+}

@@ -102,6 +102,11 @@
                                 </ul>
                             </li>
                             <li class="nav-item me-3">
+                                <a class="nav-link active" aria-current="page" href="/avansuri">
+                                    <i class="fas fa-clipboard-list me-1"></i>Avansuri
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
                                 <a class="nav-link active" aria-current="page" href="{{ route('pontaje.afisare_lunar') }}">
                                     <i class="fas fa-user-clock me-1"></i>Pontaje
                                 </a>

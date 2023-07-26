@@ -14,6 +14,7 @@ use App\Http\Controllers\NormaLucrataController;
 use App\Http\Controllers\ImportFisierExcelController;
 use App\Http\Controllers\InserareDateDeTestController;
 use App\Http\Controllers\InserareAngajatiController;
+use App\Http\Controllers\AvansController;
 
 /*
 |--------------------------------------------------------------------------
@@ -118,6 +119,9 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/inserare-comenzi-de-test', [InserareDateDeTestController::class, 'inserareComenzi']);
 
     // Update faze produse. Se face update din tabelul sheet1, ce contine toate fazele iar in ultima coloana contine id-ul produsului
-    Route::any('/import/update-faze-produse/{update?}', [ImportFisierExcelController::class, 'getUpdateFazeProduse']);
+    // Route::any('/import/update-faze-produse/{update?}', [ImportFisierExcelController::class, 'getUpdateFazeProduse']);
+
+    Route::get('avansuri', [AvansController::class, 'index']);
+    Route::post('/avansuri/axios-actualizare-suma', [AvansController::class, 'axiosActualizareSuma']);
 
 });
