@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produs;
 use App\Models\ProdusOperatie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProdusController extends Controller
 {
@@ -139,6 +140,10 @@ class ProdusController extends Controller
             return back()->with('error', 'Produsul "' . $produs->nume . '" nu poate fi șters pentru că are adăugate norme lucrate. Ștergeti mai întâi normele lucrate adăugate acestuia!');
         }
 
+        foreach($produs->produse_operatii as $produsOperatie){
+            DB::table('angajati_produse_operatii')->where('produs_operatie_id', $produsOperatie->id)->delete();
+        }
+
         $produs->produse_operatii()->delete();
         $produs->delete();
 
@@ -193,6 +198,11 @@ class ProdusController extends Controller
             $clone_produs_operatie->norma_totala = 0;
             $clone_produs_operatie->norma_totala_efectuata = 0;
             $clone_produs->produse_operatii()->save($clone_produs_operatie);
+
+            $inregistrari = DB::table('angajati_produse_operatii')->where('produs_operatie_id', $produs_operatie->id)->get();
+            foreach ($inregistrari as $inregistrare){
+                DB::table('angajati_produse_operatii')->insert(['angajat_id' => $inregistrare->angajat_id,'produs_operatie_id' => $clone_produs_operatie->id]);
+            }
             // $clone_produs_operatie->save();
         }
 
