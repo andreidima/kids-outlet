@@ -97,12 +97,12 @@
                             Săptămâna următoare >>
                         </button>
                     </div>
-                    <div class="col-md-3 d-grid gap-2">
+                    {{-- <div class="col-md-3 d-grid gap-2">
                         <button class="btn btn-sm btn-danger text-white border border-dark rounded-3 shadow" type="submit"
                             name="action" value="export_excel">
                             Export Excel Salarii
                         </button>
-                    </div>
+                    </div> --}}
                 </div>
                 {{-- <div class="row input-group custom-search-form justify-content-center">
                     <div class="col-md-6 d-grid gap-2 d-flex align-items-center">

@@ -101,11 +101,15 @@
                                     <li><a class="dropdown-item" href="/norme-lucrate/muta-lucrul-pe-luna-anterioara">Mută lucrul pe luna anterioară</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item me-3">
-                                <a class="nav-link active" aria-current="page" href="/avansuri">
-                                    <i class="fas fa-clipboard-list me-1"></i>Avansuri
+                            <li class="nav-item me-3 dropdown">
+                                <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-clipboard-list me-1"></i>Plăți
                                 </a>
-                            </li>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/avansuri">Avansuri</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/lichidare">Lichidare</a></li>
+                                </ul>
                             <li class="nav-item me-3">
                                 <a class="nav-link active" aria-current="page" href="{{ route('pontaje.afisare_lunar') }}">
                                     <i class="fas fa-user-clock me-1"></i>Pontaje

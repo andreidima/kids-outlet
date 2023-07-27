@@ -15,6 +15,7 @@ use App\Http\Controllers\ImportFisierExcelController;
 use App\Http\Controllers\InserareDateDeTestController;
 use App\Http\Controllers\InserareAngajatiController;
 use App\Http\Controllers\AvansController;
+use App\Http\Controllers\LichidareController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,7 +122,9 @@ Route::group(['middleware' => 'auth'], function () {
     // Update faze produse. Se face update din tabelul sheet1, ce contine toate fazele iar in ultima coloana contine id-ul produsului
     // Route::any('/import/update-faze-produse/{update?}', [ImportFisierExcelController::class, 'getUpdateFazeProduse']);
 
-    Route::get('avansuri', [AvansController::class, 'index']);
+    Route::get('/avansuri', [AvansController::class, 'index']);
     Route::post('/avansuri/axios-actualizare-suma', [AvansController::class, 'axiosActualizareSuma']);
+
+    Route::get('/lichidare', [LichidareController::class, 'index']);
 
 });
