@@ -163,7 +163,7 @@ class LichidareController extends Controller
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+4), $rand)->getColumn())->setAutoSize(true);
 
                         // AVANS
-                        $sheet->setCellValueByColumnAndRow((($index+5)), $rand , $avansPlatit = $angajat->avansuri->first()->suma);
+                        $sheet->setCellValueByColumnAndRow((($index+5)), $rand , $avansPlatit = $angajat->avansuri->first()->suma ?? 0);
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+5), $rand)->getColumn())->setAutoSize(true);
 
                         // CO
