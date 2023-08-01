@@ -378,10 +378,12 @@ class AngajatAplicatieController extends Controller
 
         switch ($request->input('action')) {
             case 'lunaAnterioara':
-                    $searchData = $searchData->startOfMonth()->subMonthNoOverflow()->startOfMonth();
+                    // $searchData = $searchData->startOfMonth()->subMonthNoOverflow()->startOfMonth();
+                    $searchData = Carbon::now()->subMonthNoOverflow();
                 break;
             case 'lunaUrmatoare':
-                    $searchData = $searchData->startOfMonth()->addMonthNoOverflow()->startOfMonth();
+                    // $searchData = $searchData->startOfMonth()->addMonthNoOverflow()->startOfMonth();
+                    $searchData = Carbon::now();
                 break;
         }
 
@@ -389,6 +391,7 @@ class AngajatAplicatieController extends Controller
             ->where('angajat_id', $angajat->id)
             ->whereMonth('data', $searchData)
             ->whereYear('data', $searchData)
+            // ->whereDate('data', '>=', $searchData->subMonthNoOverflow()->startOfMonth())
             ->orderBy('data')
             ->orderBy('produs_operatie_id')
             ->get();

@@ -118,37 +118,40 @@
                                 </button>
                             </div> --}}
 
-                            {{-- <input type="hidden" name="searchData" value={{ $searchData }}>
+                            <input type="hidden" name="searchData" value={{ $searchData }}>
                             <div class="col-lg-12 mb-2">
                                 <div class="row">
-                                    <div class="col-6 m-0 p-0">
-                                        <button class="btn btn-lg text-white"
-                                            type="submit"
-                                            style="background-color: #FC4A1A; border:2px solid white;"
-                                            name="action" value="lunaAnterioara"
-                                            >
-                                                @if ($angajat->limba_aplicatie === 1)
-                                                    << Luna Anterioară
-                                                @elseif ($angajat->limba_aplicatie === 2)
-                                                    Previous Month <<
-                                                @endif
-                                        </button>
-                                    </div>
-                                    <div class="col-6 m-0 p-0">
-                                        <button class="btn btn-lg text-white"
-                                            type="submit"
-                                            style="background-color: #FC4A1A; border:2px solid white;"
-                                            name="action" value="lunaUrmatoare"
-                                            >
-                                                @if ($angajat->limba_aplicatie === 1)
-                                                    >> Luna Următoare
-                                                @elseif ($angajat->limba_aplicatie === 2)
-                                                    Next month >>
-                                                @endif
-                                        </button>
-                                    </div>
+                                    @if ($searchData->month === \Carbon\Carbon::now()->month)
+                                        <div class="col-6 m-0 p-0 mx-auto">
+                                            <button class="btn btn-lg text-white"
+                                                type="submit"
+                                                style="background-color: #FC4A1A; border:2px solid white;"
+                                                name="action" value="lunaAnterioara"
+                                                >
+                                                    @if ($angajat->limba_aplicatie === 1)
+                                                        << Luna Anterioară
+                                                    @elseif ($angajat->limba_aplicatie === 2)
+                                                        << Previous Month
+                                                    @endif
+                                            </button>
+                                        </div>
+                                    @else
+                                        <div class="col-6 m-0 p-0 mx-auto">
+                                            <button class="btn btn-lg text-white"
+                                                type="submit"
+                                                style="background-color: #FC4A1A; border:2px solid white;"
+                                                name="action" value="lunaUrmatoare"
+                                                >
+                                                    @if ($angajat->limba_aplicatie === 1)
+                                                        >> Luna Următoare
+                                                    @elseif ($angajat->limba_aplicatie === 2)
+                                                        >> Next month
+                                                    @endif
+                                            </button>
+                                        </div>
+                                    @endif
                                 </div>
-                            </div> --}}
+                            </div>
                     </form>
                 </div>
 
