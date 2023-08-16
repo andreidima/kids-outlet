@@ -1,5 +1,9 @@
 @extends ('layouts.app')
 
+<script type="application/javascript">
+    angajati =  {!! json_encode($angajati) !!}
+</script>
+
 @section('content')
 <div class="container card" style="border-radius: 40px 40px 40px 40px;">
         <form class="needs-validation" novalidate method="GET" action="{{ url()->current() }}">
@@ -105,7 +109,8 @@
             @include ('errors')
 
             <div class="row" id="setareAvansuri">
-                @foreach ($angajati->groupBy('prod') as $angajatiPerProd)
+                {{-- Varianta PHP --}}
+                {{-- @foreach ($angajati->groupBy('prod') as $angajatiPerProd)
                 <div class="col-lg-7 mb-3 mx-auto">
                     <div class="table-responsive rounded">
                         <table class="table table-striped table-hover table-sm rounded">
@@ -151,7 +156,61 @@
                         </table>
                     </div>
                 </div>
-                @endforeach
+                @endforeach --}}
+
+                {{-- Varianta VueJs --}}
+                <div v-for="angajatiPerProd in angajatiPerProduri" class="col-lg-7 mb-3 mx-auto">
+                    <div v-if="angajatiPerProd.length">
+                        <div class="table-responsive rounded">
+                            <table class="table table-striped table-hover table-sm rounded">
+                                <thead class="text-white rounded" style="background-color:#e66800;">
+                                    <tr>
+                                        <th colspan=3 class="text-center">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    Prod: @{{ angajatiPerProd[0].prod }}
+                                                </div>
+                                                <div>
+                                                    {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
+                                                </div>
+                                            </div>
+                                        </th>
+                                    <tr class="" style="padding:2rem">
+                                        <th style="width: 50px;">#</th>
+                                        <th>Angajat</th>
+                                        <th class="text-end" style="width: 80px;">Avans</th>
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                    <tr v-for="(angajat, index) in angajatiPerProd">
+                                        <td>
+                                            @{{ index + 1 }}
+                                        </td>
+                                        <td>
+                                            <b>@{{ angajat.nume }}</b>
+                                        </td>
+                                        <td class="d-flex justify-content-end align-items-center">
+                                            <div v-cloak v-if="avansId === angajat.avansuri[0].id" class="me-2 text-success">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm bg-white text-end rounded-3" style="width: 80px" id="avans" name="avans"
+                                                    :value="angajat.avansuri[0].suma"
+                                                    v-on:blur = "actualizeazaAvans(angajat.avansuri[0].id, $event.target.value)"
+                                                    >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align: center">
+                                            <b>Total</b>
+                                        </td>
+                                        <td style="text-align: right; padding-right:10px">
+                                            <b>@{{ totalAvansuriPerProduri[angajatiPerProd[0].prod] }}</b>
+                                        </td>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

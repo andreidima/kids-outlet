@@ -5434,12 +5434,10 @@ if (document.querySelector('#gestionareFazeAngajati')) {
     },
     created: function created() {
       // se adauga numele produselor la operatii pentru afisarea in pagina
-      console.log(this.angajatProduseOperatii.length);
-
+      // console.log(this.angajatProduseOperatii.length);
       for (var i = 0; i < this.angajatProduseOperatii.length; i++) {
         for (var j = 0; j < this.produse.length; j++) {
-          console.log('a');
-
+          // console.log('a');
           if (this.angajatProduseOperatii[i].produs_id == this.produse[j].id) {
             this.angajatProduseOperatii[i].produsNume = this.produse[j].nume;
           }
@@ -5649,8 +5647,34 @@ if (document.querySelector('#setareAvansuri')) {
   var _app4 = new Vue({
     el: '#setareAvansuri',
     data: {
+      angajati: angajati,
+      angajatiPerProduri: [[]],
+      totalAvansuriPerProduri: [],
       mesajSucces: '',
       avansId: ''
+    },
+    beforeMount: function beforeMount() {
+      var _this3 = this;
+
+      prodMaxim = 0;
+      angajati.forEach(function (angajat) {
+        if (prodMaxim < angajat.prod) {
+          prodMaxim = angajat.prod;
+        }
+      }); // se creeaza intai arrayul gol
+
+      for (i = 0; i <= prodMaxim; i++) {
+        this.angajatiPerProduri[i] = [];
+      } // Se adauga angajatii in array la produrile fiecaruia
+
+
+      angajati.forEach(function (angajat) {
+        _this3.angajatiPerProduri[angajat.prod].push(angajat);
+      }); // Se calculeaza totalurile
+
+      for (i = 0; i <= prodMaxim; i++) {
+        this.calculeazaTotalAvansuriPerProduri(i);
+      }
     },
     methods: {
       actualizeazaAvans: function actualizeazaAvans(avansId, avansSuma) {
@@ -5665,46 +5689,28 @@ if (document.querySelector('#setareAvansuri')) {
           }
         }).then(function (response) {
           _app4.mesajSucces = response.data.raspuns;
-          _app4.avansId = response.data.avansId;
-          console.log(_app4.mesajSucces, _app4.avansId);
-        });
-      },
-      adaugaAngajatiLaFaze: function adaugaAngajatiLaFaze() {
-        if (!this.produsSelectat || !this.numereDeFaza || !this.iduriAngajati) {
-          this.mesajEroare = "Vă rugăm să completați toate câmpurile";
-          return;
-        } else {
-          this.mesajEroare = "";
-        }
+          _app4.avansId = response.data.avansId; // console.log(app.mesajSucces, app.avansId);
+          // Se cauta angajatul in array si i se actulizeaza pretul
 
-        numereDeFaza = this.numereDeFaza.split(",");
-        iduriAngajati = this.iduriAngajati.split(",");
-        console.log(numereDeFaza, iduriAngajati);
-        axios.post('/aplicatie-angajati/produs-faze-angajati/axios', {
-          numereDeFaza: numereDeFaza,
-          iduriAngajati: iduriAngajati
-        }, {
-          params: {
-            request: 'adaugareMultipla',
-            produsId: this.produsSelectat
-          }
-        }).then(function (response) {
-          _app4.mesajSucces = response.data.raspuns;
-          _app4.produse = response.data.produse; // console.log(response.data.raspuns);
+          _app4.angajatiPerProduri.forEach(function (angajatiPerProd) {
+            angajatiPerProd.forEach(function (angajat) {
+              if (angajat.avansuri[0].id === avansId) {
+                angajat.avansuri[0].suma = Number(avansSuma);
+
+                _app4.calculeazaTotalAvansuriPerProduri(angajat.prod); // Se recalculeaza si totalul, doar pentru produl respectiv
+
+              }
+            });
+          });
         });
       },
-      stergeAngajat: function stergeAngajat(indexProdus, indexOperatie, indexAngajat) {
-        // console.log(indexProdus,indexOperatie,indexAngajat);
-        // console.log(this.produse[indexProdus].produse_operatii[indexOperatie].id);
-        // console.log(this.produse[indexProdus].produse_operatii[indexOperatie].angajati[indexAngajat].id);
-        axios["delete"]('/aplicatie-angajati/produs-faze-angajati/axios', {
-          params: {
-            request: 'stergere',
-            operatie_id: this.produse[indexProdus].produse_operatii[indexOperatie].id,
-            angajat_id: this.produse[indexProdus].produse_operatii[indexOperatie].angajati[indexAngajat].id
-          }
+      calculeazaTotalAvansuriPerProduri: function calculeazaTotalAvansuriPerProduri(prod) {
+        var _this4 = this;
+
+        this.totalAvansuriPerProduri[prod] = 0;
+        this.angajatiPerProduri[prod].forEach(function (angajat) {
+          _this4.totalAvansuriPerProduri[prod] += angajat.avansuri[0].suma;
         });
-        this.produse[indexProdus].produse_operatii[indexOperatie].angajati.splice(indexAngajat, 1);
       }
     }
   });
