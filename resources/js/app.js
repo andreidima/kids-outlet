@@ -319,7 +319,6 @@ if (document.querySelector('#setareAvansuri')) {
         },
         methods: {
             actualizeazaAvans(avansId, avansSuma) {
-                // console.log('yea');
                 console.log(avansId, avansSuma);
 
                 axios
@@ -337,8 +336,6 @@ if (document.querySelector('#setareAvansuri')) {
                         app.mesajSucces = response.data.raspuns;
                         app.avansId = response.data.avansId;
 
-                        // console.log(app.mesajSucces, app.avansId);
-
                         // Se cauta angajatul in array si i se actulizeaza pretul
                         app.angajatiPerProduri.forEach((angajatiPerProd) => {
                             angajatiPerProd.forEach((angajat) => {
@@ -355,6 +352,86 @@ if (document.querySelector('#setareAvansuri')) {
                 this.totalAvansuriPerProduri[prod] = 0;
                 this.angajatiPerProduri[prod].forEach((angajat) => {
                     this.totalAvansuriPerProduri[prod] += angajat.avansuri[0].suma;
+                });
+            }
+        }
+    });
+}
+
+
+if (document.querySelector('#salarii')) {
+    const app = new Vue({
+        el: '#salarii',
+        data: {
+            angajati: angajati,
+            produse: produse,
+            angajatiPerProduri: [[]],
+            totalAvansuriPerProduri: [],
+            totalLichidariPerProduri: [],
+
+            mesajSucces: '',
+            salariuId: '',
+            numeCamp: '',
+        },
+        beforeMount: function () {
+            prodMaxim = 0;
+            angajati.forEach((angajat) => {
+                if (prodMaxim < angajat.prod) {
+                    prodMaxim = angajat.prod;
+                }
+            });
+
+            // se creeaza intai arrayul gol
+            for (i = 0; i <= prodMaxim; i++) {
+                this.angajatiPerProduri[i] = [];
+            }
+
+            // Se adauga angajatii in array la produrile fiecaruia
+            angajati.forEach((angajat) => {
+                this.angajatiPerProduri[angajat.prod].push(angajat);
+            });
+
+            // Se calculeaza totalurile
+            for (i = 0; i <= prodMaxim; i++) {
+                this.calculeazaTotaluriPerProduri(i);
+            }
+        },
+        methods: {
+            actualizeazaValoare(salariuId, numeCamp, valoare) {
+                axios
+                    .post('/salarii/axios-actualizare-valoare',
+                        {
+                            salariuId: salariuId,
+                            numeCamp: numeCamp,
+                            valoare: valoare
+                        },
+                        {
+                            params: {
+                                request: 'actualizareValoare',
+                            }
+                        })
+                    .then(function (response) {
+                        app.mesajSucces = response.data.raspuns;
+                        app.salariuId = response.data.salariuId;
+                        app.numeCamp = response.data.numeCamp;
+
+                        // Se cauta angajatul in array si i se actulizeaza pretul
+                        app.angajatiPerProduri.forEach((angajatiPerProd) => {
+                            angajatiPerProd.forEach((angajat) => {
+                                if (angajat.salarii[0].id === salariuId) {
+                                    angajat.salarii[0][numeCamp] = Number(valoare);
+                                    app.calculeazaTotaluriPerProduri(angajat.prod); // Se recalculeaza si totalul, doar pentru produl respectiv
+                                }
+                            });
+                        });
+                    });
+            },
+            calculeazaTotaluriPerProduri(prod) {
+                this.totalAvansuriPerProduri[prod] = 0;
+                this.totalLichidariPerProduri[prod] = 0;
+                this.angajatiPerProduri[prod].forEach((angajat) => {
+                    this.totalAvansuriPerProduri[prod] += angajat.salarii[0].avans;
+                    this.totalLichidariPerProduri[prod] += parseFloat(angajat.salarii[0].lichidare);
                 });
             }
         }

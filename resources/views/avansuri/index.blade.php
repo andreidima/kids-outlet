@@ -206,6 +206,7 @@
                                         <td style="text-align: right; padding-right:10px">
                                             <b>@{{ totalAvansuriPerProduri[angajatiPerProd[0].prod] }}</b>
                                         </td>
+                                    </tr>
                             </table>
                         </div>
                     </div>

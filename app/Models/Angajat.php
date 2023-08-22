@@ -76,4 +76,9 @@ class Angajat extends Model
     {
         return $this->HasMany('App\Models\Avans', 'angajat_id');
     }
+
+    public function salarii()
+    {
+        return $this->HasMany('App\Models\Salariu', 'angajat_id');
+    }
 }

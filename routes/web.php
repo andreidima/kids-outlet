@@ -16,6 +16,7 @@ use App\Http\Controllers\InserareDateDeTestController;
 use App\Http\Controllers\InserareAngajatiController;
 use App\Http\Controllers\AvansController;
 use App\Http\Controllers\LichidareController;
+use App\Http\Controllers\SalariuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -126,5 +127,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/avansuri/axios-actualizare-suma', [AvansController::class, 'axiosActualizareSuma']);
 
     Route::get('/lichidare', [LichidareController::class, 'index']);
+
+    Route::get('/salarii', [SalariuController::class, 'index']);
+    Route::post('/salarii/axios-actualizare-valoare', [SalariuController::class, 'axiosActualizareValoare']);
 
 });

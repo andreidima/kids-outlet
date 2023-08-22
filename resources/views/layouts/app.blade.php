@@ -111,6 +111,11 @@
                                     <li><a class="dropdown-item" href="/lichidare">Lichidare</a></li>
                                 </ul>
                             <li class="nav-item me-3">
+                                <a class="nav-link active" aria-current="page" href="/salarii">
+                                    <i class="fas fa-clipboard-list me-1"></i>Salarii
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
                                 <a class="nav-link active" aria-current="page" href="{{ route('pontaje.afisare_lunar') }}">
                                     <i class="fas fa-user-clock me-1"></i>Pontaje
                                 </a>
@@ -173,7 +178,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4 px-2">
             @yield('content')
         </main>
     </div>
