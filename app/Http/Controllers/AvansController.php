@@ -77,6 +77,10 @@ class AvansController extends Controller
                     ->with(['avansuri'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
+                    ->with(['pontaj' => function($query) use ($searchData){
+                        $query->whereMonth('data', $searchData)
+                            ->whereYear('data', $searchData);
+                    }])
                     ->orderBy('prod')
                     ->orderBy('nume')
                     ->get();
