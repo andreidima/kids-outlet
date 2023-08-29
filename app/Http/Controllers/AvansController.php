@@ -139,8 +139,8 @@ class AvansController extends Controller
                         $sheet->setCellValue('B' . $rand, $angajat->nume);
 
                         // AVANS
-                        if (isset($angajat->avans)){
-                            $sheet->setCellValueByColumnAndRow((3), $rand , $angajat->avans);
+                        if (isset($angajat->avansuri->first()->suma)){
+                            $sheet->setCellValueByColumnAndRow((3), $rand , $angajat->avansuri->first()->suma);
                         }
                         // $sheet->getColumnDimension($sheet->getCellByColumnAndRow((3), $rand)->getColumn())->setAutoSize(true);
 
@@ -149,7 +149,7 @@ class AvansController extends Controller
 
                         // Avans de platit
                         if ($zilePontate > 10){
-                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = $angajat->avans);
+                            $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = $angajat->avansuri->first()->suma);
                         } else if ($zilePontate >= 7){
                             $sheet->setCellValueByColumnAndRow((5), $rand , $avansDePlatit = 300);
                         } else{
@@ -416,9 +416,9 @@ class AvansController extends Controller
                     // CALCUL TOTALURI
                     // PLata in mana
                     $sheet->setCellValueByColumnAndRow((3), $rand , '=SUM(' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand_initial . ':' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . ($rand-1) . ')');
-                    $formulaTotalPlataInMana .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand . '+';
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . ($rand-1) . ')');
+                    $formulaTotalPlataInMana .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . '+';
 
                     // Schimbare culoare la totaluri in rosu
                     $sheet->getStyle(
