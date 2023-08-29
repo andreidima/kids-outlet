@@ -110,11 +110,11 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/lichidare">Lichidare</a></li>
                                 </ul>
-                            <li class="nav-item me-3">
+                            {{-- <li class="nav-item me-3">
                                 <a class="nav-link active" aria-current="page" href="/salarii">
                                     <i class="fas fa-clipboard-list me-1"></i>Salarii
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item me-3">
                                 <a class="nav-link active" aria-current="page" href="{{ route('pontaje.afisare_lunar') }}">
                                     <i class="fas fa-user-clock me-1"></i>Pontaje

@@ -12,7 +12,7 @@
                 <div class="col-lg-2">
                     <h4 class="mb-0">Avansuri</a></h4>
                 </div>
-                <div class="col-lg-6" id="app1">
+                <div class="col-lg-5" id="app1">
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
                         <div class="col-lg-5 d-flex justify-content-center">
                             <label for="searchLuna" class="mb-0 align-self-center me-1">Luna:</label>
@@ -26,15 +26,15 @@
                         </div>
                     </div>
                     <div class="row input-group custom-search-form justify-content-center">
-                        <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
+                        <button class="btn btn-sm btn-primary text-white col-md-6 border border-dark rounded-pill" type="submit">
                             <i class="fas fa-search text-white me-1"></i>Caută
                         </button>
-                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ url()->current() }}" role="button">
+                        <a class="btn btn-sm bg-secondary text-white col-md-6 border border-dark rounded-pill" href="{{ url()->current() }}" role="button">
                             <i class="far fa-trash-alt text-white me-1"></i>Resetează căutarea
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <div class="mb-2 d-flex align-items-center justify-content-end">
                         <a
                             class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
@@ -76,10 +76,10 @@
                             Export: &nbsp;
                         {{-- </div>
                         <div class="col-md-3 d-grid gap-2"> --}}
-                            {{-- <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
                                 name="action" value="exportExcelAvansuri">
                                 Excel Toate
-                            </button> --}}
+                            </button>
                         {{-- </div>
                         <div class="col-md-3 d-grid gap-2"> --}}
                             <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"

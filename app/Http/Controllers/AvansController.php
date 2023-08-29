@@ -89,7 +89,8 @@ class AvansController extends Controller
                 $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
 
-                $sheet->setCellValue('A1', 'Avansuri - ' . Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
+                // $sheet->setCellValue('A1', 'Avansuri - ' . Carbon::parse($searchData)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($searchData)->isoFormat('DD.MM.YYYY'));
+                $sheet->setCellValue('A1', 'Avansuri - ' . $searchLuna . '.' . $searchAn);
                 $sheet->getStyle('A1')->getFont()->setSize(14);
                 $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 
@@ -118,7 +119,7 @@ class AvansController extends Controller
 
                 $formulaTotalAvansDePlatit = "=";
                 $formulaTotalPlataPrinBanca = "=";
-                $formulaTotalPlanaInMana = "=";
+                $formulaTotalPlataInMana = "=";
 
                 foreach ($angajati->groupby('prod') as $angajati_per_prod){
 
@@ -188,7 +189,7 @@ class AvansController extends Controller
                     $sheet->setCellValueByColumnAndRow((7), $rand , '=SUM(' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand_initial . ':' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . ($rand-1) . ')');
-                    $formulaTotalPlanaInMana .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand . '+';
+                    $formulaTotalPlataInMana .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand . '+';
 
                     // Schimbare culoare la totaluri in rosu
                     $sheet->getStyle(
@@ -206,7 +207,7 @@ class AvansController extends Controller
 
                 $sheet->setCellValue('E' . $rand, substr_replace($formulaTotalAvansDePlatit ,"", -1));
                 $sheet->setCellValue('F' . $rand, substr_replace($formulaTotalPlataPrinBanca ,"", -1));
-                $sheet->setCellValue('G' . $rand, substr_replace($formulaTotalPlanaInMana ,"", -1));
+                $sheet->setCellValue('G' . $rand, substr_replace($formulaTotalPlataInMana ,"", -1));
                 // Schimbare culoare la totaluri in rosu
                 $sheet->getStyle(
                     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . ':' .
