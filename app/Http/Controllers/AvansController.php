@@ -160,7 +160,7 @@ class AvansController extends Controller
                         //         $sheet->setCellValueByColumnAndRow((5), $rand , $angajat->avansuri->first()->suma ?? '');
                         //     }
                         // }
-                        if ($angajat->banca_iban){
+                        if ($angajat->banca_iban || ($angajat->firma === "Petit Atelier S.R.L.") || ($angajat->firma === "Mate Andy Style") || ($angajat->firma === "Bensar S.R.L.")){
                             $sheet->setCellValueByColumnAndRow((4), $rand , $angajat->avansuri->first()->suma);
                         } else{ // plata in mana
                             $sheet->setCellValueByColumnAndRow((5), $rand , $angajat->avansuri->first()->suma);
