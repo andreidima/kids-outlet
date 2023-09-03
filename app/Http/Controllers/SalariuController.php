@@ -1045,7 +1045,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('activ', 1) // Contul este activ
-                    // ->where('prod', 1) // doar de test
+                    ->where('prod', 1) // doar de test
                     ->orderBy('prod')
                     ->orderBy('nume')
                     ->get();
