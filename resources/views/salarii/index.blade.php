@@ -238,13 +238,15 @@ table, th, td {
                                         <td style="padding: 0px 0px 0px 0px; font-weight:bold">
                                             @{{ angajat.nume }}
                                         </td>
-                                        <td v-for="realizat in angajat.realizatProduse" style="padding: 0px 2px 0px 4px; text-align:right">
-                                            <span v-if="realizat != 0" style="font-size: 12px !important; font-weight:bold;">
-                                                @{{ realizat.toFixed(3) }}
+                                        <td v-for="produs in produse" style="padding: 0px 2px 0px 4px; text-align:right">
+                                            <span v-if="angajat.realizatProduse && angajat.realizatProduse[produs.id]" style="font-size: 12px !important; font-weight:bold;">
+                                                @{{ angajat.realizatProduse[produs.id].toFixed(3) }}
                                             </span>
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; font-size: 12px !important; font-weight:bold; text-align:right;">
-                                            @{{ angajat.realizatTotal.toFixed(3) }}
+                                            <span v-if="angajat.realizatTotal" style="font-size: 12px !important; font-weight:bold;">
+                                                @{{ angajat.realizatTotal.toFixed(3) }}
+                                            </span>
                                         </td>
                                         <td class="d-flex justify-content-end align-items-center" style="font-size: 14px; padding:0px;">
                                             <div v-cloak v-if="numeCamp === 'avans' && salariuId === angajat.salarii[0].id" class="me-2 text-success">

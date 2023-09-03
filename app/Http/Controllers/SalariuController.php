@@ -24,7 +24,7 @@ class SalariuController extends Controller
 {
     public function index(Request $request){
         // Pana pe 20 ale lunii se incarca luna precedenta (la inceputul lunii se mai umbla la avansuri, iar pe 15 la salarii). Dupa 20 ale lunii se intra de obicei sa se calculeze avansurile pe luna in curs.
-        $searchLuna = $request->searchLuna ?? Carbon::now()->day < 20 ? Carbon::now()->subMonthNoOverflow()->isoFormat('MM') : Carbon::now()->isoFormat('MM');
+        $searchLuna = $request->searchLuna ?? (Carbon::now()->day < 20 ? Carbon::now()->subMonthNoOverflow()->isoFormat('MM') : Carbon::now()->isoFormat('MM'));
         $searchAn = $request->searchAn ?? Carbon::now()->isoFormat('YYYY');
 
         $request->validate(['searchLuna' => 'numeric|between:1,12', 'searchAn' => 'numeric|between:2023,2040']);
@@ -1045,7 +1045,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('activ', 1) // Contul este activ
-                    ->where('prod', 1) // doar de test
+                    // ->where('prod', 1) // doar de test
                     ->orderBy('prod')
                     ->orderBy('nume')
                     ->get();
@@ -1079,20 +1079,22 @@ class SalariuController extends Controller
 
                 foreach ($angajati as $angajat){
                     // Calcularea sumelor realizate pe fiecare produs in parte si total REALIZAT
-                    $realizatProduse = [];
-                    $realizatTotal = 0;
-                    foreach ($produse as $produs){
-                        $realizat = 0;
-                        foreach ($produs->produse_operatii as $produs_operatie){
-                            foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
-                                $realizat += $norma_lucrata->cantitate * $produs_operatie->pret;
-                            }
-                        }
-                        $realizatProduse[$produs->id] = $realizat;
-                        $realizatTotal += $realizat;
-                    }
-                    $angajat->realizatProduse = $realizatProduse; // Se adauga la angajat arrayul cu realizatul per produs
-                    $angajat->realizatTotal = $realizatTotal; // Se adauga la angajat realizatTotal
+                    // $realizatProduse = [];
+                    // $realizatTotal = 0;
+                    // foreach ($produse as $produs){
+                    //     $realizat = 0;
+                    //     foreach ($produs->produse_operatii as $produs_operatie){
+                    //         foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
+                    //             $realizat += $norma_lucrata->cantitate * $produs_operatie->pret;
+                    //         }
+                    //     }
+                    //     $realizatProduse[$produs->id] = $realizat;
+                    //     $realizatTotal += $realizat;
+                    // }
+                    // $angajat->realizatProduse = $realizatProduse; // Se adauga la angajat arrayul cu realizatul per produs
+                    // $angajat->realizatTotal = $realizatTotal; // Se adauga la angajat realizatTotal
+
+                    $angajat->realizatTotal = 0; // Se adauga la angajat realizatTotal, se va recalcula dupa incarcarea paginii in javascript
 
                     // Coloanele „CO” si „MEDICALE”
                     $zile_concediu_medical = 0;

@@ -396,6 +396,10 @@ if (document.querySelector('#salarii')) {
                 this.calculeazaTotaluriPerProduri(i);
             }
         },
+        mounted: function () {
+            this.$nextTick(() => this.calculeazaRealizaturilePeProduse());
+            // setTimeout(() => this.calculeazaRealizaturilePeProduse(),500);
+        },
         methods: {
             actualizeazaValoare(salariuId, numeCamp, valoare) {
                 axios
@@ -433,7 +437,29 @@ if (document.querySelector('#salarii')) {
                     this.totalAvansuriPerProduri[prod] += angajat.salarii[0].avans;
                     this.totalLichidariPerProduri[prod] += parseFloat(angajat.salarii[0].lichidare);
                 });
-            }
+            },
+            calculeazaRealizaturilePeProduse: function () {
+                // Calcularea sumelor realizate pe fiecare produs in parte si total REALIZAT
+                angajati.forEach((angajat) => {
+                    realizatProduse = [];
+                    realizatTotal = 0;
+                    produse.forEach((produs) => {
+                        realizat = 0;
+                        produs.produse_operatii.forEach((operatie) => {
+                            // foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
+                            angajat.norme_lucrate.forEach((norma) => {
+                                if (norma.produs_operatie_id === operatie.id) {
+                                    realizat += norma.cantitate * operatie.pret;
+                                }
+                            });
+                        });
+                        realizatProduse[produs.id] = realizat;
+                        realizatTotal += realizat;
+                    });
+                    angajat.realizatProduse = realizatProduse; // Se adauga la angajat arrayul cu realizatul per produs
+                    angajat.realizatTotal = realizatTotal; // Se adauga la angajat realizatTotal
+                });
+            },
         }
     });
 }
