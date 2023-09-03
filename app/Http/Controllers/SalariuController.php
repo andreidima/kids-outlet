@@ -833,8 +833,8 @@ class SalariuController extends Controller
                     $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
                     $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
 
-                    // Lichidare de platit
-                    $sheet->setCellValueByColumnAndRow((4), $rand , number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''));
+                    // Lichidare de platit - se seteaza coloana ca string pentru a putea delimita zecimalele cu punct
+                    $sheet->getCellByColumnAndRow((4), $rand)->setValueExplicit(number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING2);
 
                     $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
                     // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
@@ -847,6 +847,9 @@ class SalariuController extends Controller
                     $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
                 }
                 // $sheet->getColumnDimension('A')->setWidth(90);
+
+                // Coloana pret a fost setata ca string, asa ca este nevoie de aliniat textul la dreapta
+                $sheet->getStyle('D')->getAlignment()->setHorizontal('right');
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
