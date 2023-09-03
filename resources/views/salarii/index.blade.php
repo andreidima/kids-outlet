@@ -96,28 +96,36 @@ table, th, td {
                         <i class="fas fa-question-circle fa-lg text-info" title="Avansurile se calculeaza astfel: zilePontate > 10 - avansul se plătește integral, zilePontate între 7 și 10 - avansul se plătește 300, zilePontate < 7 - avansul se plătește 0"></i>
                     </div>
                     <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                        <div class="px-2 py-0 d-flex align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
-                            Export: &nbsp;
-                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                name="action" value="exportAvansuriExcelBancaBt">
-                                Excel BT
-                            </button>
-                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                name="action" value="exportAvansuriTxtBancaIng">
-                                Txt ING
-                            </button>
-                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                name="action" value="exportAvansuriExcelMana">
-                                Excel Mână
-                            </button>
+                        <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
+                            <div class="mb-1 d-flex justify-content-center align-items-center">
+                                Export: &nbsp;
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportAvansuriExcelToate">
+                                    Excel Toate
+                                </button>
+                            </div>
+                            <div class="d-flex">
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportAvansuriExcelBancaBt">
+                                    Excel BT
+                                </button>
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportAvansuriTxtBancaIng">
+                                    Txt ING
+                                </button>
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportAvansuriExcelMana">
+                                    Excel Mână
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-1">
                 </div>
-                <div class="col-lg-3 py-1 rounded-3" style="background-color: rgb(157, 249, 249)">
+                <div class="col-lg-3 py-1 rounded-3" style="background-color: rgb(255, 219, 219);">
                     <div class="mb-2 d-flex align-items-center justify-content-center">
-                        <span class="rounded-3 text-white px-2" style="background-color: darkcyan;">
+                        <span class="rounded-3 text-white px-2" style="background-color:brown;">
                             LICHIDĂRI
                         </span>
                     </div>
@@ -139,16 +147,16 @@ table, th, td {
                                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body" style="text-align:left;">
-                                    Ești sigur ca vrei să se calculeze automat toate lichidarile pentru luna aleasă?
+                                    Ești sigur ca vrei să se calculeze automat toate lichidările pentru luna aleasă?
                                     <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
-                                    Toate lichidarile introduse manual se vor șterge!
+                                    Toate lichidările introduse manual se vor șterge!
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
 
                                         <button class="btn btn-danger text-white border border-dark" type="submit"
                                             name="action" value="calculeazaAutomatLichidarile">
-                                            Calculează automat lichidarile
+                                            Calculează automat lichidările
                                         </button>
 
                                 </div>
@@ -157,20 +165,28 @@ table, th, td {
                         </div>
                     </div>
                     <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                        <div class="px-2 py-0 d-flex align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
-                            Export: &nbsp;
-                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                name="action" value="exportAvansuriExcelBancaBt">
-                                Excel BT
-                            </button>
-                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                name="action" value="exportAvansuriTxtBancaIng">
-                                Txt ING
-                            </button>
-                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                name="action" value="exportAvansuriExcelMana">
-                                Excel Mână
-                            </button>
+                        <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
+                            <div class="mb-1 d-flex justify-content-center align-items-center">
+                                Export: &nbsp;
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportLichidariExcelToate">
+                                    Excel Toate
+                                </button>
+                            </div>
+                            <div class="d-flex">
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportLichidariExcelBancaBt">
+                                    Excel BT
+                                </button>
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportLichidariTxtBancaIng">
+                                    Txt ING
+                                </button>
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportLichidariExcelMana">
+                                    Excel Mână
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,9 +200,10 @@ table, th, td {
             <div class="row" id="salarii">
                 <div v-for="angajatiPerProd in angajatiPerProduri" class="col-lg-12 mb-3 mx-auto">
                     <div v-if="angajatiPerProd.length">
-                        <div class="table-responsive rounded">
+                        {{-- <div class="table-responsive rounded"> --}}
+                        <div class="rounded">
                             <table class="table table-sm table-bordered table-hover rounded" >
-                                <thead class="text-white rounded" style="background-color:#e66800;">
+                                <thead class="text-white rounded sticky-top" style="background-color:#e66800;">
                                     <tr>
                                         <th colspan={{ $produse->count() + 10 }} class="text-center">
                                             {{-- <div class="d-flex justify-content-between">
@@ -201,16 +218,16 @@ table, th, td {
                                         </th>
                                     <tr class="" style="padding:2rem">
                                         <th style="width: 50px;">#</th>
-                                        <th>Angajat</th>
-                                        <th v-for="produs in produse" style="font-size: 12px; text-align:center">@{{ produs.nume }}</th>
-                                        <th class="text-center">Realizat</th>
-                                        <th class="text-center">Avans</th>
-                                        <th class="text-center">CO</th>
-                                        <th class="text-center">Medicale</th>
-                                        <th class="text-center">Salariu de bază</th>
-                                        <th class="text-center">Pus</th>
-                                        <th class="text-center">Realizat total</th>
-                                        <th class="text-center">Lichidare</th>
+                                        <th class="" style="">Angajat</th>
+                                        <th v-for="produs in produse" style="font-size: 12px; text-align:center; padding:0px;">@{{ produs.nume }}</th>
+                                        <th class="text-center px-0">Realizat</th>
+                                        <th class="text-center px-0">Avans</th>
+                                        <th class="text-center px-0">CO</th>
+                                        <th class="text-center px-0">Medicale</th>
+                                        <th class="text-center px-0">Salariu de bază</th>
+                                        <th class="text-center px-0">Pus</th>
+                                        <th class="text-center px-0">Realizat total</th>
+                                        <th class="text-center px-0">Lichidare</th>
                                     </tr>
                                 </thead>
                                 <tbody >
@@ -218,7 +235,7 @@ table, th, td {
                                         <td style="padding: 0px 2px 0px 4px">
                                             @{{ index + 1 }}
                                         </td>
-                                        <td style="padding: 0px 2px 0px 4px; font-weight:bold">
+                                        <td style="padding: 0px 0px 0px 0px; font-weight:bold">
                                             @{{ angajat.nume }}
                                         </td>
                                         <td v-for="realizat in angajat.realizatProduse" style="padding: 0px 2px 0px 4px; text-align:right">
@@ -233,7 +250,8 @@ table, th, td {
                                             <div v-cloak v-if="numeCamp === 'avans' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
                                                 <i class="fas fa-thumbs-up"></i>
                                             </div>
-                                            <input type="text" class="bg-white text-end rounded-3" style="width: 60px; border: none; padding:0px;" id="avans" name="avans"
+                                            {{-- <input type="text" class="bg-white text-end rounded-3" style="width: 60px; border: none; padding:0px;" id="avans" name="avans" --}}
+                                            <input type="text" class="bg-white text-end rounded-3" style="width: 60px; border:1px solid aqua; padding:0px;" id="avans" name="avans"
                                                     :value="angajat.salarii[0].avans"
                                                     v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'avans', $event.target.value)"
                                                     >
@@ -272,7 +290,7 @@ table, th, td {
                                             <div v-cloak v-if="numeCamp === 'lichidare' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
                                                 <i class="fas fa-thumbs-up"></i>
                                             </div>
-                                            <input type="text" class="bg-white text-end rounded-3" style="width: 60px; border: none; padding:0px;" id="lichidare" name="lichidare"
+                                            <input type="text" class="bg-white text-end rounded-3" style="width: 80px; border: 1px solid aqua; padding:0px;" id="lichidare" name="lichidare"
                                                     :value="angajat.salarii[0].lichidare"
                                                     v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'lichidare', $event.target.value)"
                                                     >
