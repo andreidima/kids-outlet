@@ -27,9 +27,32 @@ table, th, td {
 </style>
 
 @section('content')
-<div class="card mx-1" style="border-radius: 40px 40px 40px 40px;">
+<div class="card mx-1" style="border-radius: 40px 40px 40px 40px;" id="salarii">
+        <form class="needs-validation mb-0" novalidate method="POST" action="{{ url()->current() }}">
+            @csrf
+
+            <input type="hidden" name="angajatiPerProduri" :value="JSON.stringify(angajatiPerProduri)">
+            <input type="hidden" name="produse" :value="JSON.stringify(produse)">
+            <input type="hidden" name="searchLuna" value="{{ $searchLuna }}">
+            <input type="hidden" name="searchAn" value="{{ $searchAn }}">
+
+            <button name="action" value="exportLichidariExcelToate">
+                Excel toate
+            </button>
+            <button class="btn btn-danger text-white border border-dark" type="submit"
+                name="action" value="calculeazaAutomatLichidarile">
+                Calculează automat lichidările
+            </button>
+        </form>
+
         <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
             @csrf
+
+            <input type="hidden" name="angajatiPerProduri"
+                {{-- v-model="angajatiPerProduri"  --}}
+                :value="JSON.stringify(angajatiPerProduri)"
+                >
+
             <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
                 <div class="col-lg-1">
                     <h4 class="mb-0">Salarii</a></h4>
@@ -200,15 +223,7 @@ table, th, td {
 
             @include ('errors')
 
-            <div v-cloak v-if="angajatiPerProduri && angajatiPerProduri.length" class="row" id="salarii">
-                                <div class="">
-                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="button"
-                                        name="action" value="exportLichidariExcelMana"
-                                        v-on:click = "axiosDescarcareExcelLichidariToate()"
-                                        >
-                                        Excel lichidari toate
-                                    </button>
-                                </div>
+            <div v-cloak v-if="angajatiPerProduri && angajatiPerProduri.length" class="row">
                 <div class="col-lg-12 my-2 d-flex justify-content-center">
                     <button v-if="arataProduseleDesfasurat === 'nu'" class="btn btn-sm btn-primary text-white mx-1 border border-dark rounded-pill" type="button"
                         v-on:click="arataProduseleDesfasurat = 'da'"

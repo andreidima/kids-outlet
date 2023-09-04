@@ -1124,17 +1124,278 @@ class SalariuController extends Controller
                 return view('salarii.index', compact('angajati', 'produse', 'searchData', 'searchLuna', 'searchAn', 'salariulMinimPeEconomie', 'numarDeZileLucratoare'));
                 break;
             }
-
-
-
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function postIndex(Request $request)
+    {
+        $angajatiPerProduri = json_decode($request->angajatiPerProduri, true);
+        $produse = json_decode($request->produse, true);
+        // dd($angajatiPerProduri, $produse);
+
+        $searchData = Carbon::today();
+        $searchData->day = 1;
+        $searchData->month = $request->searchLuna;
+        $searchData->year = $request->searchAn;
+
+        $search_data_inceput = \Carbon\Carbon::parse($searchData);
+        $search_data_sfarsit = \Carbon\Carbon::parse($searchData)->endOfMonth();
+
+        $salariul_minim_pe_economie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
+
+        $zile_nelucratoare = DB::table('zile_nelucratoare')->whereDate('data', '>=', $search_data_inceput)->whereDate('data', '<=', $search_data_sfarsit)->pluck('data')->all();
+        $numar_de_zile_lucratoare = 0;
+        for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+            if(
+                    (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
+                    &&
+                    !in_array(\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString(), $zile_nelucratoare)
+                ){
+                $numar_de_zile_lucratoare ++;
+            }
+        }
+
+
+        switch ($request->input('action')) {
+            case 'exportLichidariExcelToate':
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+
+                $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+                $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+
+                $sheet->setCellValue('A1', 'Lichidare - ' . \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY'));
+                $sheet->getStyle('A1')->getFont()->setSize(14);
+                $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                // $sheet->setCellValue('A2', Carbon::parse($search_data_inceput)->isoFormat('DD.MM.YYYY') . ' - ' . Carbon::parse($search_data_sfarsit)->isoFormat('DD.MM.YYYY'));
+                // $sheet->getStyle('A2')->getFont()->setSize(14);
+
+                $sheet->setCellValue('A4', 'Nr.');
+                $sheet->getColumnDimension('A')->setAutoSize(true);
+                $sheet->setCellValue('B4', 'Nume Prenume');
+                $sheet->getColumnDimension('B')->setAutoSize(true);
+                foreach ($produse as $index=>$produs){
+                    $sheet->setCellValueByColumnAndRow(($index+3), 4 , str_replace(" ","\n",$produs['nume']));
+                    $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . '4')->getAlignment()->setWrapText(true);
+                    $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+3), 4)->getColumn())->setWidth(10);
+                }
+                isset($index) ? '' : ($index = 0); // Daca nu exista nici un produs de afisat, se da automat o valoare indexului, pentru a nu genera eroare
+
+                $sheet->setCellValueByColumnAndRow(($index+4), 4 , 'REALIZAT');
+                $sheet->setCellValueByColumnAndRow(($index+5), 4 , 'AVANS');
+                $sheet->setCellValueByColumnAndRow(($index+6), 4 , 'CO');
+                $sheet->setCellValueByColumnAndRow(($index+7), 4 , 'MEDICALE');
+                $sheet->setCellValueByColumnAndRow(($index+8), 4 , 'SALARIU DE BAZA');
+                $sheet->setCellValueByColumnAndRow(($index+9), 4 , 'PUS');
+                $sheet->setCellValueByColumnAndRow(($index+10), 4 , 'REALIZAT TOTAL');
+                $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE CALCULATĂ DE APLICAȚIE');
+                $sheet->setCellValueByColumnAndRow(($index+12), 4 , 'LICHIDARE SETATĂ DE OPERATOR');
+
+                $rand = 5;
+
+                foreach ($angajatiPerProduri as $angajati_per_prod){
+                    if (count($angajati_per_prod) > 0){
+                        $sheet->setCellValue('A' . $rand, 'Prod ' . $angajati_per_prod[0]['prod']);
+
+                        $rand ++;
+                        $rand_initial = $rand;
+
+                        $nr_crt_angajat = 1;
+
+                        foreach ($angajati_per_prod as $angajat){
+                            $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
+                            $sheet->setCellValue('B' . $rand, $angajat['nume']);
+
+                            $suma_totala_formula = '=';
+                            foreach ($produse as $index=>$produs){
+                                if ($angajat['realizatProduse'][$produs['id']] > 0){
+                                    $sheet->setCellValueByColumnAndRow(($index+3), $rand , $angajat['realizatProduse'][$produs['id']]);
+                                }
+                                $suma_totala_formula .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+3) . $rand . '+';
+                            }
+
+                            // Stergerea ultimului „+” din formula
+                            $suma_totala_formula = substr($suma_totala_formula, 0, -1);
+
+                            // REALIZAT
+                            $sheet->setCellValueByColumnAndRow(($index+4), $rand , $suma_totala_formula);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+4), $rand)->getColumn())->setAutoSize(true);
+
+                            // AVANS
+                            $sheet->setCellValueByColumnAndRow((($index+5)), $rand , $avansPlatit = $angajat['salarii'][0]['avans'] ?? 0);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+5), $rand)->getColumn())->setAutoSize(true);
+
+                            // CO
+                            // MEDICALE
+                            $zile_concediu_medical = 0;
+                            $zile_concediu_de_odihna = 0;
+                            foreach($angajat['pontaj'] as $pontaj){
+                                if ($pontaj['concediu'] === 1){
+                                    $zile_concediu_medical ++;
+                                }else if ($pontaj['concediu'] === 2){
+                                    $zile_concediu_de_odihna ++;
+                                }
+                            }
+                            if ($zile_concediu_de_odihna > 0){
+                                $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=' . $salariul_minim_pe_economie . '/' . $numar_de_zile_lucratoare . '*' . $zile_concediu_de_odihna);
+                            }
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+6), $rand)->getColumn())->setAutoSize(true);
+                            if ($zile_concediu_medical > 0){
+                                $sheet->setCellValueByColumnAndRow(($index+7), $rand , '=' . $salariul_minim_pe_economie . '/' . $numar_de_zile_lucratoare . '*' . $zile_concediu_medical . '*0.75');
+                            }
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+7), $rand)->getColumn())->setAutoSize(true);
+
+                            // SALARIU DE BAZA
+                            $sheet->setCellValueByColumnAndRow(($index+8), $rand , '=' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+8), $rand)->getColumn())->setAutoSize(true);
+
+                            // PUS
+                            $sheet->setCellValueByColumnAndRow(($index+9), $rand , '=' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+9), $rand)->getColumn())->setAutoSize(true);
+
+                            // REALIZAT TOTAL
+                            $sheet->setCellValueByColumnAndRow(($index+10), $rand , '=' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . '+' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . $rand . '+' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+10), $rand)->getColumn())->setAutoSize(true);
+
+                            // LICHIDARE CALCULATA DE APLICATIE
+                            $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
+                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
+
+                            // LICHIDARE SETATA DE OPERATOR
+                            $sheet->setCellValueByColumnAndRow((($index+12)), $rand , $angajat['salarii'][0]['lichidare']);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+12), $rand)->getColumn())->setAutoSize(true);
+
+
+                            $rand ++;
+                            $nr_crt_angajat ++;
+                        }
+
+
+                        // CALCUL TOTALURI
+                        // REALIZAT
+                        $sheet->setCellValueByColumnAndRow(($index+4), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . ($rand-1) . ')');
+                        // AVANS
+                        $sheet->setCellValueByColumnAndRow(($index+5), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . ($rand-1) . ')');
+                        // CO
+                        $sheet->setCellValueByColumnAndRow(($index+6), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . ($rand-1) . ')');
+                        // MEDICALE
+                        $sheet->setCellValueByColumnAndRow(($index+7), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . ($rand-1) . ')');
+                        // SALARIU DE BAZA
+                        $sheet->setCellValueByColumnAndRow(($index+8), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . ($rand-1) . ')');
+                        $sheet->getStyle(
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . ($rand-1)
+                            )->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFfe5858');
+                        // PUS
+                        $sheet->setCellValueByColumnAndRow(($index+9), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+9) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+9) . ($rand-1) . ')');
+                        // REALIZAT TOTAL
+                        $sheet->setCellValueByColumnAndRow(($index+10), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . ($rand-1) . ')');
+                        $sheet->getStyle(
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . ($rand-1)
+                            )->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('CC8ccd8c');
+                        // LICHIDARE CALCULATA DE APLICATIE
+                        $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . ($rand-1) . ')');
+                        // LICHIDARE SETATA DE OPERATOR
+                        $sheet->setCellValueByColumnAndRow(($index+12), $rand , '=SUM(' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand_initial . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . ($rand-1) . ')');
+                        // Schimbare culoare la totaluri in rosu
+                        $sheet->getStyle(
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . ':' .
+                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand
+                            )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+
+
+                        $rand += 2;
+                    }
+                }
+
+                // Se parcug toate coloanele si se stabileste latimea AUTO
+                foreach ($sheet->getColumnIterator() as $column) {
+                    // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                }
+                // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
+                $sheet->mergeCells('A1:' . $column->getColumnIndex() . '1');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+                // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+
+                // Aliniere numere la dreapta
+                // $sheet->getStyle('C6:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal('right');
+
+                $writer = new Xlsx($spreadsheet);
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="Lichidari toate.xlsx"');
+                $writer->save('php://output');
+                exit();
+            break;
+            case 'calculeazaAutomatLichidarile':
+                foreach ($angajatiPerProduri as $angajatiPerProd){
+                foreach ($angajatiPerProd as $angajat){
+                    // Calcularea sumelor realizate pe fiecare produs in parte si total REALIZAT
+                    $realizatTotal = 0;
+                    foreach ($angajat['realizatProdus'] as $produs){
+                        $realizat = 0;
+                        foreach ($produs->produse_operatii as $produs_operatie){
+                            foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
+                                $realizat += $norma_lucrata->cantitate * $produs_operatie->pret;
+                            }
+                        }
+                        $realizatProduse[$produs->id] = $realizat;
+                        $realizatTotal += $realizat;
+                    }
+
+                    // Coloanele „CO” si „MEDICALE”
+                    $zile_concediu_medical = 0;
+                    $zile_concediu_de_odihna = 0;
+                    foreach($angajat->pontaj as $pontaj){
+                        if ($pontaj->concediu === 1){
+                            $zile_concediu_medical ++;
+                        }else if ($pontaj->concediu === 2){
+                            $zile_concediu_de_odihna ++;
+                        }
+                    }
+                    $sumaConcediuOdihna = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_de_odihna;
+                    $sumaConcediuMedical = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_medical * 0.75;
+
+                    $angajat->salarii->first()->update(['lichidare' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0)]);
+                }
+            break;
+            default:
+                // make a response, with the content, a 200 response code and the headers
+                return Response::make($content, 200, $headers);
+                break;
+        }
+    }
+
+
     public function axiosActualizareValoare(Request $request)
     {
         switch ($_GET['request']) {
@@ -1153,41 +1414,5 @@ class SalariuController extends Controller
             default:
                 break;
         }
-    }
-
-    public function axiosDescarcareExcelLichidariToate(Request $request)
-    {
-        $angajati = $request->angajati;
-
-                foreach ($angajati as $angajat){
-                    // $content .= $angajat->id . "\t";
-                    $content .= "RO02INGB0000999912573918\t";
-                    $content .= $angajat->banca_iban . "\t";
-
-                    $content .= number_format((float)$angajat->salarii->first()->lichidare, 2, '.', '') . "\t";
-
-                    $content .= $angajat->banca_angajat_nume . "\t";
-                    $content .= 'LICHIDARE' . "\t";
-                    $content .= Carbon::parse($searchData)->isoformat('MMMM YYYY') . "\t";
-
-                    $content .= "\n";
-                }
-
-                // file name that will be used in the download
-                $fileName = "Lichidari ING.txt";
-
-                // use headers in order to generate the download
-                $headers = [
-                'Content-type' => 'text/plain',
-                'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
-                'Content-Length' => strlen($content)
-                ];
-
-                // make a response, with the content, a 200 response code and the headers
-                return Response::make($content, 200, $headers);
-        return response()->json([
-            'raspuns' => "S-a intors mesajul",
-            'angajati' => $angajati,
-        ]);
     }
 }
