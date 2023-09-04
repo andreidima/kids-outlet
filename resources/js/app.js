@@ -366,8 +366,19 @@ if (document.querySelector('#salarii')) {
             angajati: angajati,
             produse: produse,
             angajatiPerProduri: [[]],
+
+            totalRealizatPerProduri: [],
             totalAvansuriPerProduri: [],
+            totalCoPerProduri: [],
+            totalMedicalePerProduri: [],
+            totalSalariuDeBazaPerProduri: [],
+            totalRealizatTotalPerProduri: [],
             totalLichidariPerProduri: [],
+
+            salariulMinimPeEconomie: salariulMinimPeEconomie,
+            numarDeZileLucratoare: numarDeZileLucratoare,
+
+            arataProduseleDesfasurat: 'nu',
 
             mesajSucces: '',
             salariuId: '',
@@ -391,13 +402,17 @@ if (document.querySelector('#salarii')) {
                 this.angajatiPerProduri[angajat.prod].push(angajat);
             });
 
+            this.calculeazaRealizaturilePeProduse();
+            this.calculeazaConcediile();
             // Se calculeaza totalurile
             for (i = 0; i <= prodMaxim; i++) {
                 this.calculeazaTotaluriPerProduri(i);
             }
         },
-        mounted: function () {
-            this.$nextTick(() => this.calculeazaRealizaturilePeProduse());
+        created: function () {
+            // this.$nextTick(() => this.calculeazaRealizaturilePeProduse());
+            // this.calculeazaRealizaturilePeProduse();
+            // this.calculeazaConcediile();
             // setTimeout(() => this.calculeazaRealizaturilePeProduse(),500);
         },
         methods: {
@@ -431,10 +446,20 @@ if (document.querySelector('#salarii')) {
                     });
             },
             calculeazaTotaluriPerProduri(prod) {
+                this.totalRealizatPerProduri[prod] = 0;
                 this.totalAvansuriPerProduri[prod] = 0;
+                this.totalCoPerProduri[prod] = 0;
+                this.totalMedicalePerProduri[prod] = 0;
+                this.totalSalariuDeBazaPerProduri[prod] = 0;
+                this.totalRealizatTotalPerProduri[prod] = 0;
                 this.totalLichidariPerProduri[prod] = 0;
                 this.angajatiPerProduri[prod].forEach((angajat) => {
+                    this.totalRealizatPerProduri[prod] += angajat.realizatTotal;
                     this.totalAvansuriPerProduri[prod] += angajat.salarii[0].avans;
+                    this.totalCoPerProduri[prod] += angajat.sumaConcediuOdihna;
+                    this.totalMedicalePerProduri[prod] += angajat.sumaConcediuMedical;
+                    this.totalSalariuDeBazaPerProduri[prod] += angajat.realizatTotal + angajat.sumaConcediuOdihna + angajat.sumaConcediuMedical;
+                    this.totalRealizatTotalPerProduri[prod] += angajat.realizatTotal + angajat.sumaConcediuOdihna + angajat.sumaConcediuMedical;
                     this.totalLichidariPerProduri[prod] += parseFloat(angajat.salarii[0].lichidare);
                 });
             },
@@ -458,6 +483,22 @@ if (document.querySelector('#salarii')) {
                     });
                     angajat.realizatProduse = realizatProduse; // Se adauga la angajat arrayul cu realizatul per produs
                     angajat.realizatTotal = realizatTotal; // Se adauga la angajat realizatTotal
+                });
+            },
+            calculeazaConcediile: function () {
+                // Calcularea concediului medical si a celui de odihna
+                angajati.forEach((angajat) => {
+                    zile_concediu_medical = 0;
+                    zile_concediu_de_odihna = 0;
+                    angajat.pontaj.forEach((pontaj) => {
+                        if (pontaj.concediu == 1) {
+                            zile_concediu_medical++;
+                        } else if (pontaj.concediu == 2) {
+                            zile_concediu_de_odihna++;
+                        }
+                    });
+                    angajat.sumaConcediuOdihna = this.salariulMinimPeEconomie / this.numarDeZileLucratoare * zile_concediu_de_odihna;
+                    angajat.sumaConcediuMedical = this.salariulMinimPeEconomie / this.numarDeZileLucratoare * zile_concediu_medical * 0.75;
                 });
             },
         }

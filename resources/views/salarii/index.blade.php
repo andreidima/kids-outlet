@@ -3,6 +3,9 @@
 <script type="application/javascript">
     angajati =  {!! json_encode($angajati) !!}
     produse =  {!! json_encode($produse) !!}
+
+    salariulMinimPeEconomie =  {!! json_encode($salariulMinimPeEconomie) !!}
+    numarDeZileLucratoare =  {!! json_encode($numarDeZileLucratoare) !!}
 </script>
 
 <style>
@@ -137,7 +140,7 @@ table, th, td {
                             data-bs-target="#calculeazaAutomatLichidarile"
                             title="Calculează automat lichidarile"
                             >
-                            Calculează automat lichidarile
+                            Calculează automat lichidările
                         </a>
                         <div class="modal fade text-dark" id="calculeazaAutomatLichidarile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -197,40 +200,47 @@ table, th, td {
 
             @include ('errors')
 
-            <div class="row" id="salarii">
-                <div v-for="angajatiPerProd in angajatiPerProduri" class="col-lg-12 mb-3 mx-auto">
-                    <div v-if="angajatiPerProd.length">
-                        {{-- <div class="table-responsive rounded"> --}}
-                        <div class="rounded">
-                            <table class="table table-sm table-bordered table-hover rounded" >
-                                <thead class="text-white rounded sticky-top" style="background-color:#e66800;">
-                                    <tr>
-                                        <th colspan={{ $produse->count() + 10 }} class="text-center">
-                                            {{-- <div class="d-flex justify-content-between">
-                                                <div>
-                                                    Prod: @{{ angajatiPerProd[0].prod }}
-                                                </div>
-                                                <div>
-                                                    {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
-                                                </div>
-                                            </div> --}}
+            <div v-cloak v-if="angajatiPerProduri && angajatiPerProduri.length" class="row" id="salarii">
+                <div class="col-lg-12 my-2 d-flex justify-content-center">
+                    <button v-if="arataProduseleDesfasurat === 'nu'" class="btn btn-sm btn-primary text-white mx-1 border border-dark rounded-pill" type="button"
+                        v-on:click="arataProduseleDesfasurat = 'da'"
+                    >
+                        Arată și realizatul pe fiecare produs în parte
+                    </button>
+                    <button v-if="arataProduseleDesfasurat === 'da'" class="btn btn-sm btn-warning text-black mx-1 border border-dark rounded-pill" type="button"
+                        v-on:click="arataProduseleDesfasurat = 'nu'"
+                    >
+                        Ascunde realizatul pe fiecare produs în parte
+                    </button>
+                </div>
+                <div class="col-lg-12 mx-auto rounded">
+                    <table class="m-0 table table-sm table-bordered table-hover rounded" >
+                        <thead class="text-white rounded sticky-top" style="background-color:#e66800;">
+                            <tr class="" style="padding:2rem">
+                                <th style="width: 50px;">#</th>
+                                <th class="" style="">Angajat</th>
+                                <th v-if="arataProduseleDesfasurat === 'da'" v-for="produs in produse" style="font-size: 12px; text-align:center; padding:0px;">@{{ produs.nume }}</th>
+                                <th class="text-center px-0">Realizat</th>
+                                <th class="text-center px-0">Avans</th>
+                                <th class="text-center px-0">CO</th>
+                                <th class="text-center px-0">Medicale</th>
+                                <th class="text-center px-0">Salariu de bază</th>
+                                <th class="text-center px-0">Pus</th>
+                                <th class="text-center px-0">Realizat total</th>
+                                <th class="text-center px-0">Lichidare</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template v-for="angajatiPerProd in angajatiPerProduri">
+                                <template v-if="angajatiPerProd.length">
+                                    <tr class="text-white" style="background-color:#e66800;">
+                                        <th v-if="arataProduseleDesfasurat === 'da'" colspan={{ $produse->count() + 10 }} class="text-center">
                                             Prod @{{ angajatiPerProd[0].prod }} - {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
                                         </th>
-                                    <tr class="" style="padding:2rem">
-                                        <th style="width: 50px;">#</th>
-                                        <th class="" style="">Angajat</th>
-                                        <th v-for="produs in produse" style="font-size: 12px; text-align:center; padding:0px;">@{{ produs.nume }}</th>
-                                        <th class="text-center px-0">Realizat</th>
-                                        <th class="text-center px-0">Avans</th>
-                                        <th class="text-center px-0">CO</th>
-                                        <th class="text-center px-0">Medicale</th>
-                                        <th class="text-center px-0">Salariu de bază</th>
-                                        <th class="text-center px-0">Pus</th>
-                                        <th class="text-center px-0">Realizat total</th>
-                                        <th class="text-center px-0">Lichidare</th>
+                                        <th v-if="arataProduseleDesfasurat === 'nu'" colspan=10 class="text-center">
+                                            Prod @{{ angajatiPerProd[0].prod }} - {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
+                                        </th>
                                     </tr>
-                                </thead>
-                                <tbody >
                                     <tr v-for="(angajat, index) in angajatiPerProd">
                                         <td style="padding: 0px 2px 0px 4px">
                                             @{{ index + 1 }}
@@ -238,7 +248,7 @@ table, th, td {
                                         <td style="padding: 0px 0px 0px 0px; font-weight:bold">
                                             @{{ angajat.nume }}
                                         </td>
-                                        <td v-for="produs in produse" style="padding: 0px 2px 0px 4px; text-align:right">
+                                        <td v-if="arataProduseleDesfasurat === 'da'" v-for="produs in produse" style="padding: 0px 2px 0px 4px; text-align:right">
                                             <span v-if="angajat.realizatProduse && angajat.realizatProduse[produs.id]" style="font-size: 12px !important; font-weight:bold;">
                                                 @{{ angajat.realizatProduse[produs.id].toFixed(3) }}
                                             </span>
@@ -259,19 +269,19 @@ table, th, td {
                                                     >
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right;">
-                                            <span v-if="angajat.sumaConcediuOdihna != 0" style="font-size: 12px !important; font-weight:bold;">
+                                            <span v-if="angajat.sumaConcediuOdihna && (angajat.sumaConcediuOdihna != 0)" style="font-size: 12px !important; font-weight:bold;">
                                                 @{{ angajat.sumaConcediuOdihna.toFixed(3) }}
                                             </span>
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right;">
-                                            <span v-if="angajat.sumaConcediuMedical != 0" style="font-size: 12px !important; font-weight:bold;">
+                                            <span v-if="angajat.sumaConcediuMedical && (angajat.sumaConcediuMedical != 0)" style="font-size: 12px !important; font-weight:bold;">
                                                 @{{ angajat.sumaConcediuMedical.toFixed(3) }}
                                             </span>
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(255, 191, 191)">
-                                            <span style="font-size: 12px !important; font-weight:bold;">
-                                                @{{ (parseFloat(angajat.realizatTotal.toFixed(3)) + parseFloat(angajat.sumaConcediuOdihna.toFixed(3)) + parseFloat(angajat.sumaConcediuMedical.toFixed(3))).toFixed(3) }}
-                                            </span>
+                                            {{-- <span v-if="angajat.realizatTotal && angajat.sumaConcediuOdihna && angajat.sumaConcediuMedical" style="font-size: 12px !important; font-weight:bold;"> --}}
+                                                @{{ (parseFloat(angajat.realizatTotal) + parseFloat(angajat.sumaConcediuOdihna) + parseFloat(angajat.sumaConcediuMedical)).toFixed(3) }}
+                                            {{-- </span> --}}
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right;">
                                             <span style="font-size: 12px !important; font-weight:bold;">
@@ -279,9 +289,9 @@ table, th, td {
                                             </span>
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(172, 218, 186)">
-                                            <span style="font-size: 12px !important; font-weight:bold;">
-                                                @{{ (parseFloat(angajat.realizatTotal.toFixed(3)) + parseFloat(angajat.sumaConcediuOdihna.toFixed(3)) + parseFloat(angajat.sumaConcediuMedical.toFixed(3))).toFixed(3) }}
-                                            </span>
+                                            {{-- <span v-if="angajat.realizatTotal && angajat.sumaConcediuOdihna && angajat.sumaConcediuMedical" style="font-size: 12px !important; font-weight:bold;"> --}}
+                                                @{{ (parseFloat(angajat.realizatTotal) + parseFloat(angajat.sumaConcediuOdihna) + parseFloat(angajat.sumaConcediuMedical)).toFixed(3) }}
+                                            {{-- </span> --}}
                                         </td>
                                         {{-- <td style="padding: 0px 2px 0px 4px; text-align:right;">
                                             <span style="font-size: 12px !important; font-weight:bold;">
@@ -299,24 +309,56 @@ table, th, td {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="{{ $produse->count() + 3 }}" style="text-align: center">
+                                        <td v-if="arataProduseleDesfasurat === 'da'" colspan="{{ $produse->count() + 2 }}" style="text-align: center">
                                             <b>Total</b>
+                                        </td>
+                                        <td v-if="arataProduseleDesfasurat === 'nu'" colspan=2 style="text-align: center">
+                                            <b>Total</b>
+                                        </td>
+                                        <td style="text-align: right; padding-right:2px;">
+                                            @{{ totalRealizatPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
                                             @{{ totalAvansuriPerProduri[angajatiPerProd[0].prod] }}
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>
+                                            @{{ totalCoPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                        </td>
+                                        <td>
+                                            @{{ totalMedicalePerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                        </td>
+                                        <td>
+                                            @{{ totalSalariuDeBazaPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                        </td>
+                                        <td>
+                                            0
+                                        </td>
+                                        <td>
+                                            @{{ totalRealizatTotalPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                        </td>
                                         <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
                                             @{{ totalLichidariPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
                                     </tr>
-                            </table>
-                        </div>
-                    </div>
+                                    <tr>
+                                        <td v-if="arataProduseleDesfasurat === 'da'" colspan="{{ $produse->count() + 10 }}">
+                                            &nbsp;
+                                            <br>
+                                            &nbsp;
+                                            <br>
+                                            &nbsp;
+                                        </td>
+                                        <td v-if="arataProduseleDesfasurat === 'nu'" colspan="10" style="text-align: center">
+                                            &nbsp;
+                                            <br>
+                                            &nbsp;
+                                            <br>
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                    </table>
                 </div>
 
             </div>

@@ -5721,8 +5721,16 @@ if (document.querySelector('#salarii')) {
       angajati: angajati,
       produse: produse,
       angajatiPerProduri: [[]],
+      totalRealizatPerProduri: [],
       totalAvansuriPerProduri: [],
+      totalCoPerProduri: [],
+      totalMedicalePerProduri: [],
+      totalSalariuDeBazaPerProduri: [],
+      totalRealizatTotalPerProduri: [],
       totalLichidariPerProduri: [],
+      salariulMinimPeEconomie: salariulMinimPeEconomie,
+      numarDeZileLucratoare: numarDeZileLucratoare,
+      arataProduseleDesfasurat: 'nu',
       mesajSucces: '',
       salariuId: '',
       numeCamp: ''
@@ -5744,18 +5752,18 @@ if (document.querySelector('#salarii')) {
 
       angajati.forEach(function (angajat) {
         _this5.angajatiPerProduri[angajat.prod].push(angajat);
-      }); // Se calculeaza totalurile
+      });
+      this.calculeazaRealizaturilePeProduse();
+      this.calculeazaConcediile(); // Se calculeaza totalurile
 
       for (i = 0; i <= prodMaxim; i++) {
         this.calculeazaTotaluriPerProduri(i);
       }
     },
-    mounted: function mounted() {
-      var _this6 = this;
-
-      this.$nextTick(function () {
-        return _this6.calculeazaRealizaturilePeProduse();
-      }); // setTimeout(() => this.calculeazaRealizaturilePeProduse(),500);
+    created: function created() {// this.$nextTick(() => this.calculeazaRealizaturilePeProduse());
+      // this.calculeazaRealizaturilePeProduse();
+      // this.calculeazaConcediile();
+      // setTimeout(() => this.calculeazaRealizaturilePeProduse(),500);
     },
     methods: {
       actualizeazaValoare: function actualizeazaValoare(salariuId, numeCamp, valoare) {
@@ -5785,13 +5793,23 @@ if (document.querySelector('#salarii')) {
         });
       },
       calculeazaTotaluriPerProduri: function calculeazaTotaluriPerProduri(prod) {
-        var _this7 = this;
+        var _this6 = this;
 
+        this.totalRealizatPerProduri[prod] = 0;
         this.totalAvansuriPerProduri[prod] = 0;
+        this.totalCoPerProduri[prod] = 0;
+        this.totalMedicalePerProduri[prod] = 0;
+        this.totalSalariuDeBazaPerProduri[prod] = 0;
+        this.totalRealizatTotalPerProduri[prod] = 0;
         this.totalLichidariPerProduri[prod] = 0;
         this.angajatiPerProduri[prod].forEach(function (angajat) {
-          _this7.totalAvansuriPerProduri[prod] += angajat.salarii[0].avans;
-          _this7.totalLichidariPerProduri[prod] += parseFloat(angajat.salarii[0].lichidare);
+          _this6.totalRealizatPerProduri[prod] += angajat.realizatTotal;
+          _this6.totalAvansuriPerProduri[prod] += angajat.salarii[0].avans;
+          _this6.totalCoPerProduri[prod] += angajat.sumaConcediuOdihna;
+          _this6.totalMedicalePerProduri[prod] += angajat.sumaConcediuMedical;
+          _this6.totalSalariuDeBazaPerProduri[prod] += angajat.realizatTotal + angajat.sumaConcediuOdihna + angajat.sumaConcediuMedical;
+          _this6.totalRealizatTotalPerProduri[prod] += angajat.realizatTotal + angajat.sumaConcediuOdihna + angajat.sumaConcediuMedical;
+          _this6.totalLichidariPerProduri[prod] += parseFloat(angajat.salarii[0].lichidare);
         });
       },
       calculeazaRealizaturilePeProduse: function calculeazaRealizaturilePeProduse() {
@@ -5815,6 +5833,24 @@ if (document.querySelector('#salarii')) {
           angajat.realizatProduse = realizatProduse; // Se adauga la angajat arrayul cu realizatul per produs
 
           angajat.realizatTotal = realizatTotal; // Se adauga la angajat realizatTotal
+        });
+      },
+      calculeazaConcediile: function calculeazaConcediile() {
+        var _this7 = this;
+
+        // Calcularea concediului medical si a celui de odihna
+        angajati.forEach(function (angajat) {
+          zile_concediu_medical = 0;
+          zile_concediu_de_odihna = 0;
+          angajat.pontaj.forEach(function (pontaj) {
+            if (pontaj.concediu == 1) {
+              zile_concediu_medical++;
+            } else if (pontaj.concediu == 2) {
+              zile_concediu_de_odihna++;
+            }
+          });
+          angajat.sumaConcediuOdihna = _this7.salariulMinimPeEconomie / _this7.numarDeZileLucratoare * zile_concediu_de_odihna;
+          angajat.sumaConcediuMedical = _this7.salariulMinimPeEconomie / _this7.numarDeZileLucratoare * zile_concediu_medical * 0.75;
         });
       }
     }

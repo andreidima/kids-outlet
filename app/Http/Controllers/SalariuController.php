@@ -1030,26 +1030,37 @@ class SalariuController extends Controller
                 $search_data_inceput = Carbon::parse($searchData);
                 $search_data_sfarsit = Carbon::parse($searchData)->endOfMonth();
 
-                $angajati = Angajat::with(['norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
+                $angajati = Angajat::select('id', 'nume', 'prod')
+                    ->with(['norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
                         $query
-                            ->with('produs_operatie.produs')
+                            ->select('angajat_id', 'produs_operatie_id', 'cantitate')
+                            // ->with('produs_operatie:produs_id,pret')
+                            // ->with('produs_operatie.produs:id,nume')
+                            ->with(['produs_operatie'=> function($query){
+                                $query->select('id', 'produs_id', 'pret')
+                                    ->with(['produs'=> function($query){
+                                        $query->select('id');
+                                    }]);
+                            }])
                             ->whereDate('data', '>=', $search_data_inceput)
                             ->whereDate('data', '<=', $search_data_sfarsit);
                     }])
                     ->with(['pontaj'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
-                        $query->whereDate('data', '>=', $search_data_inceput)
+                        $query->select('angajat_id', 'concediu')
+                            ->whereDate('data', '>=', $search_data_inceput)
                             ->whereDate('data', '<=', $search_data_sfarsit);
                             // ->where('concediu', '>', 0); // daca este 0, inseamna ca nu a fost in concediu
                         }])
                     ->with(['salarii'=> function($query) use ($searchData){
-                        $query->whereDate('data', $searchData);
+                        $query->select('id', 'angajat_id', 'avans', 'lichidare')
+                            ->whereDate('data', $searchData);
                     }])
                     ->where('activ', 1) // Contul este activ
                     // ->where('prod', 1) // doar de test
                     ->orderBy('prod')
                     ->orderBy('nume')
                     ->get();
-
+// dd($angajati->first()->norme_lucrate->take(1));
 
                 // Extragerea tuturor produselor ce au fost lucrate in luna curenta
                 $produseIds = [];
@@ -1062,22 +1073,22 @@ class SalariuController extends Controller
                 }
                 $produse = Produs::with('produse_operatii')->whereIn('id', $produseIds)->get();
 
-                $salariul_minim_pe_economie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
+                $salariulMinimPeEconomie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
 
                 $zile_nelucratoare = DB::table('zile_nelucratoare')->whereDate('data', '>=', $search_data_inceput)->whereDate('data', '<=', $search_data_sfarsit)->pluck('data')->all();
-                $numar_de_zile_lucratoare = 0;
+                $numarDeZileLucratoare = 0;
                 for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
                     if(
                             (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
                             &&
                             !in_array(\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString(), $zile_nelucratoare)
                         ){
-                        $numar_de_zile_lucratoare ++;
+                        $numarDeZileLucratoare ++;
                     }
                 }
 
 
-                foreach ($angajati as $angajat){
+                // foreach ($angajati as $angajat){
                     // Calcularea sumelor realizate pe fiecare produs in parte si total REALIZAT
                     // $realizatProduse = [];
                     // $realizatTotal = 0;
@@ -1094,23 +1105,23 @@ class SalariuController extends Controller
                     // $angajat->realizatProduse = $realizatProduse; // Se adauga la angajat arrayul cu realizatul per produs
                     // $angajat->realizatTotal = $realizatTotal; // Se adauga la angajat realizatTotal
 
-                    $angajat->realizatTotal = 0; // Se adauga la angajat realizatTotal, se va recalcula dupa incarcarea paginii in javascript
+                    // $angajat->realizatTotal = 0; // Se adauga la angajat realizatTotal, se va recalcula dupa incarcarea paginii in javascript
 
                     // Coloanele „CO” si „MEDICALE”
-                    $zile_concediu_medical = 0;
-                    $zile_concediu_de_odihna = 0;
-                    foreach($angajat->pontaj as $pontaj){
-                        if ($pontaj->concediu === 1){
-                            $zile_concediu_medical ++;
-                        }else if ($pontaj->concediu === 2){
-                            $zile_concediu_de_odihna ++;
-                        }
-                    }
-                    $angajat->sumaConcediuOdihna = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_de_odihna;
-                    $angajat->sumaConcediuMedical = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_medical * 0.75;
-                }
+                    // $zile_concediu_medical = 0;
+                    // $zile_concediu_de_odihna = 0;
+                    // foreach($angajat->pontaj as $pontaj){
+                    //     if ($pontaj->concediu === 1){
+                    //         $zile_concediu_medical ++;
+                    //     }else if ($pontaj->concediu === 2){
+                    //         $zile_concediu_de_odihna ++;
+                    //     }
+                    // }
+                    // $angajat->sumaConcediuOdihna = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_de_odihna;
+                    // $angajat->sumaConcediuMedical = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_medical * 0.75;
+                // }
 
-                return view('salarii.index', compact('angajati', 'produse', 'searchData', 'searchLuna', 'searchAn'));
+                return view('salarii.index', compact('angajati', 'produse', 'searchData', 'searchLuna', 'searchAn', 'salariulMinimPeEconomie', 'numarDeZileLucratoare'));
                 break;
             }
 
