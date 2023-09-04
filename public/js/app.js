@@ -5792,6 +5792,16 @@ if (document.querySelector('#salarii')) {
           });
         });
       },
+      axiosDescarcareExcelLichidariToate: function axiosDescarcareExcelLichidariToate() {
+        axios.post('/salarii/axios-descarcare-excel-lichidari-toate', {
+          angajati: this.angajati
+        }, {// params: {
+          //     request: 'actualizareValoare',
+          // }
+        }).then(function (response) {// console.log(response.data.raspuns);
+          // console.log(response.data.angajati);
+        });
+      },
       calculeazaTotaluriPerProduri: function calculeazaTotaluriPerProduri(prod) {
         var _this6 = this;
 

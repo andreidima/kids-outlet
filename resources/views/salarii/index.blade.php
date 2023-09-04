@@ -201,6 +201,14 @@ table, th, td {
             @include ('errors')
 
             <div v-cloak v-if="angajatiPerProduri && angajatiPerProduri.length" class="row" id="salarii">
+                                <div class="">
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="button"
+                                        name="action" value="exportLichidariExcelMana"
+                                        v-on:click = "axiosDescarcareExcelLichidariToate()"
+                                        >
+                                        Excel lichidari toate
+                                    </button>
+                                </div>
                 <div class="col-lg-12 my-2 d-flex justify-content-center">
                     <button v-if="arataProduseleDesfasurat === 'nu'" class="btn btn-sm btn-primary text-white mx-1 border border-dark rounded-pill" type="button"
                         v-on:click="arataProduseleDesfasurat = 'da'"

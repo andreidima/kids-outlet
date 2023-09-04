@@ -130,6 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/salarii', [SalariuController::class, 'index']);
     Route::post('/salarii/axios-actualizare-valoare', [SalariuController::class, 'axiosActualizareValoare']);
+    Route::post('/salarii/axios-descarcare-excel-lichidari-toate', [SalariuController::class, 'axiosDescarcareExcelLichidariToate']);
 
     // Actualizarea automata a avansurilor din salarii, in luna 09.2023. Se poate sterge codul in luna 11.2023
     Route::get('actualizarea-avansurilor-din-salarii' , function(){
