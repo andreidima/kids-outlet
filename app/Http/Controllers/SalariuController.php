@@ -1137,26 +1137,27 @@ class SalariuController extends Controller
         $searchData->month = $request->searchLuna;
         $searchData->year = $request->searchAn;
 
-        $search_data_inceput = \Carbon\Carbon::parse($searchData);
-        $search_data_sfarsit = \Carbon\Carbon::parse($searchData)->endOfMonth();
-
-        $salariul_minim_pe_economie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
-
-        $zile_nelucratoare = DB::table('zile_nelucratoare')->whereDate('data', '>=', $search_data_inceput)->whereDate('data', '<=', $search_data_sfarsit)->pluck('data')->all();
-        $numar_de_zile_lucratoare = 0;
-        for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
-            if(
-                    (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
-                    &&
-                    !in_array(\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString(), $zile_nelucratoare)
-                ){
-                $numar_de_zile_lucratoare ++;
-            }
-        }
-
 
         switch ($request->input('action')) {
             case 'exportLichidariExcelToate':
+
+                $search_data_inceput = \Carbon\Carbon::parse($searchData);
+                $search_data_sfarsit = \Carbon\Carbon::parse($searchData)->endOfMonth();
+
+                $salariul_minim_pe_economie = intval(\App\Models\Variabila::where('variabila', 'salariul_minim_pe_economie')->value('valoare'));
+
+                $zile_nelucratoare = DB::table('zile_nelucratoare')->whereDate('data', '>=', $search_data_inceput)->whereDate('data', '<=', $search_data_sfarsit)->pluck('data')->all();
+                $numar_de_zile_lucratoare = 0;
+                for ($ziua = 0; $ziua <= \Carbon\Carbon::parse($search_data_sfarsit)->diffInDays($search_data_inceput); $ziua++){
+                    if(
+                            (\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isWeekday())
+                            &&
+                            !in_array(\Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString(), $zile_nelucratoare)
+                        ){
+                        $numar_de_zile_lucratoare ++;
+                    }
+                }
+
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
                 // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
@@ -1357,17 +1358,31 @@ class SalariuController extends Controller
                 exit();
             break;
             case 'calculeazaAutomatLichidarile':
+                // foreach ($angajatiPerProduri as $angajatiPerProd){
+                //     foreach ($angajatiPerProd as $angajat){
+                //         $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->first();
+                //         $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
+                //         $salariu->save();
+                //     }
+                // }
+                $angajatiIds = [];
                 foreach ($angajatiPerProduri as $angajatiPerProd){
                     foreach ($angajatiPerProd as $angajat){
-                        $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->first();
-                        // dd($angajat, $salariu);
-                        $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
-                        $salariu->save();
-
-                        // S0a incercat sa se vada daca mass update este mai rapid decat extragerea si salvarea de mai sus, a fiecaruia in parte
-                        // $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->update(['lichidare' => $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $angajat['salarii'][0]['avans']]);
+                        array_push($angajatiIds, $angajat['id']);
                     }
                 }
+
+                $salarii = Salariu::whereIn('angajat_id', $angajatiIds)->where('data', $searchData)->get();
+
+                foreach ($angajatiPerProduri as $angajatiPerProd){
+                    foreach ($angajatiPerProd as $angajat){
+                        $salariu = $salarii->where('angajat_id', $angajat['id'])->first();
+                        $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
+                        $salariu->save();
+                    }
+                }
+                // dd($salarii);
+                // $salarii->save();
                 return back();
             break;
             default:
