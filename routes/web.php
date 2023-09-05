@@ -133,16 +133,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/salarii/axios-actualizare-valoare', [SalariuController::class, 'axiosActualizareValoare']);
 
     // Actualizarea automata a avansurilor din salarii, in luna 09.2023. Se poate sterge codul in luna 11.2023
-    Route::get('actualizarea-avansurilor-din-salarii' , function(){
-        $avansuriAugust = App\Models\Avans::where('data', '2023-08-01')->get();
-        foreach ($avansuriAugust as $avans){
-            $salariu = App\Models\Salariu::where('data', '2023-08-01')->where('angajat_id', $avans->angajat_id)->first();
-            if ($salariu){
-                $salariu->avans = $avans->suma;
-                $salariu->save();
-            }
-        }
-        echo 'Done';
-    });
+    // Route::get('actualizarea-avansurilor-din-salarii' , function(){
+    //     $avansuriAugust = App\Models\Avans::where('data', '2023-08-01')->get();
+    //     foreach ($avansuriAugust as $avans){
+    //         $salariu = App\Models\Salariu::where('data', '2023-08-01')->where('angajat_id', $avans->angajat_id)->first();
+    //         if ($salariu){
+    //             $salariu->avans = $avans->suma;
+    //             $salariu->save();
+    //         }
+    //     }
+    //     echo 'Done';
+    // });
 
 });
