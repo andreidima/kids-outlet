@@ -1358,35 +1358,17 @@ class SalariuController extends Controller
             break;
             case 'calculeazaAutomatLichidarile':
                 foreach ($angajatiPerProduri as $angajatiPerProd){
-                foreach ($angajatiPerProd as $angajat){
-                    // Calcularea sumelor realizate pe fiecare produs in parte si total REALIZAT
-                    $realizatTotal = 0;
-                    foreach ($angajat['realizatProdus'] as $produs){
-                        $realizat = 0;
-                        foreach ($produs->produse_operatii as $produs_operatie){
-                            foreach ($angajat->norme_lucrate->where('produs_operatie_id', $produs_operatie->id) as $norma_lucrata){
-                                $realizat += $norma_lucrata->cantitate * $produs_operatie->pret;
-                            }
-                        }
-                        $realizatProduse[$produs->id] = $realizat;
-                        $realizatTotal += $realizat;
-                    }
+                    foreach ($angajatiPerProd as $angajat){
+                        $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->first();
+                        // dd($angajat, $salariu);
+                        $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
+                        $salariu->save();
 
-                    // Coloanele „CO” si „MEDICALE”
-                    $zile_concediu_medical = 0;
-                    $zile_concediu_de_odihna = 0;
-                    foreach($angajat->pontaj as $pontaj){
-                        if ($pontaj->concediu === 1){
-                            $zile_concediu_medical ++;
-                        }else if ($pontaj->concediu === 2){
-                            $zile_concediu_de_odihna ++;
-                        }
+                        // S0a incercat sa se vada daca mass update este mai rapid decat extragerea si salvarea de mai sus, a fiecaruia in parte
+                        // $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->update(['lichidare' => $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $angajat['salarii'][0]['avans']]);
                     }
-                    $sumaConcediuOdihna = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_de_odihna;
-                    $sumaConcediuMedical = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_medical * 0.75;
-
-                    $angajat->salarii->first()->update(['lichidare' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0)]);
                 }
+                return back();
             break;
             default:
                 // make a response, with the content, a 200 response code and the headers
