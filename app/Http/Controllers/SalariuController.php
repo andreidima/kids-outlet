@@ -615,8 +615,9 @@ class SalariuController extends Controller
                 $sheet->setCellValueByColumnAndRow(($index+8), 4 , 'SALARIU DE BAZA');
                 $sheet->setCellValueByColumnAndRow(($index+9), 4 , 'PUS');
                 $sheet->setCellValueByColumnAndRow(($index+10), 4 , 'REALIZAT TOTAL');
-                $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE CALCULATĂ DE APLICAȚIE');
-                $sheet->setCellValueByColumnAndRow(($index+12), 4 , 'LICHIDARE SETATĂ DE OPERATOR');
+                // $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE CALCULATĂ DE APLICAȚIE');
+                // $sheet->setCellValueByColumnAndRow(($index+12), 4 , 'LICHIDARE SETATĂ DE OPERATOR');
+                $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE');
 
                 $rand = 5;
 
@@ -704,15 +705,19 @@ class SalariuController extends Controller
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand);
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+10), $rand)->getColumn())->setAutoSize(true);
 
-                        // LICHIDARE CALCULATA DE APLICATIE
-                        $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
-                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
+                        // // LICHIDARE CALCULATA DE APLICATIE
+                        // $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
+                        // $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
 
-                        // LICHIDARE SETATA DE OPERATOR
-                        $sheet->setCellValueByColumnAndRow((($index+12)), $rand , $angajat->salarii->first()->lichidare ?? 0);
-                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+12), $rand)->getColumn())->setAutoSize(true);
+                        // // LICHIDARE SETATA DE OPERATOR
+                        // $sheet->setCellValueByColumnAndRow((($index+12)), $rand , $angajat->salarii->first()->lichidare ?? 0);
+                        // $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+12), $rand)->getColumn())->setAutoSize(true);
+
+                        // LICHIDARE
+                        $sheet->setCellValueByColumnAndRow((($index+11)), $rand , $angajat->salarii->first()->lichidare ?? 0);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
 
 
                         $rand ++;
@@ -757,14 +762,18 @@ class SalariuController extends Controller
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand_initial . ':' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . ($rand-1)
                         )->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('CC8ccd8c');
-                    // LICHIDARE CALCULATA DE APLICATIE
+                    // // LICHIDARE CALCULATA DE APLICATIE
+                    // $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=SUM(' .
+                    //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand_initial . ':' .
+                    //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . ($rand-1) . ')');
+                    // // LICHIDARE SETATA DE OPERATOR
+                    // $sheet->setCellValueByColumnAndRow(($index+12), $rand , '=SUM(' .
+                    //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand_initial . ':' .
+                    //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . ($rand-1) . ')');
+                    // LICHIDARE
                     $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=SUM(' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand_initial . ':' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . ($rand-1) . ')');
-                    // LICHIDARE SETATA DE OPERATOR
-                    $sheet->setCellValueByColumnAndRow(($index+12), $rand , '=SUM(' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand_initial . ':' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . ($rand-1) . ')');
                     // Schimbare culoare la totaluri in rosu
                     $sheet->getStyle(
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . ':' .
@@ -1220,8 +1229,9 @@ class SalariuController extends Controller
                 $sheet->setCellValueByColumnAndRow(($index+8), 4 , 'SALARIU DE BAZA');
                 $sheet->setCellValueByColumnAndRow(($index+9), 4 , 'PUS');
                 $sheet->setCellValueByColumnAndRow(($index+10), 4 , 'REALIZAT TOTAL');
-                $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE CALCULATĂ DE APLICAȚIE');
-                $sheet->setCellValueByColumnAndRow(($index+12), 4 , 'LICHIDARE SETATĂ DE OPERATOR');
+                // $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE CALCULATĂ DE APLICAȚIE');
+                // $sheet->setCellValueByColumnAndRow(($index+12), 4 , 'LICHIDARE SETATĂ DE OPERATOR');
+                $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE');
 
                 $rand = 5;
 
@@ -1295,15 +1305,19 @@ class SalariuController extends Controller
                                 \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand);
                             $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+10), $rand)->getColumn())->setAutoSize(true);
 
-                            // LICHIDARE CALCULATA DE APLICATIE
-                            $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
-                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
-                                \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
-                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
+                            // // LICHIDARE CALCULATA DE APLICATIE
+                            // $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
+                            //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
+                            //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
+                            // $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
+
+                            // // LICHIDARE SETATA DE OPERATOR
+                            // $sheet->setCellValueByColumnAndRow((($index+12)), $rand , $angajat['salarii'][0]['lichidare']);
+                            // $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+12), $rand)->getColumn())->setAutoSize(true);
 
                             // LICHIDARE SETATA DE OPERATOR
-                            $sheet->setCellValueByColumnAndRow((($index+12)), $rand , $angajat['salarii'][0]['lichidare']);
-                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+12), $rand)->getColumn())->setAutoSize(true);
+                            $sheet->setCellValueByColumnAndRow((($index+11)), $rand , $angajat['salarii'][0]['lichidare']);
+                            $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
 
 
                             $rand ++;
@@ -1348,14 +1362,18 @@ class SalariuController extends Controller
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand_initial . ':' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . ($rand-1)
                             )->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('CC8ccd8c');
-                        // LICHIDARE CALCULATA DE APLICATIE
+                        // // LICHIDARE CALCULATA DE APLICATIE
+                        // $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=SUM(' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand_initial . ':' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . ($rand-1) . ')');
+                        // // LICHIDARE SETATA DE OPERATOR
+                        // $sheet->setCellValueByColumnAndRow(($index+12), $rand , '=SUM(' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand_initial . ':' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . ($rand-1) . ')');
+                        // LICHIDARE
                         $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=SUM(' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand_initial . ':' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . ($rand-1) . ')');
-                        // LICHIDARE SETATA DE OPERATOR
-                        $sheet->setCellValueByColumnAndRow(($index+12), $rand , '=SUM(' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand_initial . ':' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . ($rand-1) . ')');
                         // Schimbare culoare la totaluri in rosu
                         $sheet->getStyle(
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . ':' .
