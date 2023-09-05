@@ -102,14 +102,14 @@
                                 </ul>
                             </li>
                             <li class="nav-item me-3 dropdown">
-                                <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{-- <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-clipboard-list me-1"></i>Plăți
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" href="/avansuri">Avansuri</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/lichidare">Lichidare</a></li>
-                                </ul>
+                                </ul> --}}
                             </li>
                             <li class="nav-item me-3">
                                 <a class="nav-link active" aria-current="page" href="/salarii">
