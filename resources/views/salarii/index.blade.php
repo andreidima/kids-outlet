@@ -28,7 +28,8 @@ table, th, td {
 
 @section('content')
 <div class="card mx-1" style="border-radius: 40px 40px 40px 40px;" id="salarii">
-        <form class="needs-validation mb-0" novalidate method="POST" action="{{ url()->current() }}">
+        {{-- STERGE FORMULARUL LA 01.10.2023 --}}
+        {{-- <form class="needs-validation mb-0" novalidate method="POST" action="{{ url()->current() }}">
             @csrf
 
             <input type="hidden" name="angajatiPerProduri" :value="JSON.stringify(angajatiPerProduri)">
@@ -43,181 +44,205 @@ table, th, td {
                 name="action" value="calculeazaAutomatLichidarile">
                 Calculează automat lichidările
             </button>
-        </form>
+            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                name="action" value="exportLichidariExcelBancaBt">
+                Excel BT
+            </button>
+            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                name="action" value="exportLichidariTxtBancaIng">
+                Txt ING
+            </button>
+            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                name="action" value="exportLichidariExcelMana">
+                Excel Mână
+            </button>
+        </form> --}}
 
-        <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
-            @csrf
 
-            <input type="hidden" name="angajatiPerProduri"
-                {{-- v-model="angajatiPerProduri"  --}}
-                :value="JSON.stringify(angajatiPerProduri)"
-                >
-
-            <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-                <div class="col-lg-1">
-                    <h4 class="mb-0">Salarii</a></h4>
-                </div>
-                <div class="col-lg-4" id="app1">
-                    <div class="row mb-1 input-group custom-search-form justify-content-center">
-                        <div class="col-lg-5 d-flex justify-content-center">
-                            <label for="searchLuna" class="mb-0 align-self-center me-1">Luna:</label>
-                            <input type="text" class="form-control form-control border rounded-3" id="searchLuna" name="searchLuna" placeholder="Luna" autofocus
-                                    value="{{ $searchLuna }}">
-                        </div>
-                        <div class="col-lg-5 d-flex justify-content-center">
-                            <label for="searchAn" class="mb-0 align-self-center me-1">An:</label>
-                            <input type="text" class="form-control form-control me-1 border rounded-3" id="searchAn" name="searchAn" placeholder="An" autofocus
-                                    value="{{ $searchAn }}">
-                        </div>
-                    </div>
-                    <div class="row input-group custom-search-form justify-content-center">
-                        <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
-                            <i class="fas fa-search text-white me-1"></i>Caută
-                        </button>
-                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ url()->current() }}" role="button">
-                            <i class="far fa-trash-alt text-white me-1"></i>Resetează
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 py-1 rounded-3" style="background-color: rgb(157, 249, 249)">
-                    <div class="mb-2 d-flex align-items-center justify-content-center">
-                        <span class="rounded-3 text-white px-2" style="background-color: darkcyan;">
-                            AVANSURI
-                        </span>
-                    </div>
-                    <div class="mb-2 d-flex align-items-center justify-content-center">
-                        <a
-                            class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
-                            href="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#calculeazaAutomatAvansurile"
-                            title="Calculează automat avansurile"
-                            >
-                            Calculează automat avansurile
-                        </a>
-                        <div class="modal fade text-dark" id="calculeazaAutomatAvansurile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                <div class="modal-header bg-danger">
-                                    <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
-                                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" style="text-align:left;">
-                                    Ești sigur ca vrei să se calculeze automat toate avansurile pentru luna aleasă?
-                                    <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
-                                    Toate avansurile introduse manual se vor șterge!
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
-
-                                        <button class="btn btn-danger text-white border border-dark" type="submit"
-                                            name="action" value="calculeazaAutomatAvansurile">
-                                            Calculează automat avansurile
-                                        </button>
-
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        <i class="fas fa-question-circle fa-lg text-info" title="Avansurile se calculeaza astfel: zilePontate > 10 - avansul se plătește integral, zilePontate între 7 și 10 - avansul se plătește 300, zilePontate < 7 - avansul se plătește 0"></i>
-                    </div>
-                    <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                        <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
-                            <div class="mb-1 d-flex justify-content-center align-items-center">
-                                Export: &nbsp;
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportAvansuriExcelToate">
-                                    Excel Toate
-                                </button>
-                            </div>
-                            <div class="d-flex">
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportAvansuriExcelBancaBt">
-                                    Excel BT
-                                </button>
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportAvansuriTxtBancaIng">
-                                    Txt ING
-                                </button>
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportAvansuriExcelMana">
-                                    Excel Mână
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-1">
-                </div>
-                <div class="col-lg-3 py-1 rounded-3" style="background-color: rgb(255, 219, 219);">
-                    <div class="mb-2 d-flex align-items-center justify-content-center">
-                        <span class="rounded-3 text-white px-2" style="background-color:brown;">
-                            LICHIDĂRI
-                        </span>
-                    </div>
-                    <div class="mb-2 d-flex align-items-center justify-content-center">
-                        <a
-                            class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
-                            href="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#calculeazaAutomatLichidarile"
-                            title="Calculează automat lichidarile"
-                            >
-                            Calculează automat lichidările
-                        </a>
-                        <div class="modal fade text-dark" id="calculeazaAutomatLichidarile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                <div class="modal-header bg-danger">
-                                    <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
-                                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" style="text-align:left;">
-                                    Ești sigur ca vrei să se calculeze automat toate lichidările pentru luna aleasă?
-                                    <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
-                                    Toate lichidările introduse manual se vor șterge!
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
-
-                                        <button class="btn btn-danger text-white border border-dark" type="submit"
-                                            name="action" value="calculeazaAutomatLichidarile">
-                                            Calculează automat lichidările
-                                        </button>
-
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                        <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
-                            <div class="mb-1 d-flex justify-content-center align-items-center">
-                                Export: &nbsp;
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportLichidariExcelToate">
-                                    Excel Toate
-                                </button>
-                            </div>
-                            <div class="d-flex">
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportLichidariExcelBancaBt">
-                                    Excel BT
-                                </button>
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportLichidariTxtBancaIng">
-                                    Txt ING
-                                </button>
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportLichidariExcelMana">
-                                    Excel Mână
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
+            <div class="col-lg-1">
+                <h4 class="mb-0">Salarii</a></h4>
             </div>
-        </form>
+
+            <div class="col-lg-7">
+                <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                    @csrf
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="row mb-1 input-group custom-search-form justify-content-center">
+                                <div class="col-lg-5 d-flex justify-content-center">
+                                    <label for="searchLuna" class="mb-0 align-self-center me-1">Luna:</label>
+                                    <input type="text" class="form-control form-control border rounded-3" id="searchLuna" name="searchLuna" placeholder="Luna" autofocus
+                                            value="{{ $searchLuna }}">
+                                </div>
+                                <div class="col-lg-5 d-flex justify-content-center">
+                                    <label for="searchAn" class="mb-0 align-self-center me-1">An:</label>
+                                    <input type="text" class="form-control form-control me-1 border rounded-3" id="searchAn" name="searchAn" placeholder="An" autofocus
+                                            value="{{ $searchAn }}">
+                                </div>
+                            </div>
+                            <div class="row input-group custom-search-form justify-content-center">
+                                <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
+                                    <i class="fas fa-search text-white me-1"></i>Caută
+                                </button>
+                                <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ url()->current() }}" role="button">
+                                    <i class="far fa-trash-alt text-white me-1"></i>Resetează
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 py-1 rounded-3" style="background-color: rgb(157, 249, 249)">
+                            <div class="mb-2 d-flex align-items-center justify-content-center">
+                                <span class="rounded-3 text-white px-2" style="background-color: darkcyan;">
+                                    AVANSURI
+                                </span>
+                            </div>
+                            <div class="mb-2 d-flex align-items-center justify-content-center">
+                                <a
+                                    class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#calculeazaAutomatAvansurile"
+                                    title="Calculează automat avansurile"
+                                    >
+                                    Calculează automat avansurile
+                                </a>
+                                <div class="modal fade text-dark" id="calculeazaAutomatAvansurile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
+                                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" style="text-align:left;">
+                                            Ești sigur ca vrei să se calculeze automat toate avansurile pentru luna aleasă?
+                                            <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
+                                            Toate avansurile introduse manual se vor șterge!
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+
+                                                <button class="btn btn-danger text-white border border-dark" type="submit"
+                                                    name="action" value="calculeazaAutomatAvansurile">
+                                                    Calculează automat avansurile
+                                                </button>
+
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-question-circle fa-lg text-info" title="Avansurile se calculeaza astfel: zilePontate > 10 - avansul se plătește integral, zilePontate între 7 și 10 - avansul se plătește 300, zilePontate < 7 - avansul se plătește 0"></i>
+                            </div>
+                            <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
+                                <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
+                                    <div class="mb-1 d-flex justify-content-center align-items-center">
+                                        Export: &nbsp;
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportAvansuriExcelToate">
+                                            Excel Toate
+                                        </button>
+                                    {{-- </div>
+                                    <div class="d-flex"> --}}
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportAvansuriExcelBancaBt">
+                                            Excel BT
+                                        </button>
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportAvansuriTxtBancaIng">
+                                            Txt ING
+                                        </button>
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportAvansuriExcelMana">
+                                            Excel Mână
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-4">
+                <form class="needs-validation mb-0" novalidate method="POST" action="{{ url()->current() }}">
+                    @csrf
+
+                    <div class="row">
+                        <div class="col-lg-12 py-1 rounded-3" style="background-color: rgb(255, 219, 219);">
+
+                            <input type="hidden" name="angajatiPerProduri" :value="JSON.stringify(angajatiPerProduri)">
+                            <input type="hidden" name="produse" :value="JSON.stringify(produse)">
+                            <input type="hidden" name="searchLuna" value="{{ $searchLuna }}">
+                            <input type="hidden" name="searchAn" value="{{ $searchAn }}">
+
+                            <div class="mb-2 d-flex align-items-center justify-content-center">
+                                <span class="rounded-3 text-white px-2" style="background-color:brown;">
+                                    LICHIDĂRI
+                                </span>
+                            </div>
+                            <div class="mb-2 d-flex align-items-center justify-content-center">
+                                <a
+                                    class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#calculeazaAutomatLichidarile"
+                                    title="Calculează automat lichidarile"
+                                    >
+                                    Calculează automat lichidările
+                                </a>
+                                <div class="modal fade text-dark" id="calculeazaAutomatLichidarile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
+                                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" style="text-align:left;">
+                                            Ești sigur ca vrei să se calculeze automat toate lichidările pentru luna aleasă?
+                                            <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
+                                            Toate lichidările introduse manual se vor șterge!
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+
+                                                <button class="btn btn-danger text-white border border-dark" type="submit"
+                                                    name="action" value="calculeazaAutomatLichidarile">
+                                                    Calculează automat lichidările
+                                                </button>
+
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
+                                <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
+                                    <div class="mb-1 d-flex justify-content-center align-items-center">
+                                        Export: &nbsp;
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportLichidariExcelToate">
+                                            Excel Toate
+                                        </button>
+                                    {{-- </div>
+                                    <div class="d-flex"> --}}
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportLichidariExcelBancaBt">
+                                            Excel BT
+                                        </button>
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportLichidariTxtBancaIng">
+                                            Txt ING
+                                        </button>
+                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportLichidariExcelMana">
+                                            Excel Mână
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
         <div class="card-body px-0 py-0">
 

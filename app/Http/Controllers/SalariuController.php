@@ -1139,6 +1139,35 @@ class SalariuController extends Controller
 
 
         switch ($request->input('action')) {
+            case 'calculeazaAutomatLichidarile':
+                // foreach ($angajatiPerProduri as $angajatiPerProd){
+                //     foreach ($angajatiPerProd as $angajat){
+                //         $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->first();
+                //         $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
+                //         $salariu->save();
+                //     }
+                // }
+                $angajatiIds = [];
+                foreach ($angajatiPerProduri as $angajatiPerProd){
+                    foreach ($angajatiPerProd as $angajat){
+                        array_push($angajatiIds, $angajat['id']);
+                    }
+                }
+
+                $salarii = Salariu::whereIn('angajat_id', $angajatiIds)->where('data', $searchData)->get();
+
+                foreach ($angajatiPerProduri as $angajatiPerProd){
+                    foreach ($angajatiPerProd as $angajat){
+                        $salariu = $salarii->where('angajat_id', $angajat['id'])->first();
+                        $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
+                        $salariu->save();
+                    }
+                }
+                // dd($salarii);
+                // $salarii->save();
+                // return back()->with('status', 'Lichidările au fost calculate!');
+                return back();
+            break;
             case 'exportLichidariExcelToate':
 
                 $search_data_inceput = \Carbon\Carbon::parse($searchData);
@@ -1357,34 +1386,227 @@ class SalariuController extends Controller
                 $writer->save('php://output');
                 exit();
             break;
-            case 'calculeazaAutomatLichidarile':
-                // foreach ($angajatiPerProduri as $angajatiPerProd){
-                //     foreach ($angajatiPerProd as $angajat){
-                //         $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->first();
-                //         $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
-                //         $salariu->save();
-                //     }
-                // }
-                $angajatiIds = [];
-                foreach ($angajatiPerProduri as $angajatiPerProd){
-                    foreach ($angajatiPerProd as $angajat){
-                        array_push($angajatiIds, $angajat['id']);
-                    }
+            case 'exportLichidariExcelBancaBt':
+                $angajati = Angajat::
+                    with(['salarii'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->where('banca_iban', 'like', '%BTRL%')
+                    ->where('activ', 1)
+                    ->orderBy('prod')
+                    ->orderBy('banca_angajat_nume')
+                    ->get();
+
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+
+                $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+                $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+                $sheet->setCellValue('A1', 'NRCRT');
+                $sheet->setCellValue('B1', 'SALARIAT');
+                $sheet->setCellValue('C1', 'CNP');
+                $sheet->setCellValue('D1', 'SUMA');
+                $sheet->setCellValue('E1', 'IBAN');
+                $sheet->setCellValue('F1', 'EXPLICATIE');
+
+                $rand = 2;
+
+                $nrCrt = 1;
+
+                foreach ($angajati as $index=>$angajat){
+                    $sheet->setCellValue('A' . $rand, $nrCrt++);
+
+                    $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
+
+                    // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
+                    $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
+                    $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
+
+                    // Lichidare de platit - se seteaza coloana ca string pentru a putea delimita zecimalele cu punct
+                    $sheet->getCellByColumnAndRow((4), $rand)->setValueExplicit(number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING2);
+
+                    $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
+                    // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
+                    $sheet->setCellValue('F' . $rand, 'LICHIDARE ' . Carbon::parse($searchData)->isoformat('MMMM YYYY'));
+
+                    $rand ++;
+                }
+                // Se parcug toate coloanele si se stabileste latimea AUTO
+                foreach ($sheet->getColumnIterator() as $column) {
+                    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                }
+                // $sheet->getColumnDimension('A')->setWidth(90);
+
+                // Coloana pret a fost setata ca string, asa ca este nevoie de aliniat textul la dreapta
+                $sheet->getStyle('D')->getAlignment()->setHorizontal('right');
+
+                $writer = new Xlsx($spreadsheet);
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="Lichidari BT.xlsx"');
+                $writer->save('php://output');
+                exit();
+
+                break;
+            case 'exportLichidariTxtBancaIng':
+                $angajati = Angajat::
+                    with(['salarii'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->where('banca_iban', 'like', '%ING%')
+                    ->where('activ', 1)
+                    ->orderBy('prod')
+                    ->orderBy('nume')
+                    ->get();
+
+                // prepare content
+                $content = "Cont sursa\tCont destinatie\tSuma\tBeneficiar\tDetalii 1\tDetalii 2\n";
+
+                foreach ($angajati as $angajat){
+                    // $content .= $angajat->id . "\t";
+                    $content .= "RO02INGB0000999912573918\t";
+                    $content .= $angajat->banca_iban . "\t";
+
+                    $content .= number_format((float)$angajat->salarii->first()->lichidare, 2, '.', '') . "\t";
+
+                    $content .= $angajat->banca_angajat_nume . "\t";
+                    $content .= 'LICHIDARE' . "\t";
+                    $content .= Carbon::parse($searchData)->isoformat('MMMM YYYY') . "\t";
+
+                    $content .= "\n";
                 }
 
-                $salarii = Salariu::whereIn('angajat_id', $angajatiIds)->where('data', $searchData)->get();
+                // file name that will be used in the download
+                $fileName = "Lichidari ING.txt";
 
-                foreach ($angajatiPerProduri as $angajatiPerProd){
-                    foreach ($angajatiPerProd as $angajat){
-                        $salariu = $salarii->where('angajat_id', $angajat['id'])->first();
-                        $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
-                        $salariu->save();
+                // use headers in order to generate the download
+                $headers = [
+                'Content-type' => 'text/plain',
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
+                'Content-Length' => strlen($content)
+                ];
+
+                // make a response, with the content, a 200 response code and the headers
+                return Response::make($content, 200, $headers);
+                break;
+            case 'exportLichidariExcelMana':
+                $angajati = Angajat::
+                    with(['salarii'=> function($query) use ($searchData){
+                        $query->whereDate('data', $searchData);
+                    }])
+                    ->where(function($query){
+                        $query->where(function($query){
+                            $query->where('banca_iban', 'not like', '%BTRL%')
+                                    ->where('banca_iban', 'not like', '%ING%');
+                            })
+                            ->orWhereNull('banca_iban');
+                    })
+                    // ->where('banca_iban', 'not like', '%BTRL%')
+                    // ->where('banca_iban', 'not like', '%ING%')
+                    ->where('activ', 1)
+                    ->orderBy('prod')
+                    ->orderBy('nume')
+                    ->get();
+
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+
+                $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+                $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+
+                $sheet->setCellValue('A1', 'Lichidari - ' . Carbon::parse($searchData)->isoformat('MMMM YYYY'));
+                $sheet->getStyle('A1')->getFont()->setSize(14);
+                $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+                $sheet->setCellValue('A4', 'Nr.');
+                // $sheet->getColumnDimension('A')->setAutoSize(true);
+                $sheet->setCellValue('B4', 'Nume Prenume');
+                $sheet->getColumnDimension('B')->setAutoSize(true);
+
+                $sheet->setCellValueByColumnAndRow((3), 4 , 'LICHIDARE DE PLĂTIT ÎN MÂNĂ');
+                $spreadsheet->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . '4')->getAlignment()->setWrapText(true);
+                $sheet->getColumnDimension($sheet->getCellByColumnAndRow((3), 4)->getColumn())->setWidth(10);
+
+                $rand = 5;
+
+                $formulaTotalPlataInMana = "=";
+
+                foreach ($angajati->groupby('prod') as $angajati_per_prod){
+
+                    if ($angajati_per_prod->first()->prod){
+                        $sheet->setCellValue('A' . $rand, 'Prod ' . $angajati_per_prod->first()->prod);
+                    } else {
+                        $sheet->setCellValue('A' . $rand, 'Prod ?');
                     }
+
+                    $rand ++;
+                    $rand_initial = $rand;
+
+                    $nr_crt_angajat = 1;
+
+                    foreach ($angajati_per_prod as $angajat){
+                        $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
+                        $sheet->setCellValue('B' . $rand, $angajat->nume);
+
+                        $sheet->setCellValueByColumnAndRow((3), $rand ,  number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''));
+
+                        $rand ++;
+                        $nr_crt_angajat ++;
+                    }
+
+                    // CALCUL TOTALURI
+                    // PLata in mana
+                    $sheet->setCellValueByColumnAndRow((3), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . ($rand-1) . ')');
+                    $formulaTotalPlataInMana .= \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . '+';
+
+                    // Schimbare culoare la totaluri in rosu
+                    $sheet->getStyle(
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(4) . $rand
+                        )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+
+                    $rand += 2;
                 }
-                // dd($salarii);
-                // $salarii->save();
-                return back();
-            break;
+
+                $rand += 1;
+
+                $sheet->setCellValue('B' . $rand, 'TOTAL GENERAL');
+                $sheet->getStyle('B' . $rand)->getAlignment()->setHorizontal('right');
+
+                $sheet->setCellValue('C' . $rand, substr_replace($formulaTotalPlataInMana ,"", -1));
+                // Schimbare culoare la totaluri in rosu
+                $sheet->getStyle(
+                    \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand . ':' .
+                    \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(7) . $rand
+                    )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+                // Set bold totaluri generale
+                $sheet->getStyle('A' . $rand . ':' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(3) . $rand)->getFont()->setBold(true);
+
+                $rand += 3;
+
+                // Se parcug toate coloanele si se stabileste latimea AUTO
+                foreach ($sheet->getColumnIterator() as $column) {
+                    // $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                }
+                // S-au parcurs coloanele, avem indexul ultimei coloane, se pot aplica functii acum
+                $sheet->mergeCells('A1:C1');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('A4:' . $column->getColumnIndex() . '4')->getFont()->setBold(true);
+
+                // $sheet->getStyle('A4:' . $column->getColumnIndex() . $rand)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+
+                $writer = new Xlsx($spreadsheet);
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment; filename="Lichidari plata în mână.xlsx"');
+                $writer->save('php://output');
+                exit();
+
+                break;
             default:
                 // make a response, with the content, a 200 response code and the headers
                 return Response::make($content, 200, $headers);
