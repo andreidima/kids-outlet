@@ -25,7 +25,7 @@ class SalariuController extends Controller
     public function index(Request $request){
         // Pana pe 20 ale lunii se incarca luna precedenta (la inceputul lunii se mai umbla la avansuri, iar pe 15 la salarii). Dupa 20 ale lunii se intra de obicei sa se calculeze avansurile pe luna in curs.
         $searchLuna = $request->searchLuna ?? (Carbon::now()->day < 20 ? Carbon::now()->subMonthNoOverflow()->isoFormat('MM') : Carbon::now()->isoFormat('MM'));
-        $searchAn = $request->searchAn ?? Carbon::now()->isoFormat('YYYY');
+        $searchAn = $request->searchAn ?? (Carbon::now()->day < 20 ? Carbon::now()->subMonthNoOverflow()->isoFormat('YYYY') : Carbon::now()->isoFormat('YYYY'));
 
         $request->validate(['searchLuna' => 'numeric|between:1,12', 'searchAn' => 'numeric|between:2023,2040']);
 
