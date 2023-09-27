@@ -364,7 +364,8 @@ if (document.querySelector('#salarii')) {
         el: '#salarii',
         data: {
             angajati: angajati,
-            firme: firme,
+            firmeBtrl: {},
+            firmeIng: {},
             produse: produse,
             angajatiPerProduri: [[]],
 
@@ -394,9 +395,20 @@ if (document.querySelector('#salarii')) {
                 if (prodMaxim < angajat.prod) {
                     prodMaxim = angajat.prod;
                 }
-                // if (angajat.banca )
-                console.log(angajat.firma);
-                this.firme['angajat.firma'] = 2;
+                if (angajat.firma && angajat.banca_iban) { // daca angajatul tine de o firma si are cont iban
+                    if(!this.firmeBtrl[angajat.firma]){ // in cazul in care aceasta firma nu este in arrayl cu firmeBtrl, se adauga acum
+                        this.firmeBtrl[angajat.firma] = 0;
+                    }
+                    if (angajat.banca_iban.indexOf("BTRL") >= 0){ // Daca ibanul are btrl in nume, se adauga la firma respectiva
+                        this.firmeBtrl[angajat.firma] += 1;
+                    }
+                    if (!this.firmeIng[angajat.firma]) { // in cazul in care aceasta firma nu este in arrayl cu firmeIng, se adauga acum
+                        this.firmeIng[angajat.firma] = 0;
+                    }
+                    if (angajat.banca_iban.indexOf("ING") >= 0) { // Daca ibanul are btrl in nume, se adauga la firma respectiva
+                        this.firmeIng[angajat.firma] += 1;
+                    }
+                }
             });
 
             // se creeaza intai arrayul gol
@@ -417,6 +429,8 @@ if (document.querySelector('#salarii')) {
             }
         },
         created: function () {
+            console.log(this.firmeBtrl);
+            console.log(this.firmeIng);
             // this.$nextTick(() => this.calculeazaRealizaturilePeProduse());
             // this.calculeazaRealizaturilePeProduse();
             // this.calculeazaConcediile();

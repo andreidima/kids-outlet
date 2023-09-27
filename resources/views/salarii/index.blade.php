@@ -2,7 +2,6 @@
 
 <script type="application/javascript">
     angajati =  {!! json_encode($angajati) !!}
-    firme =  {!! json_encode($firme) !!}
     produse =  {!! json_encode($produse) !!}
 
     salariulMinimPeEconomie =  {!! json_encode($salariulMinimPeEconomie) !!}
@@ -143,10 +142,14 @@ table, th, td {
                                         </button>
                                     {{-- </div>
                                     <div class="d-flex"> --}}
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportAvansuriExcelBancaBt">
-                                            Excel BT
-                                        </button>
+                                        <template v-for="(value, key) in firmeBtrl">
+                                            {{-- <template v-if="firmaNrAngajati > 0"> --}}
+                                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                                    name="action" value="exportAvansuriExcelBancaBt">
+                                                    Excel BT firma @{{ key }} (@{{ value }})
+                                                </button>
+                                            {{-- </template> --}}
+                                        </template>
                                         <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
                                             name="action" value="exportAvansuriTxtBancaIng">
                                             Txt ING
