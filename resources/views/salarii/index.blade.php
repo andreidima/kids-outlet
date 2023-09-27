@@ -369,19 +369,19 @@ table, th, td {
                                         <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
                                             @{{ totalAvansuriPerProduri[angajatiPerProd[0].prod] }}
                                         </td>
-                                        <td>
+                                        <td style="text-align: right; padding-right:2px;">
                                             @{{ totalCoPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
-                                        <td>
+                                        <td style="text-align: right; padding-right:2px;">
                                             @{{ totalMedicalePerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
-                                        <td>
+                                        <td style="text-align: right; padding-right:2px;">
                                             @{{ totalSalariuDeBazaPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
-                                        <td>
+                                        <td style="text-align: right; padding-right:2px;">
                                             0
                                         </td>
-                                        <td>
+                                        <td style="text-align: right; padding-right:2px;">
                                             @{{ totalRealizatTotalPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
@@ -406,6 +406,39 @@ table, th, td {
                                     </tr>
                                 </template>
                             </template>
+
+                            <tr>
+                                <td v-if="arataProduseleDesfasurat === 'da'" colspan="{{ $produse->count() + 2 }}" style="text-align: center">
+                                    <b>Total general</b>
+                                </td>
+                                <td v-if="arataProduseleDesfasurat === 'nu'" colspan=2 style="text-align: center">
+                                    <b>Total general</b>
+                                </td>
+                                <td style="text-align: right; padding-right:2px;">
+                                    @{{ totalRealizatPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
+                                    @{{ totalAvansuriPerProduri.reduce((partialSum, a) => partialSum + a, 0) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px;">
+                                    @{{ totalCoPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px;">
+                                    @{{ totalMedicalePerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px;">
+                                    @{{ totalSalariuDeBazaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px;">
+                                    0
+                                </td>
+                                <td style="text-align: right; padding-right:2px;">
+                                    @{{ totalRealizatTotalPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
+                                    @{{ totalLichidariPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                            </tr>
                     </table>
                 </div>
 
