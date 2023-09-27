@@ -46,6 +46,8 @@ class SalariuController extends Controller
             }
         }
 
+        $firme = ["Darimode Style S.R.L.", "Petit Atelier S.R.L.", "Mate Andy Style", "Bensar S.R.L."];
+
         // Daca se apasa pe butonull „calculeazaAutomatAvansurile”, se genereaza avansurile si se salveaza in baza de date
         if ($request->input('action') === 'calculeazaAutomatAvansurile'){
             $angajati = Angajat::where('activ', 1)
@@ -316,7 +318,7 @@ class SalariuController extends Controller
 
                 break;
             case 'exportAvansuriExcelBancaBt':
-                $angajati = Angajat::
+                $angajatiToateFirmele = Angajat::
                     with(['salarii'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
@@ -326,53 +328,57 @@ class SalariuController extends Controller
                     ->orderBy('banca_angajat_nume')
                     ->get();
 
-                $spreadsheet = new Spreadsheet();
-                $sheet = $spreadsheet->getActiveSheet();
-                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+                foreach($firme as $firma){
+                    $angajati = $angajatiToateFirmele->where('firma', $firma);
 
-                $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
-                $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+                    $spreadsheet = new Spreadsheet();
+                    $sheet = $spreadsheet->getActiveSheet();
+                    // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
 
-                $sheet->setCellValue('A1', 'NRCRT');
-                $sheet->setCellValue('B1', 'SALARIAT');
-                $sheet->setCellValue('C1', 'CNP');
-                $sheet->setCellValue('D1', 'SUMA');
-                $sheet->setCellValue('E1', 'IBAN');
-                $sheet->setCellValue('F1', 'EXPLICATIE');
+                    $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+                    $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-                $rand = 2;
+                    $sheet->setCellValue('A1', 'NRCRT');
+                    $sheet->setCellValue('B1', 'SALARIAT');
+                    $sheet->setCellValue('C1', 'CNP');
+                    $sheet->setCellValue('D1', 'SUMA');
+                    $sheet->setCellValue('E1', 'IBAN');
+                    $sheet->setCellValue('F1', 'EXPLICATIE');
 
-                $nrCrt = 1;
+                    $rand = 2;
 
-                foreach ($angajati as $index=>$angajat){
-                    $sheet->setCellValue('A' . $rand, $nrCrt++);
+                    $nrCrt = 1;
 
-                    $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
+                    foreach ($angajati as $index=>$angajat){
+                        $sheet->setCellValue('A' . $rand, $nrCrt++);
 
-                    // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
-                    $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
-                    $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
+                        $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
 
-                    // Avans de platit
-                    $sheet->setCellValueByColumnAndRow((4), $rand , $angajat->salarii->first()->avans);
+                        // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
+                        $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
+                        $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
 
-                    $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
-                    // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
-                    $sheet->setCellValue('F' . $rand, 'AVANS ' . Carbon::parse($searchData)->isoformat('MMMM YYYY'));
+                        // Avans de platit
+                        $sheet->setCellValueByColumnAndRow((4), $rand , $angajat->salarii->first()->avans);
 
-                    $rand ++;
+                        $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
+                        // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
+                        $sheet->setCellValue('F' . $rand, 'AVANS ' . Carbon::parse($searchData)->isoformat('MMMM YYYY'));
+
+                        $rand ++;
+                    }
+                    // Se parcug toate coloanele si se stabileste latimea AUTO
+                    foreach ($sheet->getColumnIterator() as $column) {
+                        $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+                    }
+                    // $sheet->getColumnDimension('A')->setWidth(90);
+
+                    $writer = new Xlsx($spreadsheet);
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header('Content-Disposition: attachment; filename="Avansuri BT.xlsx"');
+                    $writer->save('php://output');
+                    exit();
                 }
-                // Se parcug toate coloanele si se stabileste latimea AUTO
-                foreach ($sheet->getColumnIterator() as $column) {
-                    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
-                }
-                // $sheet->getColumnDimension('A')->setWidth(90);
-
-                $writer = new Xlsx($spreadsheet);
-                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="Avansuri BT.xlsx"');
-                $writer->save('php://output');
-                exit();
 
                 break;
             case 'exportAvansuriTxtBancaIng':
@@ -1039,7 +1045,7 @@ class SalariuController extends Controller
                 $search_data_inceput = Carbon::parse($searchData);
                 $search_data_sfarsit = Carbon::parse($searchData)->endOfMonth();
 
-                $angajati = Angajat::select('id', 'nume', 'prod')
+                $angajati = Angajat::select('id', 'nume', 'prod', 'firma', 'banca_iban')
                     ->with(['norme_lucrate'=> function($query) use ($search_data_inceput, $search_data_sfarsit){
                         $query
                             ->select('angajat_id', 'produs_operatie_id', 'cantitate')
@@ -1130,7 +1136,7 @@ class SalariuController extends Controller
                     // $angajat->sumaConcediuMedical = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_medical * 0.75;
                 // }
 
-                return view('salarii.index', compact('angajati', 'produse', 'searchData', 'searchLuna', 'searchAn', 'salariulMinimPeEconomie', 'numarDeZileLucratoare'));
+                return view('salarii.index', compact('angajati', 'firme', 'produse', 'searchData', 'searchLuna', 'searchAn', 'salariulMinimPeEconomie', 'numarDeZileLucratoare'));
                 break;
             }
     }

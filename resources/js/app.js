@@ -364,6 +364,7 @@ if (document.querySelector('#salarii')) {
         el: '#salarii',
         data: {
             angajati: angajati,
+            firme: firme,
             produse: produse,
             angajatiPerProduri: [[]],
 
@@ -383,6 +384,9 @@ if (document.querySelector('#salarii')) {
             mesajSucces: '',
             salariuId: '',
             numeCamp: '',
+
+            numarAngajatiBtrlPerFirma: [[]],
+            numarAngajatiIngPerFirma: [[]],
         },
         beforeMount: function () {
             prodMaxim = 0;
@@ -390,6 +394,9 @@ if (document.querySelector('#salarii')) {
                 if (prodMaxim < angajat.prod) {
                     prodMaxim = angajat.prod;
                 }
+                // if (angajat.banca )
+                console.log(angajat.firma);
+                this.firme['angajat.firma'] = 2;
             });
 
             // se creeaza intai arrayul gol

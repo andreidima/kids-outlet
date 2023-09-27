@@ -2,6 +2,7 @@
 
 <script type="application/javascript">
     angajati =  {!! json_encode($angajati) !!}
+    firme =  {!! json_encode($firme) !!}
     produse =  {!! json_encode($produse) !!}
 
     salariulMinimPeEconomie =  {!! json_encode($salariulMinimPeEconomie) !!}
