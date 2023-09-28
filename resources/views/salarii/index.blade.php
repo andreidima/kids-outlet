@@ -64,106 +64,136 @@ table, th, td {
                 <h4 class="mb-0">Salarii</a></h4>
             </div>
 
-            <div class="col-lg-7">
+            <div class="col-lg-3">
                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                     @csrf
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <div class="row mb-1 input-group custom-search-form justify-content-center">
-                                <div class="col-lg-5 d-flex justify-content-center">
-                                    <label for="searchLuna" class="mb-0 align-self-center me-1">Luna:</label>
-                                    <input type="text" class="form-control form-control border rounded-3" id="searchLuna" name="searchLuna" placeholder="Luna" autofocus
-                                            value="{{ $searchLuna }}">
-                                </div>
-                                <div class="col-lg-5 d-flex justify-content-center">
-                                    <label for="searchAn" class="mb-0 align-self-center me-1">An:</label>
-                                    <input type="text" class="form-control form-control me-1 border rounded-3" id="searchAn" name="searchAn" placeholder="An" autofocus
-                                            value="{{ $searchAn }}">
-                                </div>
-                            </div>
-                            <div class="row input-group custom-search-form justify-content-center">
-                                <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
-                                    <i class="fas fa-search text-white me-1"></i>Caută
-                                </button>
-                                <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ url()->current() }}" role="button">
-                                    <i class="far fa-trash-alt text-white me-1"></i>Resetează
-                                </a>
-                            </div>
+                    <div class="row mb-1 input-group custom-search-form justify-content-center">
+                        <div class="col-lg-5 d-flex justify-content-center">
+                            <label for="searchLuna" class="mb-0 align-self-center me-1">Luna:</label>
+                            <input type="text" class="form-control form-control border rounded-3" id="searchLuna" name="searchLuna" placeholder="Luna" autofocus
+                                    value="{{ $searchLuna }}">
                         </div>
-                        <div class="col-lg-7 py-1 rounded-3" style="background-color: rgb(157, 249, 249)">
-                            <div class="mb-2 d-flex align-items-center justify-content-center">
-                                <span class="rounded-3 text-white px-2" style="background-color: darkcyan;">
-                                    AVANSURI
-                                </span>
-                            </div>
-                            <div class="mb-2 d-flex align-items-center justify-content-center">
-                                <a
-                                    class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
-                                    href="#"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#calculeazaAutomatAvansurile"
-                                    title="Calculează automat avansurile"
-                                    >
-                                    Calculează automat avansurile
-                                </a>
-                                <div class="modal fade text-dark" id="calculeazaAutomatAvansurile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                        <div class="modal-header bg-danger">
-                                            <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
-                                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="text-align:left;">
-                                            Ești sigur ca vrei să se calculeze automat toate avansurile pentru luna aleasă?
-                                            <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
-                                            Toate avansurile introduse manual se vor șterge!
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
-
-                                                <button class="btn btn-danger text-white border border-dark" type="submit"
-                                                    name="action" value="calculeazaAutomatAvansurile">
-                                                    Calculează automat avansurile
-                                                </button>
-
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <i class="fas fa-question-circle fa-lg text-info" title="Avansurile se calculeaza astfel: zilePontate > 10 - avansul se plătește integral, zilePontate între 7 și 10 - avansul se plătește 300, zilePontate < 7 - avansul se plătește 0"></i>
-                            </div>
-                            <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                                <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
-                                    <div class="mb-1 d-flex justify-content-center align-items-center">
-                                        Export: &nbsp;
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportAvansuriExcelToate">
-                                            Excel Toate
-                                        </button>
-                                    {{-- </div>
-                                    <div class="d-flex"> --}}
-                                        <template v-for="(value, key) in firmeBtrl">
-                                            {{-- <template v-if="firmaNrAngajati > 0"> --}}
-                                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                                    name="action" value="exportAvansuriExcelBancaBt">
-                                                    Excel BT firma @{{ key }} (@{{ value }})
-                                                </button>
-                                            {{-- </template> --}}
-                                        </template>
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportAvansuriTxtBancaIng">
-                                            Txt ING
-                                        </button>
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportAvansuriExcelMana">
-                                            Excel Mână
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-lg-5 d-flex justify-content-center">
+                            <label for="searchAn" class="mb-0 align-self-center me-1">An:</label>
+                            <input type="text" class="form-control form-control me-1 border rounded-3" id="searchAn" name="searchAn" placeholder="An" autofocus
+                                    value="{{ $searchAn }}">
                         </div>
                     </div>
+                    <div class="row input-group custom-search-form justify-content-center">
+                        <button class="btn btn-sm btn-primary text-white col-md-4 me-1 border border-dark rounded-pill" type="submit">
+                            <i class="fas fa-search text-white me-1"></i>Caută
+                        </button>
+                        <a class="btn btn-sm bg-secondary text-white col-md-4 border border-dark rounded-pill" href="{{ url()->current() }}" role="button">
+                            <i class="far fa-trash-alt text-white me-1"></i>Resetează
+                        </a>
+                    </div>
                 </form>
+            </div>
+
+            <div class="col-lg-4 py-1 rounded-3" style="background-color: rgb(157, 249, 249)">
+                <div class="mb-2 d-flex align-items-center justify-content-center">
+                    <span class="rounded-3 text-white px-2" style="background-color: darkcyan;">
+                        AVANSURI
+                    </span>
+                </div>
+                <div class="mb-2 d-flex align-items-center justify-content-center">
+                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                        @csrf
+                        <a
+                            class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
+                            href="#"
+                            data-bs-toggle="modal"
+                            data-bs-target="#calculeazaAutomatAvansurile"
+                            title="Calculează automat avansurile"
+                            >
+                            Calculează automat avansurile
+                        </a>
+                        <div class="modal fade text-dark" id="calculeazaAutomatAvansurile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header bg-danger">
+                                    <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
+                                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="text-align:left;">
+                                    Ești sigur ca vrei să se calculeze automat toate avansurile pentru luna aleasă?
+                                    <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
+                                    Toate avansurile introduse manual se vor șterge!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+
+                                        <button class="btn btn-danger text-white border border-dark" type="submit"
+                                            name="action" value="calculeazaAutomatAvansurile">
+                                            Calculează automat avansurile
+                                        </button>
+
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <i class="fas fa-question-circle fa-lg text-info" title="Avansurile se calculeaza astfel: zilePontate > 10 - avansul se plătește integral, zilePontate între 7 și 10 - avansul se plătește 300, zilePontate < 7 - avansul se plătește 0"></i>
+                    </form>
+                </div>
+                <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
+                    <div class="px-2 py-0 align-items-center rounded-3 text-dark" style="background-color:rgb(193, 255, 226)">
+                        {{-- <div class="mb-1 d-flex justify-content-center align-items-center"> --}}
+                        <div class="mb-1 d-flex align-items-center">
+                                Export:
+                                <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                    @csrf
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportAvansuriExcelToate">
+                                        Excel Toate
+                                    </button>
+                                </form>
+                                <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                    @csrf
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportAvansuriExcelMana">
+                                        Excel Mână
+                                    </button>
+                                </form>
+                        </div>
+                        <div class="mb-1 d-flex align-items-center">
+                            <div class="text-center" style="">
+                                <template v-for="(value, key) in firmeBtrl">
+                                    <template v-if="value > 0">
+                                        <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                            @csrf
+                                            <input type="hidden" name="firma" :value="key">
+                                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                                name="action" value="exportAvansuriExcelBancaBt">
+                                                Excel BT @{{ key }} (@{{ value }})
+                                            </button>
+                                        </form>
+                                    </template>
+                                </template>
+                            </div>
+                            <div class="text-center" style="white-space: nowrap">
+                                <template v-for="(value, key) in firmeIng">
+                                    <template v-if="value > 0">
+                                        <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                            @csrf
+                                            <input type="hidden" name="firma" :value="key">
+                                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                                name="action" value="exportAvansuriExcelBancaBt">
+                                                Txt ING @{{ key }} (@{{ value }})
+                                            </button>
+                                        </form>
+                                    </template>
+                                </template>
+                            </div>
+                            {{-- <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                @csrf
+                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    name="action" value="exportAvansuriTxtBancaIng">
+                                    Txt ING
+                                </button>
+                            </form> --}}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-lg-4">

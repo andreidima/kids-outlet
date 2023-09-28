@@ -316,17 +316,16 @@ class SalariuController extends Controller
 
                 break;
             case 'exportAvansuriExcelBancaBt':
-                $angajatiToateFirmele = Angajat::
+                $angajati = Angajat::
                     with(['salarii'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('banca_iban', 'like', '%BTRL%')
+                    ->where('firma', ($request->firma ?? 'XXX'))
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('banca_angajat_nume')
                     ->get();
-
-                $angajati = $angajatiToateFirmele->where('firma', $firma);
 
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
@@ -372,7 +371,7 @@ class SalariuController extends Controller
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="Avansuri BT.xlsx"');
+                header('Content-Disposition: attachment; filename="Avansuri BT ' . $request->firma . '.xlsx"');
                 $writer->save('php://output');
                 exit();
 
