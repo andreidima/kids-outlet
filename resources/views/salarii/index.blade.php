@@ -137,9 +137,11 @@ table, th, td {
                 </div>
                 <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
                     <div class="px-2 py-0 align-items-center rounded-3 text-dark" style="background-color:rgb(193, 255, 226)">
-                        {{-- <div class="mb-1 d-flex justify-content-center align-items-center"> --}}
-                        <div class="mb-1 d-flex align-items-center">
+                        <div class="mb-0 d-flex flex-wrap justify-content-center align-items-center">
+                            <div class="mb-1" style="white-space: nowrap;">
                                 Export:
+                            </div>
+                            <div class="mb-1" style="white-space: nowrap;">
                                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                     @csrf
                                     <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
@@ -147,135 +149,145 @@ table, th, td {
                                         Excel Toate
                                     </button>
                                 </form>
+                            </div>
+                            <template v-for="(value, key) in firmeBtrl">
+                                <template v-if="value > 0">
+                                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                        @csrf
+                                        <input type="hidden" name="firma" :value="key">
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit" style="white-space: nowrap;"
+                                            name="action" value="exportAvansuriExcelBancaBt">
+                                            Excel BT @{{ key }} (@{{ value }})
+                                        </button>
+                                    </form>
+                                </template>
+                            </template>
+                            <template v-for="(value, key) in firmeIng">
+                                <template v-if="value > 0">
+                                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                        @csrf
+                                        <input type="hidden" name="firma" :value="key">
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportAvansuriTxtBancaIng">
+                                            Txt ING @{{ key }} (@{{ value }})
+                                        </button>
+                                    </form>
+                                </template>
+                            </template>
+                            <div style="white-space: nowrap;">
                                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                     @csrf
-                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                    <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
                                         name="action" value="exportAvansuriExcelMana">
                                         Excel Mână
                                     </button>
                                 </form>
-                        </div>
-                        <div class="mb-1 d-flex align-items-center">
-                            <div class="text-center" style="">
-                                <template v-for="(value, key) in firmeBtrl">
-                                    <template v-if="value > 0">
-                                        <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
-                                            @csrf
-                                            <input type="hidden" name="firma" :value="key">
-                                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                                name="action" value="exportAvansuriExcelBancaBt">
-                                                Excel BT @{{ key }} (@{{ value }})
-                                            </button>
-                                        </form>
-                                    </template>
-                                </template>
                             </div>
-                            <div class="text-center" style="white-space: nowrap">
-                                <template v-for="(value, key) in firmeIng">
-                                    <template v-if="value > 0">
-                                        <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
-                                            @csrf
-                                            <input type="hidden" name="firma" :value="key">
-                                            <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                                name="action" value="exportAvansuriExcelBancaBt">
-                                                Txt ING @{{ key }} (@{{ value }})
-                                            </button>
-                                        </form>
-                                    </template>
-                                </template>
-                            </div>
-                            {{-- <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
-                                @csrf
-                                <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                    name="action" value="exportAvansuriTxtBancaIng">
-                                    Txt ING
-                                </button>
-                            </form> --}}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4">
-                <form class="needs-validation mb-0" novalidate method="POST" action="{{ url()->current() }}">
-                    @csrf
+            <div class="col-lg-4 py-1 rounded-3" style="background-color: rgb(255, 219, 219);">
+                <input type="hidden" name="angajatiPerProduri" :value="JSON.stringify(angajatiPerProduri)">
+                <input type="hidden" name="produse" :value="JSON.stringify(produse)">
+                <input type="hidden" name="searchLuna" value="{{ $searchLuna }}">
+                <input type="hidden" name="searchAn" value="{{ $searchAn }}">
 
-                    <div class="row">
-                        <div class="col-lg-12 py-1 rounded-3" style="background-color: rgb(255, 219, 219);">
-
-                            <input type="hidden" name="angajatiPerProduri" :value="JSON.stringify(angajatiPerProduri)">
-                            <input type="hidden" name="produse" :value="JSON.stringify(produse)">
-                            <input type="hidden" name="searchLuna" value="{{ $searchLuna }}">
-                            <input type="hidden" name="searchAn" value="{{ $searchAn }}">
-
-                            <div class="mb-2 d-flex align-items-center justify-content-center">
-                                <span class="rounded-3 text-white px-2" style="background-color:brown;">
-                                    LICHIDĂRI
-                                </span>
-                            </div>
-                            <div class="mb-2 d-flex align-items-center justify-content-center">
-                                <a
-                                    class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
-                                    href="#"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#calculeazaAutomatLichidarile"
-                                    title="Calculează automat lichidarile"
-                                    >
-                                    Calculează automat lichidările
-                                </a>
-                                <div class="modal fade text-dark" id="calculeazaAutomatLichidarile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                        <div class="modal-header bg-danger">
-                                            <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
-                                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="text-align:left;">
-                                            Ești sigur ca vrei să se calculeze automat toate lichidările pentru luna aleasă?
-                                            <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
-                                            Toate lichidările introduse manual se vor șterge!
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
-
-                                                <button class="btn btn-danger text-white border border-dark" type="submit"
-                                                    name="action" value="calculeazaAutomatLichidarile">
-                                                    Calculează automat lichidările
-                                                </button>
-
-                                        </div>
-                                        </div>
-                                    </div>
+                <div class="mb-2 d-flex align-items-center justify-content-center">
+                    <span class="rounded-3 text-white px-2" style="background-color:brown;">
+                        LICHIDĂRI
+                    </span>
+                </div>
+                <div class="mb-2 d-flex align-items-center justify-content-center">
+                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                        @csrf
+                        <a
+                            class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
+                            href="#"
+                            data-bs-toggle="modal"
+                            data-bs-target="#calculeazaAutomatLichidarile"
+                            title="Calculează automat lichidarile"
+                            >
+                            Calculează automat lichidările
+                        </a>
+                        <div class="modal fade text-dark" id="calculeazaAutomatLichidarile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header bg-danger">
+                                    <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
+                                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                            </div>
-                            <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                                <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
-                                    <div class="mb-1 d-flex justify-content-center align-items-center">
-                                        Export: &nbsp;
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportLichidariExcelToate">
-                                            Excel Toate
+                                <div class="modal-body" style="text-align:left;">
+                                    Ești sigur ca vrei să se calculeze automat toate lichidările pentru luna aleasă?
+                                    <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
+                                    Toate lichidările introduse manual se vor șterge!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+
+                                        <button class="btn btn-danger text-white border border-dark" type="submit"
+                                            name="action" value="calculeazaAutomatLichidarile">
+                                            Calculează automat lichidările
                                         </button>
-                                    {{-- </div>
-                                    <div class="d-flex"> --}}
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportLichidariExcelBancaBt">
-                                            Excel BT
-                                        </button>
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportLichidariTxtBancaIng">
-                                            Txt ING
-                                        </button>
-                                        <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportLichidariExcelMana">
-                                            Excel Mână
-                                        </button>
-                                    </div>
+
+                                </div>
                                 </div>
                             </div>
                         </div>
+                    </form>
+                </div>
+                <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
+                    <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
+                        <div class="mb-0 d-flex flex-wrap justify-content-center align-items-center">
+                            <div class="mb-1" style="white-space: nowrap;">
+                                Export:
+                            </div>
+                            <div class="mb-1" style="white-space: nowrap;">
+                                <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                    @csrf
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportLichidariExcelToate">
+                                        Excel Toate
+                                    </button>
+                                </form>
+                            </div>
+                            <template v-for="(value, key) in firmeBtrl">
+                                <template v-if="value > 0">
+                                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                        @csrf
+                                        <input type="hidden" name="firma" :value="key">
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit" style="white-space: nowrap;"
+                                            name="action" value="exportLichidariExcelBancaBt">
+                                            Excel BT @{{ key }} (@{{ value }})
+                                        </button>
+                                    </form>
+                                </template>
+                            </template>
+                            <template v-for="(value, key) in firmeIng">
+                                <template v-if="value > 0">
+                                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                        @csrf
+                                        <input type="hidden" name="firma" :value="key">
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportLichidariTxtBancaIng">
+                                            Txt ING @{{ key }} (@{{ value }})
+                                        </button>
+                                    </form>
+                                </template>
+                            </template>
+                            <div style="white-space: nowrap;">
+                                <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                    @csrf
+                                    <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportLichidariExcelMana">
+                                        Excel Mână
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
 
         <div class="card-body px-0 py-0">

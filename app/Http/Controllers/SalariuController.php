@@ -382,6 +382,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('banca_iban', 'like', '%ING%')
+                    ->where('firma', ($request->firma ?? 'XXX'))
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('nume')
@@ -405,7 +406,7 @@ class SalariuController extends Controller
                 }
 
                 // file name that will be used in the download
-                $fileName = "Avansuri ING.txt";
+                $fileName = "Avansuri ING " . $request->firma . ".txt";
 
                 // use headers in order to generate the download
                 $headers = [
@@ -811,6 +812,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('banca_iban', 'like', '%BTRL%')
+                    ->where('firma', ($request->firma ?? 'XXX'))
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('banca_angajat_nume')
@@ -863,7 +865,7 @@ class SalariuController extends Controller
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="Lichidari BT.xlsx"');
+                header('Content-Disposition: attachment; filename="Lichidari BT ' . $request->firma . '.xlsx"');
                 $writer->save('php://output');
                 exit();
 
@@ -874,6 +876,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('banca_iban', 'like', '%ING%')
+                    ->where('firma', ($request->firma ?? 'XXX'))
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('nume')
@@ -897,7 +900,7 @@ class SalariuController extends Controller
                 }
 
                 // file name that will be used in the download
-                $fileName = "Lichidari ING.txt";
+                $fileName = "Lichidari ING " . $request->firma . ".txt";
 
                 // use headers in order to generate the download
                 $headers = [
