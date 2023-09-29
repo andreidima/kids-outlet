@@ -60,11 +60,11 @@ table, th, td {
 
 
         <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
-            <div class="col-lg-1">
+            <div class="col-lg-3">
                 <h4 class="mb-0">Salarii</a></h4>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-6 mb-2">
                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                     @csrf
                     <div class="row mb-1 input-group custom-search-form justify-content-center">
@@ -90,13 +90,13 @@ table, th, td {
                 </form>
             </div>
 
-            <div class="col-lg-4 py-1 rounded-3" style="background-color: rgb(157, 249, 249)">
-                <div class="mb-2 d-flex align-items-center justify-content-center">
+            <div class="col-lg-6 py-1 rounded-3" style="background-color: rgb(157, 249, 249)">
+                <div class="mb-1 d-flex align-items-center justify-content-center">
                     <span class="rounded-3 text-white px-2" style="background-color: darkcyan;">
                         AVANSURI
                     </span>
                 </div>
-                <div class="mb-2 d-flex align-items-center justify-content-center">
+                <div class="mb-1 d-flex align-items-center justify-content-center">
                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                         @csrf
                         <a
@@ -136,45 +136,72 @@ table, th, td {
                     </form>
                 </div>
                 <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                    <div class="px-2 py-0 align-items-center rounded-3 text-dark" style="background-color:rgb(193, 255, 226)">
-                        <div class="mb-0 d-flex flex-wrap justify-content-center align-items-center">
-                            <div class="mb-1" style="white-space: nowrap;">
+                    <div class="px-2 py-0 align-items-center rounded-3 text-dark" style="background-color:rgb(193, 255, 226);">
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Export:
                             </div>
-                            <div class="mb-1" style="white-space: nowrap;">
+                            <div class="mb-0" style="white-space: nowrap;">
                                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                     @csrf
                                     <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                        name="action" value="exportAvansuriExcelToate">
+                                        name="action" value="exportAvansuriExcelToate" style="height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
                                         Excel Toate
                                     </button>
                                 </form>
+                            </div>
+                        </div>
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
+                                Excel BT:
                             </div>
                             <template v-for="(value, key) in firmeBtrl">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
                                         <input type="hidden" name="firma" :value="key">
-                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit" style="white-space: nowrap;"
-                                            name="action" value="exportAvansuriExcelBancaBt">
-                                            Excel BT @{{ key }} (@{{ value }})
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportAvansuriExcelBancaBt" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                            @{{ key }} (@{{ value }})
                                         </button>
                                     </form>
                                 </template>
                             </template>
+                        </div>
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
+                                Txt ING:
+                            </div>
                             <template v-for="(value, key) in firmeIng">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
                                         <input type="hidden" name="firma" :value="key">
                                         <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportAvansuriTxtBancaIng">
-                                            Txt ING @{{ key }} (@{{ value }})
+                                            name="action" value="exportAvansuriTxtBancaIng" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                            @{{ key }} (@{{ value }})
                                         </button>
                                     </form>
                                 </template>
                             </template>
-                            <div style="white-space: nowrap;">
+                        </div>
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
+                                Excel Mână:
+                            </div>
+                            <template v-for="(value, key) in firmeFaraBanca">
+                                <template v-if="value > 0">
+                                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                        @csrf
+                                        <input type="hidden" name="firma" :value="key">
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportAvansuriExcelMana" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                            @{{ key }} (@{{ value }})
+                                        </button>
+                                    </form>
+                                </template>
+                            </template>
+                            {{-- <div style="white-space: nowrap;">
                                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                     @csrf
                                     <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
@@ -182,24 +209,24 @@ table, th, td {
                                         Excel Mână
                                     </button>
                                 </form>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4 py-1 rounded-3" style="background-color: rgb(255, 219, 219);">
+            <div class="col-lg-6 py-1 rounded-3" style="background-color: rgb(255, 219, 219);">
                 <input type="hidden" name="angajatiPerProduri" :value="JSON.stringify(angajatiPerProduri)">
                 <input type="hidden" name="produse" :value="JSON.stringify(produse)">
                 <input type="hidden" name="searchLuna" value="{{ $searchLuna }}">
                 <input type="hidden" name="searchAn" value="{{ $searchAn }}">
 
-                <div class="mb-2 d-flex align-items-center justify-content-center">
+                <div class="mb-1 d-flex align-items-center justify-content-center">
                     <span class="rounded-3 text-white px-2" style="background-color:brown;">
                         LICHIDĂRI
                     </span>
                 </div>
-                <div class="mb-2 d-flex align-items-center justify-content-center">
+                <div class="mb-1 d-flex align-items-center justify-content-center">
                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                         @csrf
                         <a
@@ -238,45 +265,72 @@ table, th, td {
                     </form>
                 </div>
                 <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
-                    <div class="px-2 py-0 align-items-center rounded-pill text-dark" style="background-color:rgb(193, 255, 226)">
-                        <div class="mb-0 d-flex flex-wrap justify-content-center align-items-center">
-                            <div class="mb-1" style="white-space: nowrap;">
+                    <div class="px-2 py-0 align-items-center rounded-3 text-dark" style="background-color:rgb(193, 255, 226)">
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Export:
                             </div>
                             <div class="mb-1" style="white-space: nowrap;">
                                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                     @csrf
                                     <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
-                                        name="action" value="exportLichidariExcelToate">
+                                        name="action" value="exportLichidariExcelToate" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
                                         Excel Toate
                                     </button>
                                 </form>
+                            </div>
+                        </div>
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
+                                Excel BT:
                             </div>
                             <template v-for="(value, key) in firmeBtrl">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
                                         <input type="hidden" name="firma" :value="key">
-                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit" style="white-space: nowrap;"
-                                            name="action" value="exportLichidariExcelBancaBt">
-                                            Excel BT @{{ key }} (@{{ value }})
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportLichidariExcelBancaBt" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                            @{{ key }} (@{{ value }})
                                         </button>
                                     </form>
                                 </template>
                             </template>
+                        </div>
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
+                                Txt ING:
+                            </div>
                             <template v-for="(value, key) in firmeIng">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
                                         <input type="hidden" name="firma" :value="key">
                                         <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
-                                            name="action" value="exportLichidariTxtBancaIng">
+                                            name="action" value="exportLichidariTxtBancaIng" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
                                             Txt ING @{{ key }} (@{{ value }})
                                         </button>
                                     </form>
                                 </template>
                             </template>
-                            <div style="white-space: nowrap;">
+                        </div>
+                        <div class="mb-0 d-flex flex-wrap justify-content-start align-items-center">
+                            <div class="mb-0" style="white-space: nowrap; font-size:90%">
+                                Excel Mână:
+                            </div>
+                            <template v-for="(value, key) in firmeFaraBanca">
+                                <template v-if="value > 0">
+                                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                                        @csrf
+                                        <input type="hidden" name="firma" :value="key">
+                                        <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
+                                            name="action" value="exportLichidariExcelMana" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                            @{{ key }} (@{{ value }})
+                                        </button>
+                                    </form>
+                                </template>
+                            </template>
+                            {{-- <div style="white-space: nowrap;">
                                 <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                     @csrf
                                     <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
@@ -284,7 +338,7 @@ table, th, td {
                                         Excel Mână
                                     </button>
                                 </form>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

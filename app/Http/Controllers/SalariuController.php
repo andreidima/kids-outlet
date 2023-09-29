@@ -382,7 +382,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('banca_iban', 'like', '%ING%')
-                    ->where('firma', ($request->firma ?? 'XXX'))
+                    ->where('firma', ($request->firma ?? null))
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('nume')
@@ -430,6 +430,7 @@ class SalariuController extends Controller
                             })
                             ->orWhereNull('banca_iban');
                     })
+                    ->where('firma', (($request->firma == 'faraFirma') ? null : $request->firma))
                     // ->where('banca_iban', 'not like', '%BTRL%')
                     // ->where('banca_iban', 'not like', '%ING%')
                     ->where('activ', 1)
@@ -812,7 +813,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('banca_iban', 'like', '%BTRL%')
-                    ->where('firma', ($request->firma ?? 'XXX'))
+                    ->where('firma', ($request->firma ?? null))
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('banca_angajat_nume')
@@ -876,7 +877,7 @@ class SalariuController extends Controller
                         $query->whereDate('data', $searchData);
                     }])
                     ->where('banca_iban', 'like', '%ING%')
-                    ->where('firma', ($request->firma ?? 'XXX'))
+                    ->where('firma', ($request->firma ?? null))
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('nume')
@@ -924,6 +925,7 @@ class SalariuController extends Controller
                             })
                             ->orWhereNull('banca_iban');
                     })
+                    ->where('firma', (($request->firma == 'faraFirma') ? null : $request->firma))
                     // ->where('banca_iban', 'not like', '%BTRL%')
                     // ->where('banca_iban', 'not like', '%ING%')
                     ->where('activ', 1)

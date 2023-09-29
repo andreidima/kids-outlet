@@ -364,8 +364,9 @@ if (document.querySelector('#salarii')) {
         el: '#salarii',
         data: {
             angajati: angajati,
-            firmeBtrl: {},
-            firmeIng: {},
+            firmeBtrl: {}, // firme care au angajati cu conturi BTRL
+            firmeIng: {}, // firme care au angajati cu conturi ING
+            firmeFaraBanca: {}, // firme care au angajati fara conturi bancare
             produse: produse,
             angajatiPerProduri: [[]],
 
@@ -395,19 +396,22 @@ if (document.querySelector('#salarii')) {
                 if (prodMaxim < angajat.prod) {
                     prodMaxim = angajat.prod;
                 }
-                if (angajat.firma && angajat.banca_iban) { // daca angajatul tine de o firma si are cont iban
-                    if(!this.firmeBtrl[angajat.firma]){ // in cazul in care aceasta firma nu este in arrayl cu firmeBtrl, se adauga acum
-                        this.firmeBtrl[angajat.firma] = 0;
+                if (angajat.firma) { // se verifica daca angajatul tine de o firma
+                    if (angajat.banca_iban) { // se verifica daca angajatul are cont iban
+                        if (angajat.banca_iban.indexOf("BTRL") >= 0) { // Daca ibanul are btrl in nume, se adauga la firma respectiva
+                            this.firmeBtrl[angajat.firma] ? (this.firmeBtrl[angajat.firma] += 1) : (this.firmeBtrl[angajat.firma] = 1);
+                        } else if (angajat.banca_iban.indexOf("ING") >= 0) { // Daca ibanul are btrl in nume, se adauga la firma respectiva
+                            this.firmeIng[angajat.firma] ? (this.firmeIng[angajat.firma] += 1) : (this.firmeIng[angajat.firma] = 1);
+                        } else {
+                            this.firmeFaraBanca[angajat.firma] ? (this.firmeFaraBanca[angajat.firma] += 1) : (this.firmeFaraBanca[angajat.firma] = 1);
+                        }
                     }
-                    if (angajat.banca_iban.indexOf("BTRL") >= 0){ // Daca ibanul are btrl in nume, se adauga la firma respectiva
-                        this.firmeBtrl[angajat.firma] += 1;
+                    else {
+                        this.firmeFaraBanca[angajat.firma] ? (this.firmeFaraBanca[angajat.firma] += 1) : (this.firmeFaraBanca[angajat.firma] = 1);
                     }
-                    if (!this.firmeIng[angajat.firma]) { // in cazul in care aceasta firma nu este in arrayl cu firmeIng, se adauga acum
-                        this.firmeIng[angajat.firma] = 0;
-                    }
-                    if (angajat.banca_iban.indexOf("ING") >= 0) { // Daca ibanul are btrl in nume, se adauga la firma respectiva
-                        this.firmeIng[angajat.firma] += 1;
-                    }
+                }
+                else { // in cazul in care angajatul nu tine de o firma
+                    this.firmeFaraBanca['faraFirma'] ? (this.firmeFaraBanca['faraFirma'] += 1) : (this.firmeFaraBanca['faraFirma'] = 1);
                 }
             });
 
@@ -429,8 +433,8 @@ if (document.querySelector('#salarii')) {
             }
         },
         created: function () {
-            console.log(this.firmeBtrl);
-            console.log(this.firmeIng);
+            // console.log(this.firmeBtrl);
+            // console.log(this.firmeIng);
             // this.$nextTick(() => this.calculeazaRealizaturilePeProduse());
             // this.calculeazaRealizaturilePeProduse();
             // this.calculeazaConcediile();
