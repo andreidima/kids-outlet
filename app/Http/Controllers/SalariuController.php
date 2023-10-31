@@ -157,10 +157,10 @@ class SalariuController extends Controller
                     with(['salarii'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
-                    ->with(['pontaj' => function($query) use ($searchData){
-                        $query->whereMonth('data', $searchData)
-                            ->whereYear('data', $searchData);
-                    }])
+                    // ->with(['pontaj' => function($query) use ($searchData){
+                    //     $query->whereMonth('data', $searchData)
+                    //         ->whereYear('data', $searchData);
+                    // }])
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('nume')
@@ -233,7 +233,8 @@ class SalariuController extends Controller
                         }
 
                         // Mod de plata
-                        if ($angajat->banca_iban || ($angajat->firma === "Petit Atelier S.R.L.") || ($angajat->firma === "Mate Andy Style") || ($angajat->firma === "Bensar S.R.L.")){
+                        // if ($angajat->banca_iban || ($angajat->firma === "Petit Atelier S.R.L.") || ($angajat->firma === "Mate Andy Style") || ($angajat->firma === "Bensar S.R.L.")){
+                        if ($angajat->banca_iban && (strpos($angajat->banca_iban, 'BTRL') || strpos($angajat->banca_iban, 'ING'))){
                             $sheet->setCellValueByColumnAndRow((4), $rand , $angajat->salarii->first()->avans);
                         } else{ // plata in mana
                             $sheet->setCellValueByColumnAndRow((5), $rand , $angajat->salarii->first()->avans);
