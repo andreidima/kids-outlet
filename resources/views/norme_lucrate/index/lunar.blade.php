@@ -1,7 +1,12 @@
 @extends ('layouts.app')
 
+@php
+    use \Carbon\Carbon;
+@endphp
+
 @section('content')
-<div class="container card" style="border-radius: 40px 40px 40px 40px;">
+{{-- <div class="container card" style="border-radius: 40px 40px 40px 40px;"> --}}
+<div class="card mx-1" style="border-radius: 40px 40px 40px 40px;">
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
         <div class="col-lg-2">
             {{-- <h4 class="mb-0"><a href="{{ route('norme-lucrate.afisare_lunar') }}">
@@ -148,6 +153,12 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    {{-- ziuaDinSaptamana este necesara la calcularea normelor pe fiecare zi in parte --}}
+                    @php
+                        $ziuaDinSaptamana = Carbon::today()->dayOfWeek;
+                    @endphp
+
                     @forelse ($angajati as $angajat)
                         <tr>
                             <td style="">
@@ -174,18 +185,69 @@
                                 <td class="text-center">
                                     @php
                                         $suma_totala = 0;
+                                        $minuteTotale = 0;
                                     @endphp
-                                    @forelse ($angajat->norme_lucrate
-                                                            // ->where('created_at', '>', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
-                                                            // ->where('created_at', '<', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua+1))
-                                                            ->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('YYYY-MM-DD'))
-                                            as $norma_lucrata)
+                                    @forelse ($angajat->norme_lucrate->where('data', \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->isoFormat('YYYY-MM-DD')) as $norma_lucrata)
                                             @php
-                                                $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;
+                                                $suma_totala += $norma_lucrata->cantitate * ($norma_lucrata->produs_operatie->pret ?? 0);
+
+                                                if ($norma_lucrata->produs_operatie->norma && ($norma_lucrata->produs_operatie->norma > 1)){
+                                                    $minuteTotale += $norma_lucrata->cantitate * (480/$norma_lucrata->produs_operatie->norma);
+                                                }
                                             @endphp
                                     @empty
                                     @endforelse
 
+                                    @if ($minuteTotale > 0)
+                                        {{-- 480 de minute este norma pentru romani toate zilele, iar pentru straini doar in ziua de vineri --}}
+                                        @if (
+                                            ($angajat->limba_aplicatie == 1) // angajatul este roman
+                                            || (($angajat->limba_aplicatie == 2) && ($ziuaDinSaptamana == 5)) // angajatul este strain si este vineri
+                                        )
+                                            @if ($minuteTotale < 480)
+                                                <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
+                                                    <span class="badge bg-danger p-1">
+                                                        {{ number_format($minuteTotale, 0) . ' min' }}
+                                                    </span>
+                                                </a>
+                                            @elseif($minuteTotale == 480)
+                                                <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
+                                                    <span class="badge bg-success p-1">
+                                                        {{ number_format($minuteTotale, 0) . ' min' }}
+                                                    </span>
+                                                </a>
+                                            @elseif($minuteTotale > 480)
+                                                <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
+                                                    <span class="badge bg-primary p-1">
+                                                        {{ number_format($minuteTotale, 0) . ' min' }}
+                                                    </span>
+                                                </a>
+                                            @endif
+                                        @elseif (
+                                            ($angajat->limba_aplicatie == 2) && ($ziuaDinSaptamana < 5) // angajatul este strain si ziua este luni-joi
+                                        )
+                                            @if ($minuteTotale < 600)
+                                                <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
+                                                    <span class="badge bg-danger p-1">
+                                                        {{ number_format($minuteTotale, 0) . ' min' }}
+                                                    </span>
+                                                </a>
+                                            @elseif($minuteTotale == 600)
+                                                <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
+                                                    <span class="badge bg-success p-1">
+                                                        {{ number_format($minuteTotale, 0) . ' min' }}
+                                                    </span>
+                                                </a>
+                                            @elseif($minuteTotale > 600)
+                                                <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
+                                                    <span class="badge bg-primary p-1">
+                                                        {{ number_format($minuteTotale, 0) . ' min' }}
+                                                    </span>
+                                                </a>
+                                            @endif
+                                        @endif
+                                        <br>
+                                    @endif
                                     <a href="/norme-lucrate/per-angajat-per-data/{{ $angajat->id }}/{{ \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua)->toDateString() }}">
                                         {{ ($suma_totala <> '0') ? ($suma_totala . ' lei') : '' }}
                                     </a>
@@ -193,27 +255,6 @@
                                     @php
                                         $suma_totala_pe_toata_perioada += $suma_totala;
                                     @endphp
-
-                                    {{-- @forelse ($angajat->norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
-                                        @forelse ($norme_lucrate_per_data as $norma_lucrata)
-                                            @if (\Carbon\Carbon::parse($norma_lucrata->created_at)->startOfDay() == \Carbon\Carbon::parse($search_data_inceput)->addDays($ziua))
-
-                                                <p class="m-0 p-0" style="white-space: nowrap">
-                                                    <span class="badge bg-secondary mx-1" style="font-size: 1em">
-                                                        {{ $norma_lucrata->numar_de_faza }}
-                                                    </span>
-                                                    =
-                                                    <span class="badge bg-success mx-1" style="font-size: 1em">
-                                                        {{ $norma_lucrata->cantitate }}
-                                                    </span>
-                                                        {{ $norma_lucrata->produs_operatie->pret ?? '' }}
-                                                </p>
-
-                                            @endif
-                                        @empty
-                                        @endforelse
-                                    @empty
-                                    @endforelse --}}
                                 </td>
                             @endfor
                             <td class="text-center">

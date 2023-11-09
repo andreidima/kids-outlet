@@ -103,6 +103,7 @@
                             <th>Nr. fază</th>
                             <th>Operație</th>
                             <th class="text-center">Cantitate</th>
+                            <th class="text-center">Norma</th>
                             <th class="text-center">Preț</th>
                             <th class="text-center">Suma</th>
                             @if (!$angajat)
@@ -140,13 +141,16 @@
                                     {{ $norma_lucrata->cantitate }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $norma_lucrata->produs_operatie->pret }}
+                                    {{ number_format(($norma_lucrata->produs_operatie->norma ?? 0), 0) }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret }}
+                                    {{ $norma_lucrata->produs_operatie->pret ?? ''}}
+                                </td>
+                                <td class="text-center">
+                                    {{ $norma_lucrata->cantitate * ($norma_lucrata->produs_operatie->pret ?? 0) }}
                                     @if ($angajat)
                                         @php
-                                            $suma_totala += $norma_lucrata->cantitate * $norma_lucrata->produs_operatie->pret;
+                                            $suma_totala += $norma_lucrata->cantitate * ($norma_lucrata->produs_operatie->pret ?? 0);
                                         @endphp
                                     @endif
                                 </td>
