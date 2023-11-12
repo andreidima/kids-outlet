@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use \Carbon\Carbon;
+@endphp
+
 @section('content')
     <div class="container-fluid" style="background-color: #DFDCE3;">
         <div class="row p-2 align-items-center">
@@ -155,6 +159,10 @@
                     </form>
                 </div>
 
+                {{-- ziuaDinSaptamana este necesara la calcularea normelor pe fiecare zi in parte --}}
+                @php
+                    $ziuaDinSaptamana = Carbon::today()->dayOfWeek;
+                @endphp
 
                 {{-- Afisarea normelor lucrate, in ordinea zilelor din luna, desfasurat pe fiecare norma in parte --}}
                 @forelse ($norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
@@ -179,12 +187,12 @@
                     @endif
 
                     @php
-                        $minuteTotalePeZi = 0;
+                        $minuteTotale = 0;
                     @endphp
                     @forelse ($norme_lucrate_per_data as $norma_lucrata)
                         @php
                             if ($norma_lucrata->produs_operatie->norma && ($norma_lucrata->produs_operatie->norma > 0)){
-                                $minuteTotalePeZi += $norma_lucrata->cantitate * (480/$norma_lucrata->produs_operatie->norma);
+                                $minuteTotale += $norma_lucrata->cantitate * (480/$norma_lucrata->produs_operatie->norma);
                             }
                         @endphp
                     @empty
@@ -195,7 +203,37 @@
                                     {{ $norma_lucrata->first()->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ ($minuteTotalePeZi > 0) ? number_format($minuteTotalePeZi / 60, 1) : '' }}
+
+                                    @if ($minuteTotale > 0)
+                                        {{-- 480 de minute este norma pentru romani toate zilele, iar pentru straini doar in ziua de vineri --}}
+                                        @if (
+                                            ($angajat->limba_aplicatie == 1) // angajatul este roman
+                                            || (($angajat->limba_aplicatie == 2) && ($ziuaDinSaptamana == 5)) // angajatul este strain si este vineri
+                                        )
+                                            @if ($minuteTotale < 480)
+                                                <span class="badge bg-danger p-1">
+                                            @elseif($minuteTotale == 480)
+                                                <span class="badge bg-success p-1">
+                                            @elseif($minuteTotale > 480)
+                                                <span class="badge bg-primary p-1">
+                                            @endif
+                                                    {{ number_format($minuteTotale / 60, 1) }}
+                                                </span>
+                                        @elseif (
+                                            ($angajat->limba_aplicatie == 2) && ($ziuaDinSaptamana < 5) // angajatul este strain si ziua este luni-joi
+                                        )
+                                            @if ($minuteTotale < 600)
+                                                <span class="badge bg-danger p-1">
+                                            @elseif($minuteTotale == 600)
+                                                <span class="badge bg-success p-1">
+                                            @elseif($minuteTotale > 600)
+                                                <span class="badge bg-primary p-1">
+                                            @endif
+                                                    {{ number_format($minuteTotale / 60, 1) }}
+                                                </span>
+                                        @endif
+                                        <br>
+                                    @endif
                                 </td>
                             </tr>
 
