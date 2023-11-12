@@ -191,7 +191,7 @@
                                             @php
                                                 $suma_totala += $norma_lucrata->cantitate * ($norma_lucrata->produs_operatie->pret ?? 0);
 
-                                                if ($norma_lucrata->produs_operatie->norma && ($norma_lucrata->produs_operatie->norma > 1)){
+                                                if ($norma_lucrata->produs_operatie->norma && ($norma_lucrata->produs_operatie->norma > 0)){
                                                     $minuteTotale += $norma_lucrata->cantitate * (480/$norma_lucrata->produs_operatie->norma);
                                                 }
                                             @endphp

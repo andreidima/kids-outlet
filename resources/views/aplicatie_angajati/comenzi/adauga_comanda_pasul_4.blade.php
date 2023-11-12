@@ -95,6 +95,16 @@
                     <br>
                     <small>
                         @if ($angajat->limba_aplicatie === 1)
+                            Norma pe oră:
+                        @elseif ($angajat->limba_aplicatie === 2)
+                            {{-- මෙහෙයුම්:
+                            / --}}
+                            Rate per hour:
+                        @endif
+                    </small> {{ $angajat->norma_pe_ora }}
+                    <br>
+                    <small>
+                        @if ($angajat->limba_aplicatie === 1)
                             Preț pe bucată:
                         @elseif ($angajat->limba_aplicatie === 2)
                             {{-- මෙහෙයුම්:

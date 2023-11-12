@@ -228,6 +228,7 @@ class AngajatAplicatieController extends Controller
 
         $angajat->numar_de_faza = $produs_operatie->numar_de_faza;
         $angajat->operatie_nume = $produs_operatie->nume;
+        $angajat->norma_pe_ora = (($produs_operatie->norma > 0) ? (480 / $produs_operatie->norma * 60) : "?");
         $angajat->pret_pe_bucata = $produs_operatie->pret;
 
         $request->session()->put('angajat', $angajat);

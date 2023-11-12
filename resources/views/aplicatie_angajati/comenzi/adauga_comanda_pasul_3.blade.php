@@ -72,6 +72,14 @@
                             Operation:
                         @endif
                     </small> {{ $angajat->operatie_nume }}
+                    <br>
+                    <small>
+                        @if ($angajat->limba_aplicatie === 1)
+                            Norma pe oră:
+                        @elseif ($angajat->limba_aplicatie === 2)
+                            Rate per hour:
+                        @endif
+                    </small> {{ $angajat->norma_pe_ora }}
                     {{-- <br>
                     <br>
                     <small>Preț pe bucată:</small> {{ $angajat->pret_pe_bucata }} lei --}}

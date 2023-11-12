@@ -155,34 +155,61 @@
                     </form>
                 </div>
 
-                {{-- @php
-                    $suma_totala = 0;
-                @endphp
-                @forelse ($norme_lucrate->groupBy('numar_de_faza') as $norme_lucrate_per_numar_de_faza)
+
+                {{-- Afisarea normelor lucrate, in ordinea zilelor din luna, desfasurat pe fiecare norma in parte --}}
+                @forelse ($norme_lucrate->groupBy('data') as $norme_lucrate_per_data)
+                    @if ($loop->first)
+                        <table class="table table-striped table-hover table-sm rounded-3 rounded my-4" style="background-color:#2c039b;">
+                            <tr>
+                                <th>
+                                    @if ($angajat->limba_aplicatie === 1)
+                                        Data
+                                    @elseif ($angajat->limba_aplicatie === 2)
+                                        Date
+                                    @endif
+                                </th>
+                                <th class="text-center">
+                                    @if ($angajat->limba_aplicatie === 1)
+                                        Ore lucrate
+                                    @elseif ($angajat->limba_aplicatie === 2)
+                                        Worked hours
+                                    @endif
+                                </th>
+                            </tr>
+                    @endif
+
                     @php
-                        $suma_totala += $norme_lucrate_per_numar_de_faza->sum('cantitate') * $norme_lucrate_per_numar_de_faza->first()->produs_operatie->pret
+                        $minuteTotalePeZi = 0;
                     @endphp
-                    <div class="mb-4 px-1" style="background-color:#007e6b;">
-                        <small>Număr de fază:</small> {{ $norme_lucrate_per_numar_de_faza->first()->numar_de_faza }}
-                        <br>
-                        <small>Număr de bucăți în total:</small> {{ $norme_lucrate_per_numar_de_faza->sum('cantitate') }}
-                        <br>
-                        <small>Preț pe bucată:</small> {{ $norme_lucrate_per_numar_de_faza->first()->produs_operatie->pret }} lei
-                        <br>
-                        <small>Suma totală:</small> {{ $norme_lucrate_per_numar_de_faza->sum('cantitate') * $norme_lucrate_per_numar_de_faza->first()->produs_operatie->pret }} lei
-                    </div>
+                    @forelse ($norme_lucrate_per_data as $norma_lucrata)
+                        @php
+                            if ($norma_lucrata->produs_operatie->norma && ($norma_lucrata->produs_operatie->norma > 0)){
+                                $minuteTotalePeZi += $norma_lucrata->cantitate * (480/$norma_lucrata->produs_operatie->norma);
+                            }
+                        @endphp
+                    @empty
+                    @endforelse
+
+                            <tr>
+                                <td>
+                                    {{ $norma_lucrata->first()->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ ($minuteTotalePeZi > 0) ? number_format($minuteTotalePeZi / 60, 1) : '' }}
+                                </td>
+                            </tr>
+
+
+                    @if ($loop->last)
+                        </table>
+                    @endif
                 @empty
                 @endforelse
 
-                <h4 class="mb-4 text-center">
-                    <b>
-                        REALIZAT TOTAL:
-                        <br>
-                        {{ $suma_totala }} lei
-                    </b>
-                </h4> --}}
 
 
+
+                {{-- Afisarea normelor lucrate, in ordinea zilelor din luna, desfasurat pe fiecare norma in parte --}}
                 @php
                     $suma_totala = 0;
                 @endphp
