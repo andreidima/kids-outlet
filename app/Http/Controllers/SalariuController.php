@@ -44,7 +44,7 @@ class SalariuController extends Controller
             if ($angajat->salarii->count() === 0){
                 $salariu = Salariu::create(['angajat_id' => $angajat->id,
                     'angajat_firma' => $angajat->firma,
-                    'angajat_prod' => $angajat->prod,
+                    'banca_iban' => $angajat->banca_iban,
                     'avans' => 0,
                     'salariu_de_baza' => 0,
                     'realizat_total' => 0,
@@ -60,6 +60,11 @@ class SalariuController extends Controller
         //     $salariu = $angajat->salarii->first();
         //     $salariu->angajat_firma = $angajat->firma;
         //     $salariu->angajat_prod = $angajat->prod;
+        //     $salariu->banca_iban = $angajat->banca_iban;
+        //     $salariu->salariu_de_baza = 0;
+        //     $salariu->realizat_total = 0;
+        //     $salariu->banca = 0;
+        //     $salariu->mana = 0;
         //     $salariu->save();
         // }
 
@@ -165,13 +170,7 @@ class SalariuController extends Controller
                 // Se stabileste cum vor fi facute platile, prin banca sau in mana
                 $banca = 0;
                 $mana = 0;
-                $banca_nume = "";
                 if ($angajat->banca_iban && (strpos($angajat->banca_iban, 'BTRL') || strpos($angajat->banca_iban, 'ING'))){
-                    if (strpos($angajat->banca_iban, 'BTRL')){
-                        $banca_nume = "BTRL";
-                    } else {
-                        $banca_nume = "ING";
-                    }
                     $banca = $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0);
                 } else{ // plata in mana
                     $mana = $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0);
@@ -182,7 +181,6 @@ class SalariuController extends Controller
                         'salariu_de_baza' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical,
                         'realizat_total' => $realizatTotal,
                         'lichidare' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0),
-                        'banca_nume' => $banca_nume,
                         'banca' => $banca,
                         'mana' => $mana
                     ]
@@ -663,6 +661,8 @@ class SalariuController extends Controller
                 // $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE CALCULATĂ DE APLICAȚIE');
                 // $sheet->setCellValueByColumnAndRow(($index+12), 4 , 'LICHIDARE SETATĂ DE OPERATOR');
                 $sheet->setCellValueByColumnAndRow(($index+11), 4 , 'LICHIDARE');
+                $sheet->setCellValueByColumnAndRow(($index+12), 4 , 'BANCA');
+                $sheet->setCellValueByColumnAndRow(($index+13), 4 , 'MANA');
 
                 $rand = 5;
 
@@ -732,37 +732,44 @@ class SalariuController extends Controller
                         }
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+7), $rand)->getColumn())->setAutoSize(true);
 
-                        // SALARIU DE BAZA
+                        // SALARIU DE BAZA - metoda veche de calcul
                         $sheet->setCellValueByColumnAndRow(($index+8), $rand , '=' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand);
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+8), $rand)->getColumn())->setAutoSize(true);
+                        // SALARIU DE BAZA DIN TABELUL DE SALARIU
+                        $sheet->setCellValueByColumnAndRow((($index+8)), $rand , $angajat->salarii->first()->salariu_de_baza ?? 0);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+8), $rand)->getColumn())->setAutoSize(true);
 
-                        // PUS
+                        // PUS - metoda veche de calcul
                         $sheet->setCellValueByColumnAndRow(($index+9), $rand , '=' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
                             \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+10) . $rand);
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+9), $rand)->getColumn())->setAutoSize(true);
+                        // PUS
+                        $sheet->setCellValueByColumnAndRow((($index+9)), $rand , ($angajat->salarii->first()->realizat_total ?? 0) - ($angajat->salarii->first()->salariu_de_baza ?? 0));
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+9), $rand)->getColumn())->setAutoSize(true);
 
+                        // REALIZAT TOTAL - metoda veche
+                        // $sheet->setCellValueByColumnAndRow(($index+10), $rand , '=' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . '+' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . $rand . '+' .
+                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand);
+                        // $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+10), $rand)->getColumn())->setAutoSize(true);
                         // REALIZAT TOTAL
-                        $sheet->setCellValueByColumnAndRow(($index+10), $rand , '=' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . '+' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+6) . $rand . '+' .
-                            \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+7) . $rand);
+                        $sheet->setCellValueByColumnAndRow((($index+10)), $rand , ($angajat->salarii->first()->realizat_total ?? 0));
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+10), $rand)->getColumn())->setAutoSize(true);
-
-                        // // LICHIDARE CALCULATA DE APLICATIE
-                        // $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=' .
-                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+8) . $rand . '-' .
-                        //     \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+5) . $rand);
-                        // $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
-
-                        // // LICHIDARE SETATA DE OPERATOR
-                        // $sheet->setCellValueByColumnAndRow((($index+12)), $rand , $angajat->salarii->first()->lichidare ?? 0);
-                        // $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+12), $rand)->getColumn())->setAutoSize(true);
 
                         // LICHIDARE
                         $sheet->setCellValueByColumnAndRow((($index+11)), $rand , $angajat->salarii->first()->lichidare ?? 0);
                         $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+11), $rand)->getColumn())->setAutoSize(true);
+
+                        // BANCA
+                        $sheet->setCellValueByColumnAndRow((($index+12)), $rand , $angajat->salarii->first()->banca ?? 0);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+12), $rand)->getColumn())->setAutoSize(true);
+
+                        // MANA
+                        $sheet->setCellValueByColumnAndRow((($index+13)), $rand , $angajat->salarii->first()->mana ?? 0);
+                        $sheet->getColumnDimension($sheet->getCellByColumnAndRow(($index+13), $rand)->getColumn())->setAutoSize(true);
 
 
                         $rand ++;
@@ -819,10 +826,18 @@ class SalariuController extends Controller
                     $sheet->setCellValueByColumnAndRow(($index+11), $rand , '=SUM(' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . $rand_initial . ':' .
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+11) . ($rand-1) . ')');
+                    // BANCA
+                    $sheet->setCellValueByColumnAndRow(($index+12), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . ($rand-1) . ')');
+                    // MANA
+                    $sheet->setCellValueByColumnAndRow(($index+13), $rand , '=SUM(' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+13) . $rand_initial . ':' .
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+13) . ($rand-1) . ')');
                     // Schimbare culoare la totaluri in rosu
                     $sheet->getStyle(
                         \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+4) . $rand . ':' .
-                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+12) . $rand
+                        \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index+14) . $rand
                         )->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
 
 
@@ -854,7 +869,12 @@ class SalariuController extends Controller
                     with(['salarii'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
-                    ->where('banca_iban', 'like', '%BTRL%')
+                    // ->where('banca_iban', 'like', '%BTRL%')
+                    ->whereHas('salarii', function($query) use ($searchData){
+                        $query->where('banca_iban', 'like', '%BTRL%')
+                            ->where('banca', '>', 0)
+                            ->whereDate('data', $searchData);
+                    })
                     ->where('firma', ($request->firma ?? null))
                     ->where('activ', 1)
                     ->orderBy('prod')
@@ -884,15 +904,14 @@ class SalariuController extends Controller
 
                     $sheet->setCellValue('B' . $rand, $angajat->banca_angajat_nume);
 
-                    // $sheet->setCellValueExplicit('C' . $rand, $angajat->banca_angajat_cnp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // setarea tipului de text: number to text
                     $sheet->setCellValue('C' . $rand, $angajat->banca_angajat_cnp);
                     $sheet->getStyle('C' . $rand)->getNumberFormat()->setFormatCode('#'); // nu se va folosi notatia sciintifica E+
 
                     // Lichidare de platit - se seteaza coloana ca string pentru a putea delimita zecimalele cu punct
-                    $sheet->getCellByColumnAndRow((4), $rand)->setValueExplicit(number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING2);
+                    // $sheet->getCellByColumnAndRow((4), $rand)->setValueExplicit(number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING2);
+                    $sheet->getCellByColumnAndRow((4), $rand)->setValueExplicit(number_format((float)$angajat->salarii->first()->banca, 2, '.', ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING2);
 
                     $sheet->setCellValue('E' . $rand, $angajat->banca_iban);
-                    // $sheet->setCellValue('F' . $rand, $angajat->banca_detalii_1 . " " . $angajat->banca_detalii_2);
                     $sheet->setCellValue('F' . $rand, 'LICHIDARE ' . Carbon::parse($searchData)->isoformat('MMMM YYYY'));
 
                     $rand ++;
@@ -901,7 +920,6 @@ class SalariuController extends Controller
                 foreach ($sheet->getColumnIterator() as $column) {
                     $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
                 }
-                // $sheet->getColumnDimension('A')->setWidth(90);
 
                 // Coloana pret a fost setata ca string, asa ca este nevoie de aliniat textul la dreapta
                 $sheet->getStyle('D')->getAlignment()->setHorizontal('right');
@@ -918,7 +936,12 @@ class SalariuController extends Controller
                     with(['salarii'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
-                    ->where('banca_iban', 'like', '%ING%')
+                    // ->where('banca_iban', 'like', '%ING%')
+                    ->whereHas('salarii', function($query) use ($searchData){
+                        $query->where('banca_iban', 'like', '%ING%')
+                            ->where('banca', '>', 0)
+                            ->whereDate('data', $searchData);
+                    })
                     ->where('firma', ($request->firma ?? null))
                     ->where('activ', 1)
                     ->orderBy('prod')
@@ -929,11 +952,11 @@ class SalariuController extends Controller
                 $content = "Cont sursa\tCont destinatie\tSuma\tBeneficiar\tDetalii 1\tDetalii 2\n";
 
                 foreach ($angajati as $angajat){
-                    // $content .= $angajat->id . "\t";
                     $content .= "RO02INGB0000999912573918\t";
                     $content .= $angajat->banca_iban . "\t";
 
-                    $content .= number_format((float)$angajat->salarii->first()->lichidare, 2, '.', '') . "\t";
+                    // $content .= number_format((float)$angajat->salarii->first()->lichidare, 2, '.', '') . "\t";
+                    $content .= number_format((float)$angajat->salarii->first()->banca, 2, '.', '') . "\t";
 
                     $content .= $angajat->banca_angajat_nume . "\t";
                     $content .= 'LICHIDARE' . "\t";
@@ -960,16 +983,18 @@ class SalariuController extends Controller
                     with(['salarii'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
-                    ->where(function($query){
-                        $query->where(function($query){
-                            $query->where('banca_iban', 'not like', '%BTRL%')
-                                    ->where('banca_iban', 'not like', '%ING%');
-                            })
-                            ->orWhereNull('banca_iban');
+                    // ->where(function($query){
+                    //     $query->where(function($query){
+                    //         $query->where('banca_iban', 'not like', '%BTRL%')
+                    //                 ->where('banca_iban', 'not like', '%ING%');
+                    //         })
+                    //         ->orWhereNull('banca_iban');
+                    // })
+                    ->whereHas('salarii', function($query) use ($searchData){
+                        $query->where('mana', '>', 0)
+                            ->whereDate('data', $searchData);
                     })
                     ->where('firma', (($request->firma == 'faraFirma') ? null : $request->firma))
-                    // ->where('banca_iban', 'not like', '%BTRL%')
-                    // ->where('banca_iban', 'not like', '%ING%')
                     ->where('activ', 1)
                     ->orderBy('prod')
                     ->orderBy('nume')
@@ -977,7 +1002,6 @@ class SalariuController extends Controller
 
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
-                // $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
 
                 $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
                 $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
@@ -1017,7 +1041,8 @@ class SalariuController extends Controller
                         $sheet->setCellValue('A' . $rand, $nr_crt_angajat);
                         $sheet->setCellValue('B' . $rand, $angajat->nume);
 
-                        $sheet->setCellValueByColumnAndRow((3), $rand ,  number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''));
+                        // $sheet->setCellValueByColumnAndRow((3), $rand ,  number_format((float)$angajat->salarii->first()->lichidare, 2, '.', ''));
+                        $sheet->setCellValueByColumnAndRow((3), $rand ,  number_format((float)$angajat->salarii->first()->mana, 2, '.', ''));
 
                         $rand ++;
                         $nr_crt_angajat ++;
@@ -1109,7 +1134,7 @@ class SalariuController extends Controller
                             // ->where('concediu', '>', 0); // daca este 0, inseamna ca nu a fost in concediu
                         }])
                     ->with(['salarii'=> function($query) use ($searchData){
-                        $query->select('id', 'angajat_id', 'avans', 'salariu_de_baza', 'lichidare', 'realizat_total', 'banca', 'mana')
+                        $query->select('id', 'angajat_id', 'banca_iban', 'avans', 'salariu_de_baza', 'lichidare', 'realizat_total', 'banca', 'mana')
                             ->whereDate('data', $searchData);
                     }])
                     ->where('activ', 1) // Contul este activ
@@ -1686,11 +1711,23 @@ class SalariuController extends Controller
                     case 'salariu_de_baza':
                         $salariu->salariu_de_baza = $request->valoare;
                         $salariu->lichidare = $salariu->salariu_de_baza - $salariu->avans;
-                        $salariu->banca_nume ? ($salariu->banca = $salariu->lichidare) : ($salariu->mana = $salariu->lichidare);
+                        if ($salariu->banca_iban){
+                            $salariu->banca = $salariu->lichidare;
+                            $salariu->mana = 0;
+                        } else {
+                            $salariu->banca = 0;
+                            $salariu->mana = $salariu->lichidare;
+                        }
                         break;
                     case 'lichidare':
                         $salariu->lichidare = $request->valoare;
-                        $salariu->banca_nume ? ($salariu->banca = $salariu->lichidare) : ($salariu->mana = $salariu->lichidare);
+                        if ($salariu->banca_iban){
+                            $salariu->banca = $salariu->lichidare;
+                            $salariu->mana = 0;
+                        } else {
+                            $salariu->banca = 0;
+                            $salariu->mana = $salariu->lichidare;
+                        }
                         break;
                     case 'banca':
                         $salariu->banca = $request->valoare;

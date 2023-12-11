@@ -364,9 +364,12 @@ if (document.querySelector('#salarii')) {
         el: '#salarii',
         data: {
             angajati: angajati,
-            firmeBtrl: {}, // firme care au angajati cu conturi BTRL
-            firmeIng: {}, // firme care au angajati cu conturi ING
-            firmeFaraBanca: {}, // firme care au angajati fara conturi bancare
+            avansuriFirmeBtrl: {}, // firme care au angajati cu conturi BTRL
+            avansuriFirmeIng: {}, // firme care au angajati cu conturi ING
+            avansuriFirmeFaraBanca: {}, // firme care au angajati fara conturi bancare
+            lichidareFirmeBtrl: {}, // firme care au angajati cu conturi BTRL
+            lichidareFirmeIng: {}, // firme care au angajati cu conturi ING
+            lichidareFirmeFaraBanca: {}, // firme care au angajati fara conturi bancare
             produse: produse,
             angajatiPerProduri: [[]],
 
@@ -398,23 +401,44 @@ if (document.querySelector('#salarii')) {
                 if (prodMaxim < angajat.prod) {
                     prodMaxim = angajat.prod;
                 }
+
+                // Avansuri
                 if (angajat.firma) { // se verifica daca angajatul tine de o firma
                     if (angajat.banca_iban) { // se verifica daca angajatul are cont iban
                         if (angajat.banca_iban.indexOf("BTRL") >= 0) { // Daca ibanul are btrl in nume, se adauga la firma respectiva
-                            this.firmeBtrl[angajat.firma] ? (this.firmeBtrl[angajat.firma] += 1) : (this.firmeBtrl[angajat.firma] = 1);
-                        } else if (angajat.banca_iban.indexOf("ING") >= 0) { // Daca ibanul are btrl in nume, se adauga la firma respectiva
-                            this.firmeIng[angajat.firma] ? (this.firmeIng[angajat.firma] += 1) : (this.firmeIng[angajat.firma] = 1);
+                            this.avansuriFirmeBtrl[angajat.firma] ? (this.avansuriFirmeBtrl[angajat.firma] += 1) : (this.avansuriFirmeBtrl[angajat.firma] = 1);
+                        } else if (angajat.banca_iban.indexOf("ING") >= 0) { // Daca ibanul are ing in nume, se adauga la firma respectiva
+                            this.avansuriFirmeIng[angajat.firma] ? (this.avansuriFirmeIng[angajat.firma] += 1) : (this.avansuriFirmeIng[angajat.firma] = 1);
                         } else {
-                            this.firmeFaraBanca[angajat.firma] ? (this.firmeFaraBanca[angajat.firma] += 1) : (this.firmeFaraBanca[angajat.firma] = 1);
+                            this.avansuriFirmeFaraBanca[angajat.firma] ? (this.avansuriFirmeFaraBanca[angajat.firma] += 1) : (this.avansuriFirmeFaraBanca[angajat.firma] = 1);
                         }
                     }
                     else {
-                        this.firmeFaraBanca[angajat.firma] ? (this.firmeFaraBanca[angajat.firma] += 1) : (this.firmeFaraBanca[angajat.firma] = 1);
+                        this.avansuriFirmeFaraBanca[angajat.firma] ? (this.avansuriFirmeFaraBanca[angajat.firma] += 1) : (this.avansuriFirmeFaraBanca[angajat.firma] = 1);
                     }
                 }
                 else { // in cazul in care angajatul nu tine de o firma
-                    this.firmeFaraBanca['faraFirma'] ? (this.firmeFaraBanca['faraFirma'] += 1) : (this.firmeFaraBanca['faraFirma'] = 1);
+                    this.avansuriFirmeFaraBanca['faraFirma'] ? (this.avansuriFirmeFaraBanca['faraFirma'] += 1) : (this.avansuriFirmeFaraBanca['faraFirma'] = 1);
                 }
+
+                // Lichidari
+                if (angajat.firma) { // se verifica daca angajatul tine de o firma
+                    if (parseFloat(angajat.salarii[0]['banca']) > 0) { // se verifica daca are vreo suma setata pentru banca
+                        if (angajat.salarii[0]['banca_iban'].indexOf("BTRL") >= 0) { // Daca ibanul are btrl in nume se adauga la firma respectiva
+                            this.lichidareFirmeBtrl[angajat.firma] ? (this.lichidareFirmeBtrl[angajat.firma] += 1) : (this.lichidareFirmeBtrl[angajat.firma] = 1);
+                        } else if (angajat.salarii[0]['banca_iban'].indexOf("ING") >= 0) { // Daca ibanul are ing in nume se adauga la firma respectiva
+                            this.lichidareFirmeIng[angajat.firma] ? (this.lichidareFirmeIng[angajat.firma] += 1) : (this.lichidareFirmeIng[angajat.firma] = 1);
+                        }
+                    }
+
+                    if (parseFloat(angajat.salarii[0]['mana']) > 0) {
+                        this.lichidareFirmeFaraBanca[angajat.firma] ? (this.lichidareFirmeFaraBanca[angajat.firma] += 1) : (this.lichidareFirmeFaraBanca[angajat.firma] = 1);
+                    }
+                }
+                else if (parseFloat(angajat.salarii[0]['mana']) > 0) { // in cazul in care angajatul nu tine de o firma
+                    this.lichidareFirmeFaraBanca['faraFirma'] ? (this.lichidareFirmeFaraBanca['faraFirma'] += 1) : (this.lichidareFirmeFaraBanca['faraFirma'] = 1);
+                }
+
             });
 
             // se creeaza intai arrayul gol

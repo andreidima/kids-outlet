@@ -155,7 +155,7 @@ table, th, td {
                             <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Excel BT:
                             </div>
-                            <template v-for="(value, key) in firmeBtrl">
+                            <template v-for="(value, key) in avansuriFirmeBtrl">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
@@ -172,7 +172,7 @@ table, th, td {
                             <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Txt ING:
                             </div>
-                            <template v-for="(value, key) in firmeIng">
+                            <template v-for="(value, key) in avansuriFirmeIng">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
@@ -189,7 +189,7 @@ table, th, td {
                             <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Excel Mână:
                             </div>
-                            <template v-for="(value, key) in firmeFaraBanca">
+                            <template v-for="(value, key) in avansuriFirmeFaraBanca">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
@@ -237,7 +237,7 @@ table, th, td {
                                 data-bs-target="#calculeazaAutomatSalariileDeBazaLichidarileBancaMana"
                                 title="Calculează automat salariu de baza, lichidare, bancă, mână"
                                 >
-                                Calculează automat salariu de bază, lichidare, bancă, mână
+                                Calculează automat salariile
                             </a>
                             <div class="modal fade text-dark" id="calculeazaAutomatSalariileDeBazaLichidarileBancaMana" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -324,7 +324,7 @@ table, th, td {
                             <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Excel BT:
                             </div>
-                            <template v-for="(value, key) in firmeBtrl">
+                            <template v-for="(value, key) in lichidareFirmeBtrl">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
@@ -341,14 +341,14 @@ table, th, td {
                             <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Txt ING:
                             </div>
-                            <template v-for="(value, key) in firmeIng">
+                            <template v-for="(value, key) in lichidareFirmeIng">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
                                         <input type="hidden" name="firma" :value="key">
                                         <button class="btn btn-sm btn-success text-white mb-1 mx-1 border border-dark rounded-pill" type="submit"
                                             name="action" value="exportLichidariTxtBancaIng" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
-                                            Txt ING @{{ key }} (@{{ value }})
+                                            @{{ key }} (@{{ value }})
                                         </button>
                                     </form>
                                 </template>
@@ -358,7 +358,7 @@ table, th, td {
                             <div class="mb-0" style="white-space: nowrap; font-size:90%">
                                 Excel Mână:
                             </div>
-                            <template v-for="(value, key) in firmeFaraBanca">
+                            <template v-for="(value, key) in lichidareFirmeFaraBanca">
                                 <template v-if="value > 0">
                                     <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
                                         @csrf
