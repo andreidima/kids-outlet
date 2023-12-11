@@ -468,7 +468,7 @@ table, th, td {
                                                 @{{ angajat.sumaConcediuMedical.toFixed(3) }}
                                             </span>
                                         </td>
-                                        <td class="d-flex justify-content-end align-items-center" style="padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(255, 191, 191)">
+                                        <td class="d-flex justify-content-end align-items-center" style="font-size: 14px; padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(255, 191, 191)">
                                             <div v-cloak v-if="numeCamp === 'salariu_de_baza' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
                                                 <i class="fas fa-thumbs-up"></i>
                                             </div>
@@ -479,14 +479,14 @@ table, th, td {
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right;">
                                             <span style="font-size: 12px !important; font-weight:bold;">
-                                                0
+                                                @{{ (angajat.salarii[0].realizat_total - angajat.salarii[0].salariu_de_baza).toFixed(3) }}
                                             </span>
                                         </td>
-                                        <td style="padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(172, 218, 186)">
-                                            @{{ (parseFloat(angajat.realizatTotal) + parseFloat(angajat.sumaConcediuOdihna) + parseFloat(angajat.sumaConcediuMedical)).toFixed(3) }}
+                                        <td style="font-size: 12px !important; padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(172, 218, 186)">
+                                            @{{ angajat.salarii[0].realizat_total }}
                                         </td>
                                         <td class="" style="padding:0px;">
-                                            <div class="d-flex justify-content-end align-items-center">
+                                            <div class="d-flex justify-content-end align-items-center" style="font-size: 14px;">
                                                 <div v-cloak v-if="numeCamp === 'lichidare' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
                                                     <i class="fas fa-thumbs-up"></i>
                                                 </div>
@@ -497,7 +497,7 @@ table, th, td {
                                             </div>
                                         </td>
                                         <td class="" style="padding:0px;">
-                                            <div class="d-flex justify-content-end align-items-center">
+                                            <div class="d-flex justify-content-end align-items-center" style="font-size: 14px;">
                                                 <div v-cloak v-if="numeCamp === 'banca' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
                                                     <i class="fas fa-thumbs-up"></i>
                                                 </div>
@@ -508,7 +508,7 @@ table, th, td {
                                             </div>
                                         </td>
                                         <td class="" style="padding:0px;">
-                                            <div class="d-flex justify-content-end align-items-center">
+                                            <div class="d-flex justify-content-end align-items-center" style="font-size: 14px;">
                                                 <div v-cloak v-if="numeCamp === 'mana' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
                                                     <i class="fas fa-thumbs-up"></i>
                                                 </div>
@@ -542,13 +542,19 @@ table, th, td {
                                             @{{ totalSalariuDeBazaPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px;">
-                                            0
+                                            @{{ (totalRealizatTotalPerProduri[angajatiPerProd[0].prod].toFixed(3) - totalSalariuDeBazaPerProduri[angajatiPerProd[0].prod].toFixed(3)).toFixed(3) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px;">
                                             @{{ totalRealizatTotalPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
                                             @{{ totalLichidariPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                        </td>
+                                        <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
+                                            @{{ totalBancaPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                        </td>
+                                        <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
+                                            @{{ totalManaPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -593,13 +599,19 @@ table, th, td {
                                     @{{ totalSalariuDeBazaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
                                 </td>
                                 <td style="text-align: right; padding-right:2px;">
-                                    0
+                                    @{{ (totalRealizatTotalPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) - totalSalariuDeBazaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3)).toFixed(3) }}
                                 </td>
                                 <td style="text-align: right; padding-right:2px;">
                                     @{{ totalRealizatTotalPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
                                 </td>
                                 <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
                                     @{{ totalLichidariPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
+                                    @{{ totalBancaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                </td>
+                                <td style="text-align: right; padding-right:2px; font-size: 14px !important; font-weight:bold;">
+                                    @{{ totalManaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
                                 </td>
                             </tr>
                     </table>

@@ -35,16 +35,32 @@ class SalariuController extends Controller
         $searchData->year = $searchAn;
 
         // Se verifica daca sunt generate salariile pe luna cautata, daca nu se creaza acum si se salveaza in DB
-        $angajati = Angajat::select('id', 'banca_iban')->where('activ', 1)
+        $angajati = Angajat::select('id', 'banca_iban', 'firma', 'prod')->where('activ', 1)
                 ->with(['salarii' => function($query) use ($searchData){
                     $query->whereDate('data', $searchData);
                 }])
                 ->get();
         foreach ($angajati as $angajat){
             if ($angajat->salarii->count() === 0){
-                $salariu = Salariu::create(['angajat_id' => $angajat->id,'avans' => 0, 'salariu_de_baza' => 0, 'lichidare' => 0, 'banca' => 0, 'mana' => 0, 'data' => $searchData]);
+                $salariu = Salariu::create(['angajat_id' => $angajat->id,
+                    'angajat_firma' => $angajat->firma,
+                    'angajat_prod' => $angajat->prod,
+                    'avans' => 0,
+                    'salariu_de_baza' => 0,
+                    'lichidare' => 0,
+                    'banca' => 0,
+                    'mana' => 0,
+                    'data' => $searchData]);
             }
         }
+
+        // Doar prima oara ca sa se salveze in db datele acestea, pe urma nu mai este necesar
+        // foreach ($angajati as $angajat){
+        //     $salariu = $angajat->salarii->first();
+        //     $salariu->angajat_firma = $angajat->firma;
+        //     $salariu->angajat_prod = $angajat->prod;
+        //     $salariu->save();
+        // }
 
         // Daca se apasa pe butonull „calculeazaAutomatAvansurile”, se genereaza avansurile si se salveaza in baza de date
         if ($request->input('action') === 'calculeazaAutomatAvansurile'){
@@ -163,6 +179,7 @@ class SalariuController extends Controller
                 $angajat->salarii->first()->update(
                     [
                         'salariu_de_baza' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical,
+                        'realizat_total' => $realizatTotal,
                         'lichidare' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0),
                         'banca_nume' => $banca_nume,
                         'banca' => $banca,
@@ -1091,7 +1108,7 @@ class SalariuController extends Controller
                             // ->where('concediu', '>', 0); // daca este 0, inseamna ca nu a fost in concediu
                         }])
                     ->with(['salarii'=> function($query) use ($searchData){
-                        $query->select('id', 'angajat_id', 'avans', 'salariu_de_baza', 'lichidare', 'banca', 'mana')
+                        $query->select('id', 'angajat_id', 'avans', 'salariu_de_baza', 'lichidare', 'realizat_total', 'banca', 'mana')
                             ->whereDate('data', $searchData);
                     }])
                     ->where('activ', 1) // Contul este activ
@@ -1684,6 +1701,7 @@ class SalariuController extends Controller
                         break;
                 }
                 $salariu->save();
+                $salariu = Salariu::find($request->salariuId);
 
                 return response()->json([
                     'raspuns' => "Actualizat",

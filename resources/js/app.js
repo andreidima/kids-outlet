@@ -377,6 +377,8 @@ if (document.querySelector('#salarii')) {
             totalSalariuDeBazaPerProduri: [],
             totalRealizatTotalPerProduri: [],
             totalLichidariPerProduri: [],
+            totalBancaPerProduri: [],
+            totalManaPerProduri: [],
 
             salariulMinimPeEconomie: salariulMinimPeEconomie,
             numarDeZileLucratoare: numarDeZileLucratoare,
@@ -483,14 +485,18 @@ if (document.querySelector('#salarii')) {
                 this.totalSalariuDeBazaPerProduri[prod] = 0;
                 this.totalRealizatTotalPerProduri[prod] = 0;
                 this.totalLichidariPerProduri[prod] = 0;
+                this.totalBancaPerProduri[prod] = 0;
+                this.totalManaPerProduri[prod] = 0;
                 this.angajatiPerProduri[prod].forEach((angajat) => {
                     this.totalRealizatPerProduri[prod] += angajat.realizatTotal;
-                    this.totalAvansuriPerProduri[prod] += angajat.salarii[0].avans;
+                    this.totalAvansuriPerProduri[prod] += parseFloat(angajat.salarii[0].avans);
                     this.totalCoPerProduri[prod] += angajat.sumaConcediuOdihna;
                     this.totalMedicalePerProduri[prod] += angajat.sumaConcediuMedical;
-                    this.totalSalariuDeBazaPerProduri[prod] += angajat.realizatTotal + angajat.sumaConcediuOdihna + angajat.sumaConcediuMedical;
-                    this.totalRealizatTotalPerProduri[prod] += angajat.realizatTotal + angajat.sumaConcediuOdihna + angajat.sumaConcediuMedical;
+                    this.totalSalariuDeBazaPerProduri[prod] += parseFloat(angajat.salarii[0].salariu_de_baza);
+                    this.totalRealizatTotalPerProduri[prod] += parseFloat(angajat.salarii[0].realizat_total);
                     this.totalLichidariPerProduri[prod] += parseFloat(angajat.salarii[0].lichidare);
+                    this.totalBancaPerProduri[prod] += parseFloat(angajat.salarii[0].banca);
+                    this.totalManaPerProduri[prod] += parseFloat(angajat.salarii[0].mana);
                 });
             },
             calculeazaRealizaturilePeProduse: function () {
