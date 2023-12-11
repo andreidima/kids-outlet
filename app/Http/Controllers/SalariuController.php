@@ -47,6 +47,7 @@ class SalariuController extends Controller
                     'angajat_prod' => $angajat->prod,
                     'avans' => 0,
                     'salariu_de_baza' => 0,
+                    'realizat_total' => 0,
                     'lichidare' => 0,
                     'banca' => 0,
                     'mana' => 0,
