@@ -442,6 +442,7 @@ if (document.querySelector('#salarii')) {
         },
         methods: {
             actualizeazaValoare(salariuId, numeCamp, valoare) {
+                // if (numeCamp === "salariu_de_baza"){}
                 axios
                     .post('/salarii/axios-actualizare-valoare',
                         {
@@ -463,7 +464,11 @@ if (document.querySelector('#salarii')) {
                         app.angajatiPerProduri.forEach((angajatiPerProd) => {
                             angajatiPerProd.forEach((angajat) => {
                                 if (angajat.salarii[0].id === salariuId) {
-                                    angajat.salarii[0][numeCamp] = Number(valoare);
+                                    angajat.salarii[0]['avans'] = Number(response.data.salariuDinDb.avans);
+                                    angajat.salarii[0]['salariu_de_baza'] = Number(response.data.salariuDinDb.salariu_de_baza);
+                                    angajat.salarii[0]['lichidare'] = Number(response.data.salariuDinDb.lichidare);
+                                    angajat.salarii[0]['banca'] = Number(response.data.salariuDinDb.banca);
+                                    angajat.salarii[0]['mana'] = Number(response.data.salariuDinDb.mana);
                                     app.calculeazaTotaluriPerProduri(angajat.prod); // Se recalculeaza si totalul, doar pentru produl respectiv
                                 }
                             });

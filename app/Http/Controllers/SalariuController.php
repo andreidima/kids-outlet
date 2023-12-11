@@ -35,14 +35,14 @@ class SalariuController extends Controller
         $searchData->year = $searchAn;
 
         // Se verifica daca sunt generate salariile pe luna cautata, daca nu se creaza acum si se salveaza in DB
-        $angajati = Angajat::select('id')->where('activ', 1)
+        $angajati = Angajat::select('id', 'banca_iban')->where('activ', 1)
                 ->with(['salarii' => function($query) use ($searchData){
                     $query->whereDate('data', $searchData);
                 }])
                 ->get();
         foreach ($angajati as $angajat){
             if ($angajat->salarii->count() === 0){
-                $salariu = Salariu::create(['angajat_id' => $angajat->id, 'avans' => 0, 'lichidare' => 0, 'data' => $searchData]);
+                $salariu = Salariu::create(['angajat_id' => $angajat->id,'avans' => 0, 'salariu_de_baza' => 0, 'lichidare' => 0, 'banca' => 0, 'mana' => 0, 'data' => $searchData]);
             }
         }
 
@@ -71,8 +71,8 @@ class SalariuController extends Controller
             }
         }
 
-        // Daca se apasa pe butonull „calculeazaAutomatLichidarile”, se genereaza lichidarile si se salveaza in baza de date
-        if ($request->input('action') === 'calculeazaAutomatLichidarile'){
+        // Daca se apasa pe butonull „calculeazaAutomatSalariileDeBazaSiLichidarile”, se genereaza salariile de baza si lichidarile si se salveaza in baza de date
+        if ($request->input('action') === 'calculeazaAutomatSalariileDeBazaLichidarileBancaMana'){
             $search_data_inceput = Carbon::parse($searchData);
             $search_data_sfarsit = Carbon::parse($searchData)->endOfMonth();
 
@@ -145,7 +145,30 @@ class SalariuController extends Controller
                 $sumaConcediuOdihna = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_de_odihna;
                 $sumaConcediuMedical = $salariul_minim_pe_economie / $numar_de_zile_lucratoare * $zile_concediu_medical * 0.75;
 
-                $angajat->salarii->first()->update(['lichidare' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0)]);
+                // Se stabileste cum vor fi facute platile, prin banca sau in mana
+                $banca = 0;
+                $mana = 0;
+                $banca_nume = "";
+                if ($angajat->banca_iban && (strpos($angajat->banca_iban, 'BTRL') || strpos($angajat->banca_iban, 'ING'))){
+                    if (strpos($angajat->banca_iban, 'BTRL')){
+                        $banca_nume = "BTRL";
+                    } else {
+                        $banca_nume = "ING";
+                    }
+                    $banca = $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0);
+                } else{ // plata in mana
+                    $mana = $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0);
+                }
+
+                $angajat->salarii->first()->update(
+                    [
+                        'salariu_de_baza' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical,
+                        'lichidare' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0),
+                        'banca_nume' => $banca_nume,
+                        'banca' => $banca,
+                        'mana' => $mana
+                    ]
+                );
             }
         }
 
@@ -1068,7 +1091,7 @@ class SalariuController extends Controller
                             // ->where('concediu', '>', 0); // daca este 0, inseamna ca nu a fost in concediu
                         }])
                     ->with(['salarii'=> function($query) use ($searchData){
-                        $query->select('id', 'angajat_id', 'avans', 'lichidare')
+                        $query->select('id', 'angajat_id', 'avans', 'salariu_de_baza', 'lichidare', 'banca', 'mana')
                             ->whereDate('data', $searchData);
                     }])
                     ->where('activ', 1) // Contul este activ
@@ -1142,7 +1165,10 @@ class SalariuController extends Controller
             }
     }
 
-    public function postIndex(Request $request)
+    // Am redenumit functia ca sa vedem daca mai este folosita pe undeva, caci ar trebui sa dea eroare aplicatia
+    // Daca nu apare ca mai este necesara pana la 20.01.2023, de sters toata functia, si linkul din web.php
+    // public function postIndex(Request $request)
+    public function postIndexRedenumitSaVadDacaMaiEsteFolosit(Request $request)
     {
         $angajatiPerProduri = json_decode($request->angajatiPerProduri, true);
         $produse = json_decode($request->produse, true);
@@ -1156,13 +1182,6 @@ class SalariuController extends Controller
 
         switch ($request->input('action')) {
             case 'calculeazaAutomatLichidarile':
-                // foreach ($angajatiPerProduri as $angajatiPerProd){
-                //     foreach ($angajatiPerProd as $angajat){
-                //         $salariu = Salariu::where('angajat_id', $angajat['id'])->where('data', $searchData)->first();
-                //         $salariu->lichidare = $angajat['realizatTotal'] + $angajat['sumaConcediuOdihna'] + $angajat['sumaConcediuMedical'] - $salariu->avans;
-                //         $salariu->save();
-                //     }
-                // }
                 $angajatiIds = [];
                 foreach ($angajatiPerProduri as $angajatiPerProd){
                     foreach ($angajatiPerProd as $angajat){
@@ -1179,9 +1198,6 @@ class SalariuController extends Controller
                         $salariu->save();
                     }
                 }
-                // dd($salarii);
-                // $salarii->save();
-                // return back()->with('status', 'Lichidările au fost calculate!');
                 return back();
             break;
             case 'exportLichidariExcelToate':
@@ -1645,14 +1661,34 @@ class SalariuController extends Controller
         switch ($_GET['request']) {
             case 'actualizareValoare':
                 $salariu = Salariu::find($request->salariuId);
-                $salariu->update([$request->numeCamp => $request->valoare]);
-                // $salariu->suma = $request->avansSuma;
-                // $salariu->save();
+                switch ($request->numeCamp){
+                    case 'avans':
+                        $salariu->avans = $request->valoare;
+                        break;
+                    case 'salariu_de_baza':
+                        $salariu->salariu_de_baza = $request->valoare;
+                        $salariu->lichidare = $salariu->salariu_de_baza - $salariu->avans;
+                        $salariu->banca_nume ? ($salariu->banca = $salariu->lichidare) : ($salariu->mana = $salariu->lichidare);
+                        break;
+                    case 'lichidare':
+                        $salariu->lichidare = $request->valoare;
+                        $salariu->banca_nume ? ($salariu->banca = $salariu->lichidare) : ($salariu->mana = $salariu->lichidare);
+                        break;
+                    case 'banca':
+                        $salariu->banca = $request->valoare;
+                        $salariu->mana = $salariu->lichidare - $salariu->banca;
+                        break;
+                    case 'mana':
+                        $salariu->mana = $request->valoare;
+                        $salariu->banca = $salariu->lichidare - $salariu->mana;
+                        break;
+                }
+                $salariu->save();
 
                 return response()->json([
                     'raspuns' => "Actualizat",
                     'salariuId' => $salariu->id,
-                    'numeCamp' => $request->numeCamp,
+                    'salariuDinDb' => $salariu
                 ]);
             break;
             default:

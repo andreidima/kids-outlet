@@ -227,42 +227,82 @@ table, th, td {
                     </span>
                 </div>
                 <div class="mb-1 d-flex align-items-center justify-content-center">
-                    <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
-                        @csrf
-                        <a
-                            class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
-                            href="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#calculeazaAutomatLichidarile"
-                            title="Calculează automat lichidarile"
-                            >
-                            Calculează automat lichidările
-                        </a>
-                        <div class="modal fade text-dark" id="calculeazaAutomatLichidarile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                <div class="modal-header bg-danger">
-                                    <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
-                                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" style="text-align:left;">
-                                    Ești sigur ca vrei să se calculeze automat toate lichidările pentru luna aleasă?
-                                    <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
-                                    Toate lichidările introduse manual se vor șterge!
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                    <div class="">
+                        <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                            @csrf
+                            <a
+                                class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
+                                href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#calculeazaAutomatSalariileDeBazaLichidarileBancaMana"
+                                title="Calculează automat salariu de baza, lichidare, bancă, mână"
+                                >
+                                Calculează automat salariu de bază, lichidare, bancă, mână
+                            </a>
+                            <div class="modal fade text-dark" id="calculeazaAutomatSalariileDeBazaLichidarileBancaMana" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a salariilor</h5>
+                                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" style="text-align:left;">
+                                        Ești sigur ca vrei să se calculeze automat toate salariile de bază, lichidare, bancă, mână pentru luna aleasă?
+                                        <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
+                                        Toate salariile de bază, lichidare, bancă, mână introduse manual se vor șterge!
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
 
-                                        <button class="btn btn-danger text-white border border-dark" type="submit"
-                                            name="action" value="calculeazaAutomatLichidarile">
-                                            Calculează automat lichidările
-                                        </button>
+                                            <button class="btn btn-danger text-white border border-dark" type="submit"
+                                                name="action" value="calculeazaAutomatSalariileDeBazaLichidarileBancaMana">
+                                                Calculează automat salariile de bază, lichidare, bancă, mână
+                                            </button>
 
-                                </div>
+                                    </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    {{-- <div class="">
+                        <form class="needs-validation mb-0" novalidate method="GET" action="{{ url()->current() }}">
+                            @csrf
+                            <a
+                                class="btn btn-sm btn-danger text-white me-1 border border-dark rounded-pill"
+                                href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#calculeazaAutomatLichidarile"
+                                title="Calculează automat lichidarile"
+                                >
+                                Calculează automat lichidările
+                            </a>
+                            <div class="modal fade text-dark" id="calculeazaAutomatLichidarile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">Calculare automată a avansurilor</h5>
+                                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" style="text-align:left;">
+                                        Ești sigur ca vrei să se calculeze automat toate lichidările pentru luna aleasă?
+                                        <h4 class="text-center">{{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}</h4>
+                                        Toate lichidările introduse manual se vor șterge!
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+
+                                            <button class="btn btn-danger text-white border border-dark" type="submit"
+                                                name="action" value="calculeazaAutomatLichidarile">
+                                                Calculează automat lichidările
+                                            </button>
+
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div> --}}
                 </div>
                 <div class="d-grid gap-2 d-flex align-items-center justify-content-center">
                     <div class="px-2 py-0 align-items-center rounded-3 text-dark" style="background-color:rgb(193, 255, 226)">
@@ -376,16 +416,18 @@ table, th, td {
                                 <th class="text-center px-0">Pus</th>
                                 <th class="text-center px-0">Realizat total</th>
                                 <th class="text-center px-0">Lichidare</th>
+                                <th class="text-center px-0">Bancă</th>
+                                <th class="text-center px-0">Mână</th>
                             </tr>
                         </thead>
                         <tbody>
                             <template v-for="angajatiPerProd in angajatiPerProduri">
                                 <template v-if="angajatiPerProd.length">
                                     <tr class="text-white" style="background-color:#e66800;">
-                                        <th v-if="arataProduseleDesfasurat === 'da'" colspan={{ $produse->count() + 10 }} class="text-center">
+                                        <th v-if="arataProduseleDesfasurat === 'da'" colspan={{ $produse->count() + 12 }} class="text-center">
                                             Prod @{{ angajatiPerProd[0].prod }} - {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
                                         </th>
-                                        <th v-if="arataProduseleDesfasurat === 'nu'" colspan=10 class="text-center">
+                                        <th v-if="arataProduseleDesfasurat === 'nu'" colspan=12 class="text-center">
                                             Prod @{{ angajatiPerProd[0].prod }} - {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
                                         </th>
                                     </tr>
@@ -426,10 +468,14 @@ table, th, td {
                                                 @{{ angajat.sumaConcediuMedical.toFixed(3) }}
                                             </span>
                                         </td>
-                                        <td style="padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(255, 191, 191)">
-                                            {{-- <span v-if="angajat.realizatTotal && angajat.sumaConcediuOdihna && angajat.sumaConcediuMedical" style="font-size: 12px !important; font-weight:bold;"> --}}
-                                                @{{ (parseFloat(angajat.realizatTotal) + parseFloat(angajat.sumaConcediuOdihna) + parseFloat(angajat.sumaConcediuMedical)).toFixed(3) }}
-                                            {{-- </span> --}}
+                                        <td class="d-flex justify-content-end align-items-center" style="padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(255, 191, 191)">
+                                            <div v-cloak v-if="numeCamp === 'salariu_de_baza' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </div>
+                                            <input type="text" class="bg-white text-end rounded-3" style="width: 80px; border: 1px solid aqua; padding:0px;" id="salariu_de_baza" name="salariu_de_baza"
+                                                    :value="angajat.salarii[0].salariu_de_baza"
+                                                    v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'salariu_de_baza', $event.target.value)"
+                                                    >
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right;">
                                             <span style="font-size: 12px !important; font-weight:bold;">
@@ -437,23 +483,40 @@ table, th, td {
                                             </span>
                                         </td>
                                         <td style="padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(172, 218, 186)">
-                                            {{-- <span v-if="angajat.realizatTotal && angajat.sumaConcediuOdihna && angajat.sumaConcediuMedical" style="font-size: 12px !important; font-weight:bold;"> --}}
-                                                @{{ (parseFloat(angajat.realizatTotal) + parseFloat(angajat.sumaConcediuOdihna) + parseFloat(angajat.sumaConcediuMedical)).toFixed(3) }}
-                                            {{-- </span> --}}
+                                            @{{ (parseFloat(angajat.realizatTotal) + parseFloat(angajat.sumaConcediuOdihna) + parseFloat(angajat.sumaConcediuMedical)).toFixed(3) }}
                                         </td>
-                                        {{-- <td style="padding: 0px 2px 0px 4px; text-align:right;">
-                                            <span style="font-size: 12px !important; font-weight:bold;">
-                                                @{{ (parseFloat(angajat.realizatTotal.toFixed(3)) + parseFloat(angajat.sumaConcediuOdihna.toFixed(3)) + parseFloat(angajat.sumaConcediuMedical.toFixed(3)) - parseFloat(angajat.salarii[0].avans.toFixed(3))).toFixed(3) }}
-                                            </span>
-                                        </td> --}}
-                                        <td class="d-flex justify-content-end align-items-center" style="font-size: 14px; padding:0px;">
-                                            <div v-cloak v-if="numeCamp === 'lichidare' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
-                                                <i class="fas fa-thumbs-up"></i>
+                                        <td class="" style="padding:0px;">
+                                            <div class="d-flex justify-content-end align-items-center">
+                                                <div v-cloak v-if="numeCamp === 'lichidare' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
+                                                    <i class="fas fa-thumbs-up"></i>
+                                                </div>
+                                                <input type="text" class="bg-white text-end rounded-3" style="width: 80px; border: 1px solid aqua; padding:0px;" id="lichidare" name="lichidare"
+                                                        :value="angajat.salarii[0].lichidare"
+                                                        v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'lichidare', $event.target.value)"
+                                                        >
                                             </div>
-                                            <input type="text" class="bg-white text-end rounded-3" style="width: 80px; border: 1px solid aqua; padding:0px;" id="lichidare" name="lichidare"
-                                                    :value="angajat.salarii[0].lichidare"
-                                                    v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'lichidare', $event.target.value)"
-                                                    >
+                                        </td>
+                                        <td class="" style="padding:0px;">
+                                            <div class="d-flex justify-content-end align-items-center">
+                                                <div v-cloak v-if="numeCamp === 'banca' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
+                                                    <i class="fas fa-thumbs-up"></i>
+                                                </div>
+                                                <input type="text" class="bg-white text-end rounded-3" style="width: 80px; border: 1px solid aqua; padding:0px;" id="banca" name="banca"
+                                                        :value="angajat.salarii[0].banca"
+                                                        v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'banca', $event.target.value)"
+                                                        >
+                                            </div>
+                                        </td>
+                                        <td class="" style="padding:0px;">
+                                            <div class="d-flex justify-content-end align-items-center">
+                                                <div v-cloak v-if="numeCamp === 'mana' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
+                                                    <i class="fas fa-thumbs-up"></i>
+                                                </div>
+                                                <input type="text" class="bg-white text-end rounded-3" style="width: 80px; border: 1px solid aqua; padding:0px;" id="mana" name="mana"
+                                                        :value="angajat.salarii[0].mana"
+                                                        v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'mana', $event.target.value)"
+                                                        >
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
