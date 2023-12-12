@@ -56,7 +56,7 @@ class SalariuController extends Controller
             }
         }
 
-        // Doar prima oara ca sa se salveze in db datele acestea, pe urma nu mai este necesar
+        // Doar prima oara ca sa se salveze in db datele acestea, pe urma nu mai este necesar, de sters la 30.01.2023
         foreach ($angajati as $angajat){
             $salariu = $angajat->salarii->first();
             $salariu->angajat_firma = $angajat->firma;
