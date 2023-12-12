@@ -548,13 +548,13 @@ table, th, td {
                                             @{{ totalRealizatTotalPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px; font-weight:bold;">
-                                            @{{ totalLichidariPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                            @{{ totalLichidariPerProduri[angajatiPerProd[0].prod].toFixed(2) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px; font-weight:bold;">
-                                            @{{ totalBancaPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                            @{{ totalBancaPerProduri[angajatiPerProd[0].prod].toFixed(2) }}
                                         </td>
                                         <td style="text-align: right; padding-right:2px; font-weight:bold;">
-                                            @{{ totalManaPerProduri[angajatiPerProd[0].prod].toFixed(3) }}
+                                            @{{ totalManaPerProduri[angajatiPerProd[0].prod].toFixed(2) }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -605,13 +605,13 @@ table, th, td {
                                     @{{ totalRealizatTotalPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
                                 </td>
                                 <td style="text-align: right; padding-right:2px; font-weight:bold;">
-                                    @{{ totalLichidariPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                    @{{ totalLichidariPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(2) }}
                                 </td>
                                 <td style="text-align: right; padding-right:2px; font-weight:bold;">
-                                    @{{ totalBancaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                    @{{ totalBancaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(2) }}
                                 </td>
                                 <td style="text-align: right; padding-right:2px; font-weight:bold;">
-                                    @{{ totalManaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(3) }}
+                                    @{{ totalManaPerProduri.reduce((partialSum, a) => partialSum + a, 0).toFixed(2) }}
                                 </td>
                             </tr>
                     </table>
