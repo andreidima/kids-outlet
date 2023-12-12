@@ -44,6 +44,7 @@ class SalariuController extends Controller
             if ($angajat->salarii->count() === 0){
                 $salariu = Salariu::create(['angajat_id' => $angajat->id,
                     'angajat_firma' => $angajat->firma,
+                    'angajat_prod' => $angajat->prod,
                     'banca_iban' => $angajat->banca_iban,
                     'avans' => 0,
                     'salariu_de_baza' => 0,
@@ -56,17 +57,17 @@ class SalariuController extends Controller
         }
 
         // Doar prima oara ca sa se salveze in db datele acestea, pe urma nu mai este necesar
-        // foreach ($angajati as $angajat){
-        //     $salariu = $angajat->salarii->first();
-        //     $salariu->angajat_firma = $angajat->firma;
-        //     $salariu->angajat_prod = $angajat->prod;
-        //     $salariu->banca_iban = $angajat->banca_iban;
-        //     $salariu->salariu_de_baza = 0;
-        //     $salariu->realizat_total = 0;
-        //     $salariu->banca = 0;
-        //     $salariu->mana = 0;
-        //     $salariu->save();
-        // }
+        foreach ($angajati as $angajat){
+            $salariu = $angajat->salarii->first();
+            $salariu->angajat_firma = $angajat->firma;
+            $salariu->angajat_prod = $angajat->prod;
+            $salariu->banca_iban = $angajat->banca_iban;
+            $salariu->salariu_de_baza = 0;
+            $salariu->realizat_total = 0;
+            $salariu->banca = 0;
+            $salariu->mana = 0;
+            $salariu->save();
+        }
 
         // Daca se apasa pe butonull „calculeazaAutomatAvansurile”, se genereaza avansurile si se salveaza in baza de date
         if ($request->input('action') === 'calculeazaAutomatAvansurile'){
