@@ -423,7 +423,7 @@ if (document.querySelector('#salarii')) {
 
                 // Lichidari
                 if (angajat.firma) { // se verifica daca angajatul tine de o firma
-                    if (parseFloat(angajat.salarii[0]['banca']) > 0) { // se verifica daca are vreo suma setata pentru banca
+                    if (angajat.salarii[0]['banca_iban'] && parseFloat(angajat.salarii[0]['banca']) > 0) { // se verifica daca are vreo suma setata pentru banca
                         if (angajat.salarii[0]['banca_iban'].indexOf("BTRL") >= 0) { // Daca ibanul are btrl in nume se adauga la firma respectiva
                             this.lichidareFirmeBtrl[angajat.firma] ? (this.lichidareFirmeBtrl[angajat.firma] += 1) : (this.lichidareFirmeBtrl[angajat.firma] = 1);
                         } else if (angajat.salarii[0]['banca_iban'].indexOf("ING") >= 0) { // Daca ibanul are ing in nume se adauga la firma respectiva
