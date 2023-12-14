@@ -482,8 +482,16 @@ table, th, td {
                                                 @{{ (angajat.salarii[0].realizat_total - angajat.salarii[0].salariu_de_baza).toFixed(3) }}
                                             </span>
                                         </td>
-                                        <td style="font-size: 12px !important; padding: 0px 2px 0px 4px; text-align:right; background-color:rgb(172, 218, 186)">
-                                            @{{ angajat.salarii[0].realizat_total }}
+                                        <td class="" style="padding:0px;">
+                                            <div class="d-flex justify-content-end align-items-center" style="font-size: 14px;">
+                                                <div v-cloak v-if="numeCamp === 'realizat_total' && salariuId === angajat.salarii[0].id" class="me-2 text-success">
+                                                    <i class="fas fa-thumbs-up"></i>
+                                                </div>
+                                                <input type="text" class="bg-white text-end rounded-3" style="width: 80px; border: 1px solid aqua; padding:0px;" id="realizat_total" name="realizat_total"
+                                                        :value="angajat.salarii[0].realizat_total"
+                                                        v-on:blur = "actualizeazaValoare(angajat.salarii[0].id, 'realizat_total', $event.target.value)"
+                                                        >
+                                            </div>
                                         </td>
                                         <td class="" style="padding:0px;">
                                             <div class="d-flex justify-content-end align-items-center" style="font-size: 14px;">

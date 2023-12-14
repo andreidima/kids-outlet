@@ -1709,6 +1709,8 @@ class SalariuController extends Controller
                     case 'avans':
                         $salariu->avans = $request->valoare;
                         break;
+                    case 'realizat_total':
+                        $salariu->realizat_total = $request->valoare;
                     case 'salariu_de_baza':
                         $salariu->salariu_de_baza = $request->valoare;
                         $salariu->lichidare = $salariu->salariu_de_baza - $salariu->avans;
@@ -1745,7 +1747,8 @@ class SalariuController extends Controller
                 return response()->json([
                     'raspuns' => "Actualizat",
                     'salariuId' => $salariu->id,
-                    'salariuDinDb' => $salariu
+                    'salariuDinDb' => $salariu,
+                    // 'numeCamp' => $request->numeCamp
                 ]);
             break;
             default:

@@ -492,6 +492,7 @@ if (document.querySelector('#salarii')) {
                                 if (angajat.salarii[0].id === salariuId) {
                                     angajat.salarii[0]['avans'] = Number(response.data.salariuDinDb.avans);
                                     angajat.salarii[0]['salariu_de_baza'] = Number(response.data.salariuDinDb.salariu_de_baza);
+                                    angajat.salarii[0]['realizat_total'] = Number(response.data.salariuDinDb.realizat_total);
                                     angajat.salarii[0]['lichidare'] = Number(response.data.salariuDinDb.lichidare);
                                     angajat.salarii[0]['banca'] = Number(response.data.salariuDinDb.banca);
                                     angajat.salarii[0]['mana'] = Number(response.data.salariuDinDb.mana);
