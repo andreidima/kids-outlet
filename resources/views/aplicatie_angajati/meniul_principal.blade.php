@@ -95,7 +95,7 @@
                         || ($angajat->id === 16) // Fodoroiu Geta
                         || ($angajat->id === 91) // Borchina Liliana
                         // || ($angajat->id === 156) // Craciun Gabriel
-                        // || ($angajat->id === 162) // Toader Maria
+                        || ($angajat->id === 162) // Toader Maria
                         || ($angajat->id === 231) // Gologus Maricica
                         || ($angajat->id === 234) // Munteanu Genoveva
                     )
