@@ -1748,7 +1748,7 @@ class SalariuController extends Controller
                     'raspuns' => "Actualizat",
                     'salariuId' => $salariu->id,
                     'salariuDinDb' => $salariu,
-                    'numeCamp' => $request->numeCamp
+                    // 'numeCamp' => $request->numeCamp
                 ]);
             break;
             default:
