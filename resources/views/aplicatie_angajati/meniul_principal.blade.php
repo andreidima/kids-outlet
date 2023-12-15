@@ -92,11 +92,11 @@
                         ($angajat->id === 1) // Andrei Dima Administrator 1
                         || ($angajat->id === 3) // Andrei Dima Administrator 3
                         || ($angajat->id === 4) // Mocanu Geanina
-                        // || ($angajat->id === 12) // Duna Luminita
                         || ($angajat->id === 16) // Fodoroiu Geta
                         || ($angajat->id === 91) // Borchina Liliana
                         || ($angajat->id === 156) // Craciun Gabriel
                         || ($angajat->id === 162) // Toader Maria
+                        || ($angajat->id === 231) // Gologus Maricica
                         || ($angajat->id === 234) // Munteanu Genoveva
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
