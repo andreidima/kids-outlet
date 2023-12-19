@@ -108,9 +108,10 @@ class ProdusController extends Controller
         $produs->update($request->only('nume', 'cantitate', 'sectia', 'activ'));
         if ($request->operatii){
             foreach ($request->operatii as $operatie_formular) {
-                echo $operatie_formular[1] . '<br>';
-                $produs_operatie = $produs->produse_operatii()->where('numar_de_faza', $operatie_formular[1])->first();
+                $produs_operatie = $produs->produse_operatii()->where('numar_de_faza', $operatie_formular[1])->first() ?? new ProdusOperatie;
                 if ($produs_operatie) {
+                    $produs_operatie->produs_id = $produs->id;
+                    $produs_operatie->numar_de_faza = $operatie_formular[1];
                     $produs_operatie->nume = $operatie_formular[2];
                     $produs_operatie->timp = $operatie_formular[3];
                     $produs_operatie->pret = $operatie_formular[4];
