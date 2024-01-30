@@ -95,9 +95,9 @@
                         || ($angajat->id === 16) // Fodoroiu Geta
                         || ($angajat->id === 91) // Borchina Liliana
                         // || ($angajat->id === 156) // Craciun Gabriel
-                        || ($angajat->id === 162) // Toader Maria
-                        || ($angajat->id === 231) // Gologus Maricica
-                        || ($angajat->id === 234) // Munteanu Genoveva
+                        // || ($angajat->id === 162) // Toader Maria
+                        // || ($angajat->id === 231) // Gologus Maricica
+                        // || ($angajat->id === 234) // Munteanu Genoveva
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
                 @endif
@@ -108,9 +108,9 @@
                         // || ($angajat->id === 12) // Duna Luminita
                         || ($angajat->id === 91) // Borchina Liliana
                         || ($angajat->id === 162) // Toader Maria
-                        || (($angajat->id ?? '') !== 16) // Fodoroiu Geta
-                        || (($angajat->id ?? '') !== 231) // Gologus Maricica
-                        || (($angajat->id ?? '') !== 234) // Munteanu Genoveva
+                        // || (($angajat->id ?? '') !== 16) // Fodoroiu Geta
+                        // || (($angajat->id ?? '') !== 231) // Gologus Maricica
+                        // || (($angajat->id ?? '') !== 234) // Munteanu Genoveva
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">ANGAJAȚI</a>
                 @endif
