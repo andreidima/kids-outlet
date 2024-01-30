@@ -17,8 +17,11 @@ class AngajatAplicatieProdusController extends Controller
     {
         $angajat = $request->session()->get('angajat');
         if( // Conturile ce pot vedea produsele
-            (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
-            && (($angajat->id ?? '') !== 162) // Toader Maria id=162
+            (($angajat->id ?? '') !== 4) // Mocanu Geanina
+            && (($angajat->id ?? '') !== 162) // Toader Maria
+            && (($angajat->id ?? '') !== 16) // Fodoroiu Geta
+            && (($angajat->id ?? '') !== 231) // Gologus Maricica
+            && (($angajat->id ?? '') !== 234) // Munteanu Genoveva
         ){
             return redirect('/aplicatie-angajati');
         }
@@ -75,6 +78,9 @@ class AngajatAplicatieProdusController extends Controller
         if( // Conturile ce pot vedea produsele
             (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
             && (($angajat->id ?? '') !== 162) // Toader Maria id=162
+            && (($angajat->id ?? '') !== 16) // Fodoroiu Geta
+            && (($angajat->id ?? '') !== 231) // Gologus Maricica
+            && (($angajat->id ?? '') !== 234) // Munteanu Genoveva
         ){
             return redirect('/aplicatie-angajati');
         }
@@ -95,6 +101,9 @@ class AngajatAplicatieProdusController extends Controller
         if( // Conturile ce pot vedea produsele
             (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
             && (($angajat->id ?? '') !== 162) // Toader Maria id=162
+            && (($angajat->id ?? '') !== 16) // Fodoroiu Geta
+            && (($angajat->id ?? '') !== 231) // Gologus Maricica
+            && (($angajat->id ?? '') !== 234) // Munteanu Genoveva
         ){
             return redirect('/aplicatie-angajati');
         }
