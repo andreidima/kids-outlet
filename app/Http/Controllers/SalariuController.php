@@ -180,7 +180,7 @@ class SalariuController extends Controller
                 $angajat->salarii->first()->update(
                     [
                         'salariu_de_baza' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical,
-                        'realizat_total' => $realizatTotal,
+                        'realizat_total' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical,
                         'lichidare' => $realizatTotal + $sumaConcediuOdihna + $sumaConcediuMedical - ($angajat->salarii->first()->avans ?? 0),
                         'banca' => $banca,
                         'mana' => $mana
