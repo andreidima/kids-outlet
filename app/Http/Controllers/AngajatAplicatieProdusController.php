@@ -22,6 +22,7 @@ class AngajatAplicatieProdusController extends Controller
             && (($angajat->id ?? '') !== 16) // Fodoroiu Geta
             && (($angajat->id ?? '') !== 231) // Gologus Maricica
             && (($angajat->id ?? '') !== 234) // Munteanu Genoveva
+            && (($angajat->id ?? '') !== 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
         ){
             return redirect('/aplicatie-angajati');
         }
@@ -81,6 +82,7 @@ class AngajatAplicatieProdusController extends Controller
             && (($angajat->id ?? '') !== 16) // Fodoroiu Geta
             && (($angajat->id ?? '') !== 231) // Gologus Maricica
             && (($angajat->id ?? '') !== 234) // Munteanu Genoveva
+            && (($angajat->id ?? '') !== 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
         ){
             return redirect('/aplicatie-angajati');
         }
@@ -104,6 +106,7 @@ class AngajatAplicatieProdusController extends Controller
             && (($angajat->id ?? '') !== 16) // Fodoroiu Geta
             && (($angajat->id ?? '') !== 231) // Gologus Maricica
             && (($angajat->id ?? '') !== 234) // Munteanu Genoveva
+            && (($angajat->id ?? '') !== 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
         ){
             return redirect('/aplicatie-angajati');
         }

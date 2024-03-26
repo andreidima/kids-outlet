@@ -34,6 +34,7 @@
                         // || ($angajat->id === 12) // Duna Luminita
                         || ($angajat->id === 91) // Borchina Liliana
                         || ($angajat->id === 162) // Toader Maria
+                        || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                         )
                     @else
                         <br>

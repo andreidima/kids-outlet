@@ -77,6 +77,7 @@
                                                                 // || ($angajat->id === 12) // Duna Luminita
                                                                 || ($angajat->id === 91) // Borchina Luminita
                                                                 || ($angajat->id === 162) // Toader Maria
+                                                                || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                                                             )
                                                             &&
                                                             (
@@ -99,6 +100,7 @@
                                                             // || ($angajat->id === 12) // Duna Luminita
                                                             || ($angajat->id === 91) // Borchina Luminita
                                                             || ($angajat->id === 162) // Toader Maria
+                                                            || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                                                         )
                                                     @else
                                                         {{ $angajat->cod_de_acces }}
@@ -184,6 +186,7 @@
                                                             // || ($angajat->id === 12) // Duna Luminita
                                                             || ($angajat->id === 91) // Borchina Luminita
                                                             || ($angajat->id === 162) // Toader Maria
+                                                            || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                                                         )
                                                     @else
                                                         {{ $angajat->cod_de_acces }}

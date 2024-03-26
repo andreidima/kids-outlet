@@ -98,6 +98,7 @@
                         || ($angajat->id === 162) // Toader Maria
                         || ($angajat->id === 231) // Gologus Maricica
                         || ($angajat->id === 234) // Munteanu Genoveva
+                        || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/vezi-faze-produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">VEZI FAZE PRODUSE</a>
                 @endif
@@ -111,6 +112,7 @@
                         || ($angajat->id === 16) // Fodoroiu Geta
                         || ($angajat->id === 231) // Gologus Maricica
                         || ($angajat->id === 234) // Munteanu Genoveva
+                        || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">ANGAJAȚI</a>
                 @endif
@@ -179,7 +181,7 @@
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
                         || ($angajat->id === 91) // Borchina Liliana
-                        || ($angajat->id === 162) // Toader Maria
+                        // || ($angajat->id === 162) // Toader Maria
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/produs-faze-angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">PRODUS FAZE ANGAJAȚI</a>
                 @endif
@@ -187,7 +189,7 @@
                 {{-- Conturile ce pot vedea toate produsele, si le si pot modifica cantitatea sau statusul „activ” --}}
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
-                        || ($angajat->id === 162) // Toader Maria
+                        // || ($angajat->id === 162) // Toader Maria
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/produse" role="button" style="background-color: #FC4A1A; border:2px solid white;">PRODUSE</a>
                 @endif
@@ -195,7 +197,7 @@
                 {{-- Conturile ce pot muta lucrul pe luna trecuta --}}
                 @if (
                         ($angajat->id === 4) // Mocanu Geanina
-                        || ($angajat->id === 162) // Toader Maria
+                        // || ($angajat->id === 162) // Toader Maria
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/muta-lucrul-pe-luna-anterioara" role="button" style="background-color: #FC4A1A; border:2px solid white;">MUTĂ LUCRUL PE LUNA ANTERIOARĂ</a>
                 @endif

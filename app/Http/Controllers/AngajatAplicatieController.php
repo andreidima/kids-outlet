@@ -822,7 +822,7 @@ class AngajatAplicatieController extends Controller
         $angajat = $request->session()->get('angajat');
         if( // Conturile ce pot muta lucrul pe luna trecuta
             (($angajat->id ?? '') !== 4) // Mocanu Geanina id=4
-            && (($angajat->id ?? '') !== 162) // Toader Maria id=162
+            // && (($angajat->id ?? '') !== 162) // Toader Maria id=162
         ){
             return redirect('/aplicatie-angajati');
         }
