@@ -89,10 +89,18 @@ Route::any('/aplicatie-angajati/muta-lucrul-pe-luna-anterioara', [AngajatAplicat
 Route::get('/aplicatie-angajati/cont-sef-sectie/norma-lucrata/{norma_lucrata}/sterge', [AngajatAplicatieController::class, 'stergeNormaLucrataDinContSefSectie']);
 
 
+
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/acasa', function () {
-        return view('acasa');
-    });
+    Route::view('/acasa', 'acasa');
+});
+
+Route::group(['middleware' => 'role:admin'], function () {
+// Route::middleware('role:admin')->group(function () {
+    // Route::get('/acasa', function () {
+    //     return view('acasa');
+    // });
+
+    Route::view('/acasa', 'acasa');
 
     Route::resource('angajati', AngajatController::class,  ['parameters' => ['angajati' => 'angajat']]);
 
@@ -105,11 +113,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('produse-operatii', ProdusOperatieController::class,  ['parameters' => ['produse-operatii' => 'produs_operatie']]);
 
-    Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
-    Route::get('norme-lucrate/per-angajat-per-data/{angajat}/{data}', [NormaLucrataController::class, 'index']);
-    Route::get('norme-lucrate/adauga/per-angajat-per-data/{angajat?}/{data?}', [NormaLucrataController::class, 'create']);
+    // Rutele de la norme au fost mutate in groupul cu middleware 'normeLucrate'. Those can be deleted at 01.05.2024
+    // Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
+    // Route::get('norme-lucrate/per-angajat-per-data/{angajat}/{data}', [NormaLucrataController::class, 'index']);
+    // Route::get('norme-lucrate/adauga/per-angajat-per-data/{angajat?}/{data?}', [NormaLucrataController::class, 'create']);
     Route::any('/norme-lucrate/muta-lucrul-pe-luna-anterioara', [NormaLucrataController::class, 'mutaLucrulPeLunaAnterioara']);
-    Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
+    // Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 
     // Route::get('/import/import-produse-operatii', [ImportFisierExcelController::class, 'importProduseOperatii']);
     // Route::get('/import/import-produse-operatii/setare-norme', [ImportFisierExcelController::class, 'importProduseOperatiiSetareNorme']);
@@ -131,18 +140,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/salarii', [SalariuController::class, 'index']);
     Route::post('/salarii', [SalariuController::class, 'postIndex']);
     Route::post('/salarii/axios-actualizare-valoare', [SalariuController::class, 'axiosActualizareValoare']);
+});
 
-    // Actualizarea automata a avansurilor din salarii, in luna 09.2023. Se poate sterge codul in luna 11.2023
-    // Route::get('actualizarea-avansurilor-din-salarii' , function(){
-    //     $avansuriAugust = App\Models\Avans::where('data', '2023-08-01')->get();
-    //     foreach ($avansuriAugust as $avans){
-    //         $salariu = App\Models\Salariu::where('data', '2023-08-01')->where('angajat_id', $avans->angajat_id)->first();
-    //         if ($salariu){
-    //             $salariu->avans = $avans->suma;
-    //             $salariu->save();
-    //         }
-    //     }
-    //     echo 'Done';
-    // });
-
+Route::group(['middleware' => 'role:admin,normeLucrate'], function () {
+    Route::get('norme-lucrate/afisare-lunar', [NormaLucrataController::class, 'afisareLunar'])->name('norme-lucrate.afisare_lunar');
+    Route::get('norme-lucrate/per-angajat-per-data/{angajat}/{data}', [NormaLucrataController::class, 'index']);
+    Route::get('norme-lucrate/adauga/per-angajat-per-data/{angajat?}/{data?}', [NormaLucrataController::class, 'create']);
+    Route::resource('norme-lucrate', NormaLucrataController::class,  ['parameters' => ['norme-lucrate' => 'norma_lucrata']]);
 });
