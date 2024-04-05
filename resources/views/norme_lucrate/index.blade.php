@@ -65,10 +65,13 @@
                 </form>
             </div>
             <div class="col-lg-3 text-end">
-                <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8"
-                    href="{{ route('norme-lucrate.create') }}" role="button">
-                    <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă lucrată
-                </a>
+                {{-- Id = 4, norme lucrate, nu poate umbla la actiuni --}}
+                @if (auth()->user()->id != 4)
+                    <a class="btn btn-sm bg-success text-white border border-dark rounded-pill col-md-8"
+                        href="{{ route('norme-lucrate.create') }}" role="button">
+                        <i class="fas fa-plus-square text-white me-1"></i>Adaugă normă lucrată
+                    </a>
+                @endif
             </div>
             {{-- @else
                 <div class="col-lg-9">
@@ -109,7 +112,11 @@
                             @if (!$angajat)
                                 <th class="text-center">Data lucrării</th>
                             @endif
-                            <th class="text-end">Acțiuni</th>
+
+                            {{-- Id = 4, norme lucrate, nu poate umbla la actiuni --}}
+                            @if (auth()->user()->id != 4)
+                                <th class="text-end">Acțiuni</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -159,30 +166,34 @@
                                         {{ $norma_lucrata->data ? \Carbon\Carbon::parse($norma_lucrata->data)->isoFormat('DD.MM.YYYY') : '' }}
                                     </td>
                                 @endif
-                                <td class="">
-                                    <div class="d-flex justify-content-end">
-                                        {{-- <a href="{{ $norma_lucrata->path() }}"
-                                            class="flex me-1"
-                                        >
-                                            <span class="badge bg-success">Vizualizează</span>
-                                        </a> --}}
-                                        <a href="{{ $norma_lucrata->path() }}/modifica"
-                                            class="flex me-1"
-                                        >
-                                            <span class="badge bg-primary">Modifică</span>
-                                        </a>
-                                        <div style="flex" class="">
-                                            <a
-                                                href="#"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#stergeNormaLucrata{{ $norma_lucrata->id }}"
-                                                title="Șterge NormaLucrata"
-                                                >
-                                                <span class="badge bg-danger">Șterge</span>
+
+                                {{-- Id = 4, norme lucrate, nu poate umbla la actiuni --}}
+                                @if (auth()->user()->id != 4)
+                                    <td class="">
+                                        <div class="d-flex justify-content-end">
+                                            {{-- <a href="{{ $norma_lucrata->path() }}"
+                                                class="flex me-1"
+                                            >
+                                                <span class="badge bg-success">Vizualizează</span>
+                                            </a> --}}
+                                            <a href="{{ $norma_lucrata->path() }}/modifica"
+                                                class="flex me-1"
+                                            >
+                                                <span class="badge bg-primary">Modifică</span>
                                             </a>
+                                            <div style="flex" class="">
+                                                <a
+                                                    href="#"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#stergeNormaLucrata{{ $norma_lucrata->id }}"
+                                                    title="Șterge NormaLucrata"
+                                                    >
+                                                    <span class="badge bg-danger">Șterge</span>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
+                                @endif
                             </tr>
 
                             @if ($loop->last)
@@ -222,36 +233,39 @@
         @endif
     </div>
 
-    {{-- Modalele pentru stergere norma_lucrata --}}
-    @foreach ($norme_lucrate as $norma_lucrata)
-        <div class="modal fade text-dark" id="stergeNormaLucrata{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white" id="exampleModalLabel">Norma Lucrată: <b>{{ $norma_lucrata->angajat->nume ?? '' }}</b></h5>
-                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="text-align:left;">
-                    Ești sigur ca vrei să ștergi Norma Lucrată?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+    {{-- Id = 4, norme lucrate, nu poate umbla la actiuni --}}
+    @if (auth()->user()->id != 4)
+        {{-- Modalele pentru stergere norma_lucrata --}}
+        @foreach ($norme_lucrate as $norma_lucrata)
+            <div class="modal fade text-dark" id="stergeNormaLucrata{{ $norma_lucrata->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <h5 class="modal-title text-white" id="exampleModalLabel">Norma Lucrată: <b>{{ $norma_lucrata->angajat->nume ?? '' }}</b></h5>
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="text-align:left;">
+                        Ești sigur ca vrei să ștergi Norma Lucrată?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
 
-                    <form method="POST" action="{{ $norma_lucrata->path() }}">
-                        @method('DELETE')
-                        @csrf
-                        <button
-                            type="submit"
-                            class="btn btn-danger text-white"
-                            >
-                            Șterge Norma Lucrată
-                        </button>
-                    </form>
+                        <form method="POST" action="{{ $norma_lucrata->path() }}">
+                            @method('DELETE')
+                            @csrf
+                            <button
+                                type="submit"
+                                class="btn btn-danger text-white"
+                                >
+                                Șterge Norma Lucrată
+                            </button>
+                        </form>
 
-                </div>
+                    </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    @endif
 
 @endsection

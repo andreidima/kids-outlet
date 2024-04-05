@@ -88,6 +88,11 @@ class NormaLucrataController extends Controller
      */
     public function create(Request $request, $angajat_id = null, $data = null)
     {
+        // Id = 4, norme lucrate, nu poate umbla la actiuni
+        if (auth()->user()->id == 4){
+            return back();
+        }
+
         $angajati = Angajat::orderBy('nume')->get();
         $produse = Produs::orderBy('nume')->get();
 
@@ -108,6 +113,11 @@ class NormaLucrataController extends Controller
      */
     public function store(Request $request)
     {
+        // Id = 4, norme lucrate, nu poate umbla la actiuni
+        if (auth()->user()->id == 4){
+            return back();
+        }
+
         $this->validateRequest($request);
 
         $produs_operatie = ProdusOperatie::where('produs_id', $request->produs_id)->where('numar_de_faza', $request->numar_de_faza)->first();
@@ -141,6 +151,11 @@ class NormaLucrataController extends Controller
      */
     public function edit(Request $request, NormaLucrata $norma_lucrata)
     {
+        // Id = 4, norme lucrate, nu poate umbla la actiuni
+        if (auth()->user()->id == 4){
+            return back();
+        }
+
         $angajati = Angajat::orderBy('nume')->get();
         $produse = Produs::orderBy('nume')->get();
 
@@ -158,6 +173,11 @@ class NormaLucrataController extends Controller
      */
     public function update(Request $request, NormaLucrata $norma_lucrata)
     {
+        // Id = 4, norme lucrate, nu poate umbla la actiuni
+        if (auth()->user()->id == 4){
+            return back();
+        }
+
         $this->validateRequest($request);
 
         $produs_operatie = ProdusOperatie::where('produs_id', $request->produs_id)->where('numar_de_faza', $request->numar_de_faza)->first();
@@ -181,6 +201,11 @@ class NormaLucrataController extends Controller
      */
     public function destroy(Request $request, NormaLucrata $norma_lucrata)
     {
+        // Id = 4, norme lucrate, nu poate umbla la actiuni
+        if (auth()->user()->id == 4){
+            return back();
+        }
+
         if ($norma_lucrata->produs_operatie){
             $norma_lucrata->produs_operatie->norma_totala_efectuata -= $norma_lucrata->cantitate;
             $norma_lucrata->produs_operatie->update();
