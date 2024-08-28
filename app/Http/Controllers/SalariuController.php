@@ -1141,6 +1141,7 @@ class SalariuController extends Controller
                     ->where('activ', 1) // Contul este activ
                     // ->where('prod', 1) // doar de test
                     ->orderBy('prod')
+                    ->orderBy('firma')
                     ->orderBy('nume')
                     ->get();
 // dd($angajati->first()->norme_lucrate->take(1));

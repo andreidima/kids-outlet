@@ -371,6 +371,7 @@ if (document.querySelector('#salarii')) {
             lichidareFirmeIng: {}, // firme care au angajati cu conturi ING
             lichidareFirmeFaraBanca: {}, // firme care au angajati fara conturi bancare
             produse: produse,
+            firme: [],
             angajatiPerProduri: [[]],
 
             totalRealizatPerProduri: [],
@@ -438,7 +439,15 @@ if (document.querySelector('#salarii')) {
                 else if (parseFloat(angajat.salarii[0]['mana']) > 0) { // in cazul in care angajatul nu tine de o firma
                     this.lichidareFirmeFaraBanca['faraFirma'] ? (this.lichidareFirmeFaraBanca['faraFirma'] += 1) : (this.lichidareFirmeFaraBanca['faraFirma'] = 1);
                 }
+            });
 
+            // Create the firme array
+            angajati.forEach((angajat) => {
+                if (angajat.firma) {
+                    if (!this.firme.includes(angajat.firma)) {
+                        this.firme.push(angajat.firma);
+                    }
+                }
             });
 
             // se creeaza intai arrayul gol

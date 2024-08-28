@@ -431,12 +431,14 @@ table, th, td {
                                             Prod @{{ angajatiPerProd[0].prod }} - {{ \Carbon\Carbon::parse($searchData)->isoFormat('MMMM YYYY') }}
                                         </th>
                                     </tr>
+                                    <template v-for="firma in firme">
                                     <tr v-for="(angajat, index) in angajatiPerProd">
+                                    <template v-if="angajat.firma == firma">
                                         <td style="padding: 0px 2px 0px 4px">
                                             @{{ index + 1 }}
                                         </td>
                                         <td style="padding: 0px 0px 0px 0px; font-weight:bold">
-                                            @{{ angajat.nume }}
+                                            @{{ angajat.firma.split(' ')[0] }} -  @{{ angajat.nume }}
                                         </td>
                                         <td v-if="arataProduseleDesfasurat === 'da'" v-for="produs in produse" style="padding: 0px 2px 0px 4px; text-align:right">
                                             <span v-if="angajat.realizatProduse && angajat.realizatProduse[produs.id]" style="font-size: 12px !important; font-weight:bold;">
@@ -526,7 +528,9 @@ table, th, td {
                                                         >
                                             </div>
                                         </td>
+                                    </template>
                                     </tr>
+                                    </template>
                                     <tr>
                                         <td v-if="arataProduseleDesfasurat === 'da'" colspan="{{ $produse->count() + 2 }}" style="text-align: center">
                                             <b>Total</b>

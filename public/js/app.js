@@ -5732,6 +5732,7 @@ if (document.querySelector('#salarii')) {
       lichidareFirmeFaraBanca: {},
       // firme care au angajati fara conturi bancare
       produse: produse,
+      firme: [],
       angajatiPerProduri: [[]],
       totalRealizatPerProduri: [],
       totalAvansuriPerProduri: [],
@@ -5802,6 +5803,14 @@ if (document.querySelector('#salarii')) {
         } else if (parseFloat(angajat.salarii[0]['mana']) > 0) {
           // in cazul in care angajatul nu tine de o firma
           _this5.lichidareFirmeFaraBanca['faraFirma'] ? _this5.lichidareFirmeFaraBanca['faraFirma'] += 1 : _this5.lichidareFirmeFaraBanca['faraFirma'] = 1;
+        }
+      }); // Create the firme array
+
+      angajati.forEach(function (angajat) {
+        if (angajat.firma) {
+          if (!_this5.firme.includes(angajat.firma)) {
+            _this5.firme.push(angajat.firma);
+          }
         }
       }); // se creeaza intai arrayul gol
 
