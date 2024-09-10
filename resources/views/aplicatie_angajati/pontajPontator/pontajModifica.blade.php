@@ -37,8 +37,9 @@
                         || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                         )
                     @else
-                        <br>
-                        Cod de acces: {{ $pontaj->angajat->cod_de_acces }}
+                        {{-- They were hidden at 10.09.2024 --}}
+                        {{-- <br>
+                        Cod de acces: {{ $pontaj->angajat->cod_de_acces }} --}}
                     @endif
 
                     <br>

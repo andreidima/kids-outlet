@@ -134,12 +134,12 @@ class AngajatAplicatieAngajatController extends Controller
         return request()->validate([
             'nume' => 'nullable|max:100',
             'telefon' => 'nullable|max:50',
-            'cod_de_acces' => [
-                'required',
-                'min:8',
-                'max:50',
-                Rule::unique('App\Models\Angajat')->ignore($angajat),
-            ],
+            // 'cod_de_acces' => [
+            //     'required',
+            //     'min:8',
+            //     'max:50',
+            //     Rule::unique('App\Models\Angajat')->ignore($angajat),
+            // ],
             'sectia' => 'required|max:500',
             'firma' => 'nullable|max:500',
             'prod' => 'nullable|max:200',

@@ -32,7 +32,8 @@
                     value="{{ old('telefon', $angajat->telefon) }}"
                     required>
             </div>
-            <div class="col-lg-3 mb-4">
+            {{-- They were hidden at 10.09.2024 --}}
+            {{-- <div class="col-lg-3 mb-4">
                 <label for="cod_de_acces" class="mb-0 ps-3">Cod de acces:</label>
                 <input
                     type="text"
@@ -41,7 +42,7 @@
                     placeholder=""
                     value="{{ old('cod_de_acces', $angajat->cod_de_acces) }}"
                     required>
-            </div>
+            </div> --}}
             <div class="col-lg-3 mb-4">
                 <label for="sectia" class="mb-0 ps-3">Secția:</label>
                 <select name="sectia" class="form-select rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">

@@ -103,7 +103,8 @@
                                                             || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                                                         )
                                                     @else
-                                                        {{ $angajat->cod_de_acces }}
+                                                        {{-- They were hidden at 10.09.2024 --}}
+                                                        {{-- {{ $angajat->cod_de_acces }} --}}
                                                     @endif
                                                 </td>
                                                 {{-- <td>

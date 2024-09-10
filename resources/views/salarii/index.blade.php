@@ -317,6 +317,22 @@ table, th, td {
                                         name="action" value="exportLichidariExcelToate" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
                                         Excel Toate
                                     </button>
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportLichidariExcelBensar" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                        Excel Bensar
+                                    </button>
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportLichidariExcelDarimode" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                        Excel Darimode
+                                    </button>
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportLichidariExcelMate" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                        Excel Mate
+                                    </button>
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportLichidariExcelPetit" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                        Excel Petit
+                                    </button>
                                 </form>
                             </div>
                         </div>

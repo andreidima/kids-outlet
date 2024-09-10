@@ -578,6 +578,11 @@ class SalariuController extends Controller
 
                 break;
             case 'exportLichidariExcelToate':
+            case 'exportLichidariExcelBensar':
+            case 'exportLichidariExcelDarimode':
+            case 'exportLichidariExcelMate':
+            case 'exportLichidariExcelPetit':
+                // dd(str_contains($request->input('action'), 'Bensar') ? 'Bensar' : (str_contains($request->input('action'), 'Darimode') ? 'Darimode' : (str_contains($request->input('action'), 'Mate') ? 'Mate' : (str_contains($request->input('action'), 'Petit') ? 'Petit' : ''))));
                 $search_data_inceput = Carbon::parse($searchData);
                 $search_data_sfarsit = Carbon::parse($searchData)->endOfMonth();
 
@@ -595,11 +600,12 @@ class SalariuController extends Controller
                     ->with(['salarii'=> function($query) use ($searchData){
                         $query->whereDate('data', $searchData);
                     }])
+                    ->where('firma', 'like', str_contains($request->input('action'), 'Bensar') ? '%Bensar%' : (str_contains($request->input('action'), 'Darimode') ? '%Darimode%' : (str_contains($request->input('action'), 'Mate') ? '%Mate%' : (str_contains($request->input('action'), 'Petit') ? '%Petit%' : '%'))))
+                    // ->where('firma', 'like', 'Bensar')
                     ->where('activ', 1) // Contul este activ
                     ->orderBy('prod')
                     ->orderBy('nume')
                     ->get();
-
 
                 $produseIds = [];
                 foreach ($angajati as $angajat){
@@ -860,7 +866,17 @@ class SalariuController extends Controller
 
                 $writer = new Xlsx($spreadsheet);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename="Lichidari toate.xlsx"');
+                if (str_contains($request->input('action'), 'Bensar')) {
+                    header('Content-Disposition: attachment; filename="Lichidari Bensar.xlsx"');
+                } else if (str_contains($request->input('action'), 'Darimode')) {
+                    header('Content-Disposition: attachment; filename="Lichidari Darimode.xlsx"');
+                } else if (str_contains($request->input('action'), 'Mate')) {
+                    header('Content-Disposition: attachment; filename="Lichidari Mate.xlsx"');
+                } else if (str_contains($request->input('action'), 'Petit')) {
+                    header('Content-Disposition: attachment; filename="Lichidari Petit.xlsx"');
+                } else if (str_contains($request->input('action'), 'Toate')) {
+                    header('Content-Disposition: attachment; filename="Lichidari toate.xlsx"');
+                }
                 $writer->save('php://output');
                 exit();
 
