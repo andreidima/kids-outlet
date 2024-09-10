@@ -42,7 +42,7 @@
                                                 ANGAJAT
                                             </th>
                                             <th scope="col">
-                                                Cod de acces
+                                                {{-- Cod de acces --}}
                                             </th>
                                             {{-- <th>
                                                 Sectia
@@ -151,7 +151,7 @@
                                                 ANGAJAT
                                             </th>
                                             <th scope="col">
-                                                Cod de acces
+                                                {{-- Cod de acces --}}
                                             </th>
                                             <th>
                                                 Sectia
@@ -190,7 +190,7 @@
                                                             || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                                                         )
                                                     @else
-                                                        {{ $angajat->cod_de_acces }}
+                                                        {{-- {{ $angajat->cod_de_acces }} --}}
                                                     @endif
                                                 </td>
                                                 <td>

@@ -28,13 +28,13 @@
 
                     {{-- Conturilor pentru care nu se afiseaza codurile de acces --}}
                     @if (
-                        ($angajat->id === 1) // Andrei Dima Administrator 1
-                        || ($angajat->id === 3) // Andrei Dima Administrator 3
-                        || ($angajat->id === 4) // Mocanu Geanina
-                        // || ($angajat->id === 12) // Duna Luminita
-                        || ($angajat->id === 91) // Borchina Liliana
-                        || ($angajat->id === 162) // Toader Maria
-                        || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
+                        ($pontaj->angajat->id === 1) // Andrei Dima Administrator 1
+                        || ($pontaj->angajat->id === 3) // Andrei Dima Administrator 3
+                        || ($pontaj->angajat->id === 4) // Mocanu Geanina
+                        // || ($pontaj->angajat->id === 12) // Duna Luminita
+                        || ($pontaj->angajat->id === 91) // Borchina Liliana
+                        || ($pontaj->angajat->id === 162) // Toader Maria
+                        || ($pontaj->angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                         )
                     @else
                         {{-- They were hidden at 10.09.2024 --}}

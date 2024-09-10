@@ -133,6 +133,7 @@ class AngajatController extends Controller
             'telefon' => 'nullable|max:50',
             'cod_de_acces' => [
                 'nullable',
+                'min:8',
                 'max:50',
                 Rule::unique('App\Models\Angajat')->ignore($angajat),
             ],
