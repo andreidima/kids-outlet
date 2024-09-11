@@ -333,6 +333,10 @@ table, th, td {
                                         name="action" value="exportLichidariExcelPetit" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
                                         Excel Petit
                                     </button>
+                                    <button class="btn btn-sm btn-success text-white mx-1 border border-dark rounded-pill" type="submit"
+                                        name="action" value="exportLichidariExcelFaraFirma" style="white-space: nowrap; height: 20px; line-height: 80%; background-color:rgb(34, 136, 66)">
+                                        Excel Fără firmă
+                                    </button>
                                 </form>
                             </div>
                         </div>

@@ -138,7 +138,7 @@ class AngajatController extends Controller
                 Rule::unique('App\Models\Angajat')->ignore($angajat),
             ],
             'sectia' => 'nullable|max:500',
-            'firma' => 'nullable|max:500',
+            'firma' => 'required|max:500',
             'prod' => 'nullable|max:200',
             'ore_angajare' => 'required|numeric|between:1,12',
             'avans' => 'required|numeric|max:99999',

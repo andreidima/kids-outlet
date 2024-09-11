@@ -56,10 +56,11 @@
                 <label for="firma" class="mb-0 ps-3">Firma:</label>
                 <select name="firma" class="form-select rounded-pill {{ $errors->has('produs_id') ? 'is-invalid' : '' }}">
                     <option value="" selected>Selectează</option>
+                    <option value="Bensar S.R.L." {{ old('firma', $angajat->firma) === "Bensar S.R.L." ? 'selected' : '' }}>Bensar S.R.L.</option>
+                    <option value="Mate Andy Style" {{ old('firma', $angajat->firma) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
                     <option value="Darimode Style S.R.L." {{ old('firma', $angajat->firma) === "Darimode Style S.R.L." ? 'selected' : '' }}>Darimode Style S.R.L.</option>
                     <option value="Petit Atelier S.R.L." {{ old('firma', $angajat->firma) === "Petit Atelier S.R.L." ? 'selected' : '' }}>Petit Atelier S.R.L.</option>
-                    <option value="Mate Andy Style" {{ old('firma', $angajat->firma) === "Mate Andy Style" ? 'selected' : '' }}>Mate Andy Style</option>
-                    <option value="Bensar S.R.L." {{ old('firma', $angajat->firma) === "Bensar S.R.L." ? 'selected' : '' }}>Bensar S.R.L.</option>
+                    <option value="Fără firmă" {{ old('firma', $angajat->firma) === "Fără firmă" ? 'selected' : '' }}>Fără firmă</option>
                 </select>
             </div>
             <div class="col-lg-3 mb-4">

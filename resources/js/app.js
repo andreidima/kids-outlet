@@ -449,6 +449,7 @@ if (document.querySelector('#salarii')) {
                     }
                 }
             });
+            this.firme.sort();
 
             // se creeaza intai arrayul gol
             for (i = 0; i <= prodMaxim; i++) {
