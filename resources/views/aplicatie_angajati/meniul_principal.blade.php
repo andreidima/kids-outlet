@@ -182,6 +182,7 @@
                         ($angajat->id === 4) // Mocanu Geanina
                         || ($angajat->id === 91) // Borchina Liliana
                         // || ($angajat->id === 162) // Toader Maria
+                        || ($angajat->id === 124) // W Rampati Dewayalage Anoja Nilathi Sandamali
                     )
                     <a class="mb-3 btn btn-lg w-100 text-white" href="/aplicatie-angajati/produs-faze-angajati" role="button" style="background-color: #FC4A1A; border:2px solid white;">PRODUS FAZE ANGAJAȚI</a>
                 @endif
